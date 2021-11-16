@@ -15,15 +15,15 @@ class AuthServices with ChangeNotifier {
   FirebaseAuth get auth => _auth;
 
   bool _toogle = false;
-  bool _record = true;
+  // bool? _record;
 
   bool get toogle => _toogle;
-  bool get record => _record;
+  // bool get record => _record!;
 
-  set recordToogle(bool tog) {
-    _record = tog;
-    notifyListeners();
-  }
+  // set recordToogle(bool tog) {
+  //   _record = tog;
+  //   notifyListeners();
+  // }
 
   set changeToogle(bool tog) {
     _toogle = tog;
@@ -177,9 +177,11 @@ class AuthServices with ChangeNotifier {
     }
   }
 
-  Future signInAnon() async {
+  Future signInAnon(BuildContext context) async {
     try {
       UserCredential result = await _auth.signInAnonymously();
+      Navigator.of(context).pop('/auth');
+
       User? user = result.user;
     } catch (e) {
       print(e.toString());

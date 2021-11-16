@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:memory_box/services/app_images.dart';
 import 'package:memory_box/services/auth_services.dart';
 import 'package:memory_box/widget/widget_auth/custom_app_bar.dart';
 import 'package:noise_meter/noise_meter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -146,6 +148,16 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
     audioPlayer?.seek(newPosition);
   }
 
+  Future<File> saveAudioFileToLocalStorage(File file, String name) async {
+    if (name == 'Аудиозапись') {
+      name += ' ${DateTime.now()}';
+    }
+    final appStorage = await getExternalStorageDirectory();
+    final newFile = File('${appStorage?.path}/$name.aac');
+    print(newFile.length());
+    return File(file.path).copy(newFile.path);
+  }
+
   @override
   Widget build(BuildContext context) {
     final recordTog = context.read<AuthServices>();
@@ -185,7 +197,8 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
                     ),
                     IconButton(
                       onPressed: () async {
-                        print(await recordTog.listAudio());
+                        saveAudioFileToLocalStorage(
+                            File(audioCache), audioName.text);
                       },
                       icon: ImageIcon(AppImages.download),
                     ),
@@ -194,8 +207,10 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
                     ),
                     IconButton(
                       onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed('/main_screen');
+
                         setState(() {});
-                        Navigator.canPop(context);
                       },
                       icon: ImageIcon(AppImages.deleteBottomNavBar),
                     ),
@@ -281,7 +296,7 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
                     if (position.inSeconds >= 15) {
                       audioPlayer?.seek(position - Duration(seconds: 15));
                     } else {
-                      audioPlayer?.seek(position = Duration(seconds: 1));
+                      audioPlayer?.seek(position = Duration(seconds: 0));
                     }
                   },
                   icon: ImageIcon(
@@ -290,7 +305,7 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
                   ),
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 40,
                 ),
                 ClipOval(
                   child: Container(
@@ -319,7 +334,7 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
                   ),
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 40,
                 ),
                 IconButton(
                   onPressed: () {
@@ -327,7 +342,7 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
                       audioPlayer?.seek(position + Duration(seconds: 15));
                     } else {
                       audioPlayer?.seek(position =
-                          Duration(seconds: musicLength.inSeconds - 1));
+                          Duration(seconds: musicLength.inSeconds - 0));
                     }
                   },
                   icon: ImageIcon(
@@ -441,7 +456,7 @@ class _RecordState extends State<Record> {
     final seconds = twoDigits(duration.inSeconds.remainder(60));
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final hour = twoDigits(duration.inHours);
-    final recordTog = context.read<AuthServices>().record;
+    // final recordTog = context.read<AuthServices>().record;
 
     AnimatedContainer buidBar(double vol) {
       double level = vol * voiseLevel * 2;

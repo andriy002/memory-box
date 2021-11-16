@@ -55,7 +55,7 @@ class ButtomAnonAuth extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
         onPressed: () {
-          AuthServices().signInAnon();
+          AuthServices().signInAnon(context);
 
           Navigator.of(context).pushReplacementNamed('/main_screen');
         },

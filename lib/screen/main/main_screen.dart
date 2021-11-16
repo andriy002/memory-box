@@ -55,13 +55,6 @@ class _MainScreanState extends State<MainScrean> {
   @override
   void initState() {
     super.initState();
-    permission();
-  }
-
-  Future<void> permission() async {
-    if (await Permission.microphone.isDenied) {
-      await Permission.microphone.request();
-    }
   }
 
   @override
