@@ -1,148 +1,243 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:memory_box/components/bottom_nav.dart';
-import 'package:memory_box/components/drawer.dart';
+import 'package:memory_box/model/firebase_file.dart';
+import 'package:memory_box/services/app_images.dart';
 
-class Audio extends StatelessWidget {
+import 'package:memory_box/services/auth_services.dart';
+import 'package:memory_box/services/firebase_api.dart';
+import 'package:provider/src/provider.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
+class Audio extends StatefulWidget {
   const Audio({Key? key}) : super(key: key);
 
   @override
+  State<Audio> createState() => _AudioState();
+}
+
+class _AudioState extends State<Audio> {
+  late Future<List<FirebaseFile>> futureFile;
+  bool playerToogle = false;
+
+  callback(bool tog) {
+    setState(() {
+      playerToogle = tog;
+    });
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    futureFile =
+        FirebaseApi.listAll('/user/QWnaTIzxyWS02ZHBcyrqs4vDrEo2/audio');
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      physics: BouncingScrollPhysics(),
-      slivers: [
-        SliverAppBar(
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.more_horiz,
-                size: 40,
-              ),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
-            SizedBox(
-              width: 10,
-            )
-          ],
-          backgroundColor: Colors.white,
-          expandedHeight: MediaQuery.of(context).size.height / 3.2,
-          floating: false,
-          pinned: false,
-          snap: false,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                CustomAppBarAudio(),
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 35,
-                    ),
-                    Text(
-                      'Аудиозаписи',
-                      style: TextStyle(
-                          fontFamily: 'ttNormal',
-                          fontSize: 36,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'Все в одном месте',
-                      style: TextStyle(
-                        fontFamily: 'ttNormal',
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 70,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '0 аудио',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'ttNormal',
-                                    fontSize: 14),
-                              ),
-                              Text(
-                                '00:00 часов',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'ttNormal',
-                                    fontSize: 14),
-                              ),
-                            ],
+    return FutureBuilder<List<FirebaseFile>>(
+        future: futureFile,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+
+            default:
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error'),
+                );
+              }
+
+              final file = snapshot.data!;
+              final indexProvider = context.read<AuthServices>().indexAudio;
+              final audioLength = context.read<AuthServices>().audioLength;
+              String twoDigits(int n) => n.toString().padLeft(2, '0');
+              final durationSeconds =
+                  twoDigits(audioLength.inSeconds.remainder(60));
+              final durationMinutes =
+                  twoDigits(audioLength.inMinutes.remainder(60));
+              final hour = twoDigits(audioLength.inHours);
+
+              String showTimeAudio() {
+                if (audioLength.inMinutes > 60) {
+                  return '${hour}:${durationMinutes} часов';
+                } else if (audioLength.inSeconds > 60) {
+                  return '${hour}:${durationMinutes} ${audioLength.inMinutes >= 2 ? 'минут' : 'минута'} ';
+                }
+                return '${durationSeconds} ${audioLength.inSeconds >= 2 ? 'секунд' : 'секунда'}';
+              }
+
+              return Stack(
+                children: [
+                  CustomScrollView(
+                    physics: BouncingScrollPhysics(),
+                    slivers: [
+                      SliverAppBar(
+                        actions: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.more_horiz,
+                              size: 40,
+                            ),
+                            onPressed: () {
+                              Scaffold.of(context).openDrawer();
+                            },
                           ),
-                          Container(
-                            width: 200,
-                            height: 40,
-                            color: Colors.white,
+                          SizedBox(
+                            width: 10,
                           )
                         ],
+                        backgroundColor: Colors.white,
+                        expandedHeight:
+                            MediaQuery.of(context).size.height / 3.2,
+                        floating: false,
+                        pinned: false,
+                        snap: false,
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: Stack(
+                            alignment: Alignment.topCenter,
+                            children: [
+                              CustomAppBarAudio(),
+                              Column(
+                                children: [
+                                  SizedBox(
+                                    height: 35,
+                                  ),
+                                  Text(
+                                    'Аудиозаписи',
+                                    style: TextStyle(
+                                        fontFamily: 'ttNormal',
+                                        fontSize: 36,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    'Все в одном месте',
+                                    style: TextStyle(
+                                      fontFamily: 'ttNormal',
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 70,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${file.length} аудио',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: 'ttNormal',
+                                                  fontSize: 14),
+                                            ),
+                                            Text(
+                                              '${showTimeAudio()}',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: 'ttNormal',
+                                                  fontSize: 14),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          width: 200,
+                                          height: 40,
+                                          color: Colors.white,
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  height: 65.0,
-                  child: Center(
-                    child: AudioPlayerList('$index'),
+                      SliverGrid(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final files = file[index];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 3, horizontal: 5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30))),
+                                child: Center(
+                                  child: AudioPlayerList(
+                                    files.name,
+                                    files.url,
+                                    index,
+                                    callback,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          childCount: file.length,
+                        ),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 1,
+                          childAspectRatio: 6,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                  if (playerToogle)
+                    BgPlayer(file[indexProvider].url, file[indexProvider].name)
+                ],
               );
-            },
-            childCount: 20,
-          ),
-        ),
-      ],
-    );
+          }
+        });
   }
 }
 
-class AudioPlayerList extends StatefulWidget {
-  final String data;
-  AudioPlayerList(this.data, {Key? key}) : super(key: key);
+class BgPlayer extends StatefulWidget {
+  final String audio;
+  final String name;
+
+  BgPlayer(this.audio, this.name, {Key? key}) : super(key: key);
 
   @override
-  _AudioPlayerListState createState() => _AudioPlayerListState();
+  _BgPlayerState createState() => _BgPlayerState();
 }
 
-class _AudioPlayerListState extends State<AudioPlayerList> {
+class _BgPlayerState extends State<BgPlayer> {
   AudioPlayer? audioPlayer;
   Duration position = Duration();
   Duration musicLength = Duration();
   bool playerToogle = true;
-
-  String audio =
-      'https://firebasestorage.googleapis.com/v0/b/memorybox-d633c.appspot.com/o/user%2FQWnaTIzxyWS02ZHBcyrqs4vDrEo2%2Faudio%2FTest21.aac?alt=media&token=a3f34978-359d-451c-863b-447b68558f43';
+  String? audio;
 
   @override
   void initState() {
     audioPlayer = AudioPlayer();
-    audioPlayer?.setUrl(audio, isLocal: false);
+    audioPlayer?.play(widget.audio, isLocal: false);
+    playerToogle = false;
+    bool statePlayer = true;
+
+    audioPlayer?.onPlayerStateChanged.listen((s) {
+      if (s == PlayerState.PLAYING) {
+        context.read<AuthServices>().statePlayer = false;
+      }
+    });
 
     audioPlayer?.onDurationChanged.listen((d) => setState(() {
           musicLength = d;
@@ -177,9 +272,9 @@ class _AudioPlayerListState extends State<AudioPlayerList> {
     return SliderTheme(
       data: SliderThemeData(
         trackHeight: 1,
-        inactiveTrackColor: Colors.black,
-        activeTrackColor: Colors.black,
-        thumbColor: Colors.black,
+        inactiveTrackColor: Colors.white,
+        activeTrackColor: Colors.white,
+        thumbColor: Colors.white,
         thumbShape: RoundSliderThumbShape(enabledThumbRadius: 3),
       ),
       child: Slider.adaptive(
@@ -205,13 +300,195 @@ class _AudioPlayerListState extends State<AudioPlayerList> {
     final durationSeconds = twoDigits(musicLength.inSeconds.remainder(60));
     final durationMinutes = twoDigits(musicLength.inMinutes.remainder(60));
 
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 85),
+      child: Container(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 7),
+          child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF8C84E2),
+                    Color(0xFF6C689F),
+                  ],
+                ),
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            width: double.infinity,
+            height: 65,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 7),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ClipOval(
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      color: Colors.white,
+                      child: IconButton(
+                        icon: playerToogle
+                            ? Icon(Icons.play_arrow)
+                            : Icon(Icons.pause),
+                        color: Color(0xFF8C84E2),
+                        iconSize: 30,
+                        onPressed: playerToogle
+                            ? () async {
+                                audioPlayer?.resume();
+                                playerToogle = false;
+                                setState(() {});
+                              }
+                            : () async {
+                                audioPlayer?.pause();
+                                playerToogle = true;
+                                setState(() {});
+                              },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 260,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(25, 0, 0, 30),
+                              child: Container(
+                                width: double.infinity,
+                                child: Text(
+                                  '${widget.name}',
+                                  style: TextStyle(
+                                      fontFamily: 'ttNormal',
+                                      color: Colors.white,
+                                      fontSize: 14),
+                                ),
+                              ),
+                            ),
+                            slider(),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(21, 20, 21, 0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '$minutes:$seconds',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'ttNormal',
+                                        fontSize: 10),
+                                  ),
+                                  Text(
+                                    '$durationMinutes:$durationSeconds',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'ttNormal',
+                                        fontSize: 10),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () async {},
+                      icon: ImageIcon(
+                        AppImages.arrowNext,
+                        size: 40,
+                        color: Colors.white,
+                      ))
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AudioPlayerList extends StatefulWidget {
+  final String audio;
+  final String data;
+  final int index;
+  final Function callback;
+  AudioPlayerList(this.data, this.audio, this.index, this.callback, {Key? key})
+      : super(key: key);
+
+  @override
+  _AudioPlayerListState createState() => _AudioPlayerListState();
+}
+
+class _AudioPlayerListState extends State<AudioPlayerList> {
+  AudioPlayer? audioPlayer;
+  Duration position = Duration();
+  Duration musicLength = Duration();
+  bool playerToogle = true;
+  String? audio;
+
+  @override
+  void initState() {
+    audioPlayer = AudioPlayer();
+
+    audio = widget.audio;
+
+    audioPlayer?.setUrl(audio!, isLocal: false);
+
+    audioPlayer?.onDurationChanged.listen((d) => setState(() {
+          musicLength = d;
+        }));
+
+    audioPlayer?.onAudioPositionChanged.listen(
+      (p) => setState(
+        () {
+          position = p;
+        },
+      ),
+    );
+
+    audioPlayer?.onPlayerCompletion.listen((event) {
+      setState(() {
+        audioPlayer?.stop();
+        playerToogle = true;
+        position = Duration(milliseconds: 0);
+      });
+    });
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    audioPlayer?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+
+    final durationSeconds = twoDigits(musicLength.inSeconds.remainder(60));
+    final durationMinutes = twoDigits(musicLength.inMinutes.remainder(60));
+
     String showTimeAudio() {
       if (musicLength.inMinutes > 60) {
         return '${musicLength.inHours} часов';
       } else if (musicLength.inSeconds > 60) {
-        return '${durationMinutes} ${musicLength.inMinutes >= 1 ? 'минута' : 'минут'} ';
+        return '${durationMinutes} ${musicLength.inMinutes >= 2 ? 'минут' : 'минута'} ';
       }
-      return '${durationSeconds} ${musicLength.inSeconds >= 1 ? 'секунда' : 'секунд'}';
+      return '${durationSeconds} ${musicLength.inSeconds >= 2 ? 'секунд' : 'секунда'}';
     }
 
     return Padding(
@@ -230,83 +507,57 @@ class _AudioPlayerListState extends State<AudioPlayerList> {
                 iconSize: 30,
                 onPressed: playerToogle
                     ? () async {
-                        audioPlayer?.play(audio, isLocal: true);
-                        playerToogle = false;
-                        setState(() {});
+                        if (context.read<AuthServices>().state) {
+                          context.read<AuthServices>().statePlayer = false;
+                          context.read<AuthServices>().setIndexAudio =
+                              widget.index;
+                          playerToogle = false;
+                          widget.callback(true);
+
+                          setState(() {});
+                        }
                       }
                     : () async {
+                        context.read<AuthServices>().statePlayer = true;
                         audioPlayer?.stop();
-                        position = Duration(seconds: 0);
                         playerToogle = true;
+                        widget.callback(false);
+
                         setState(() {});
                       },
               ),
             ),
           ),
-          playerToogle
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'data',
-                      style: TextStyle(fontFamily: 'ttNormal', fontSize: 14),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text('${showTimeAudio()}',
-                        style: TextStyle(
-                            fontFamily: 'ttNormal',
-                            fontSize: 14,
-                            color: Colors.grey)),
-                  ],
-                )
-              : Container(
-                  width: 270,
-                  child: Column(
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          slider(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 30),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 25),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '$minutes:$seconds',
-                                    style: TextStyle(fontFamily: 'ttNormal'),
-                                  ),
-                                  Text('$durationMinutes:$durationSeconds',
-                                      style: TextStyle(fontFamily: 'ttNormal')),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-          SizedBox(
-            width: playerToogle ? 60 : 0,
-          ),
-          if (playerToogle)
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.more_horiz,
-                size: 20,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 10,
               ),
+              Container(
+                width: 200,
+                child: Text(
+                  '${widget.data}',
+                  style: TextStyle(fontFamily: 'ttNormal', fontSize: 14),
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                '${showTimeAudio()}',
+                style: TextStyle(
+                    fontFamily: 'ttNormal', fontSize: 14, color: Colors.grey),
+              ),
+            ],
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.more_horiz,
+              size: 20,
             ),
+          ),
         ],
       ),
     );

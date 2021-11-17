@@ -14,7 +14,6 @@ import 'package:memory_box/services/auth_services.dart';
 import 'package:memory_box/widget/widget_auth/custom_app_bar.dart';
 import 'package:noise_meter/noise_meter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
@@ -160,7 +159,6 @@ class _AudioPlayerUIState extends State<AudioPlayerUI> {
 
   @override
   Widget build(BuildContext context) {
-    final recordTog = context.read<AuthServices>();
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final seconds = twoDigits(position.inSeconds.remainder(60));
     final minutes = twoDigits(position.inMinutes.remainder(60));
@@ -481,7 +479,6 @@ class _RecordState extends State<Record> {
           alignment: Alignment.bottomCenter,
           child: Center(
             child: Container(
-              // alignment: Alignment.bottomCenter,
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(

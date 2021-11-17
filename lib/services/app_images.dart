@@ -17,4 +17,5 @@ class AppImages {
   static const download = AssetImage('assets/images/icon/download.png');
   static const secDown = AssetImage('assets/images/icon/sec-down.png');
   static const secUp = AssetImage('assets/images/icon/sec-up.png');
+  static const arrowNext = AssetImage('assets/images/icon/arrow_next.png');
 }

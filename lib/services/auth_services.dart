@@ -11,19 +11,44 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class AuthServices with ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
+  Duration audioLength = Duration(hours: 0);
+
+  void allAudioLength(Duration dur) {
+    audioLength += dur;
+    notifyListeners();
+  }
 
   FirebaseAuth get auth => _auth;
 
+  int _indexAudio = 0;
+
+  int get indexAudio => _indexAudio;
+
+  set setIndexAudio(int index) {
+    _indexAudio = index;
+    notifyListeners();
+  }
+
+  bool _state = true;
+
+  bool get state => _state;
+
+  set statePlayer(bool state) {
+    _state = state;
+    notifyListeners();
+  }
+
   bool _toogle = false;
-  // bool? _record;
+  bool _play = false;
 
   bool get toogle => _toogle;
-  // bool get record => _record!;
 
-  // set recordToogle(bool tog) {
-  //   _record = tog;
-  //   notifyListeners();
-  // }
+  bool get play => _play;
+
+  set setPlayer(bool tog) {
+    _play = tog;
+    notifyListeners();
+  }
 
   set changeToogle(bool tog) {
     _toogle = tog;
@@ -97,6 +122,37 @@ class AuthServices with ChangeNotifier {
     return length.toString();
   }
 
+  // Future<firebase_storage.ListResult> loadAudioList() async {
+  //   firebase_storage.ListResult result = await firebase_storage
+  //       .FirebaseStorage.instance
+  //       .ref('user/${_auth.currentUser?.uid}/audio')
+  //       .listAll();
+
+  //   result.items.forEach((firebase_storage.Reference ref) async {
+  //     String url = await ref.getDownloadURL();
+  //   });
+
+  //   return result;
+  // }
+
+  // Future<List<String>> loadAudioListUrl() async {
+  //   firebase_storage.ListResult result = await firebase_storage
+  //       .FirebaseStorage.instance
+  //       .ref('user/${_auth.currentUser?.uid}/audio')
+  //       .listAll();
+
+  //   List<String> url = [];
+
+  //   // result.items.forEach((firebase_storage.Reference ref) async {
+  //   //   url.add(await ref.getDownloadURL().toString());
+  //   // });
+  //   for (var i = 0; i < result.items.length; i++) {
+  //     url.add(await result.items[i].getDownloadURL());
+  //   }
+
+  //   return await url;
+  // }
+
   void updateDisplayName(String controller) {
     _auth.currentUser?.updateDisplayName(controller);
   }
@@ -126,11 +182,6 @@ class AuthServices with ChangeNotifier {
         avatarUrl: _auth.currentUser?.photoURL);
     return user;
   }
-
-  // Stream<UserModel> user() {
-  //   var stream = StreamController<UserModel>().onListen;
-  //   return stream;
-  // }
 
   String _myVerificationId = '';
   String get myVerificationId => _myVerificationId;
