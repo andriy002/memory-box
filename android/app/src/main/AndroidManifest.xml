@@ -16,6 +16,7 @@
 
    <application
         android:label="memory_box"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

@@ -8,7 +8,6 @@ import 'package:memory_box/services/app_images.dart';
 import 'package:memory_box/services/auth_services.dart';
 import 'package:memory_box/services/firebase_api.dart';
 import 'package:provider/src/provider.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class Audio extends StatefulWidget {
   const Audio({Key? key}) : super(key: key);
@@ -54,7 +53,7 @@ class _AudioState extends State<Audio> {
               }
 
               final file = snapshot.data!;
-              final indexProvider = context.read<AuthServices>().indexAudio;
+              final indexProvider = context.watch<AuthServices>().indexAudio;
               final audioLength = context.read<AuthServices>().audioLength;
               String twoDigits(int n) => n.toString().padLeft(2, '0');
               final durationSeconds =
@@ -168,40 +167,27 @@ class _AudioState extends State<Audio> {
                           ),
                         ),
                       ),
-                      SliverGrid(
+                      SliverList(
                         delegate: SliverChildBuilderDelegate(
-                          (context, index) {
+                          (BuildContext context, int index) {
                             final files = file[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 3, horizontal: 5),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30))),
-                                child: Center(
-                                  child: AudioPlayerList(
-                                    files.name,
-                                    files.url,
-                                    index,
-                                    callback,
-                                  ),
-                                ),
-                              ),
-                            );
+
+                            return AudioPlayerList(
+                                files.name, files.url, index, callback);
                           },
                           childCount: file.length,
                         ),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 1,
-                          childAspectRatio: 6,
+                      ),
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 160,
                         ),
                       ),
                     ],
                   ),
                   if (playerToogle)
-                    BgPlayer(file[indexProvider].url, file[indexProvider].name)
+                    BgPlayer(file[indexProvider].url, file[indexProvider].name,
+                        indexProvider, file.length)
                 ],
               );
           }
@@ -212,8 +198,11 @@ class _AudioState extends State<Audio> {
 class BgPlayer extends StatefulWidget {
   final String audio;
   final String name;
+  final index;
+  final maxLenth;
 
-  BgPlayer(this.audio, this.name, {Key? key}) : super(key: key);
+  BgPlayer(this.audio, this.name, this.index, this.maxLenth, {Key? key})
+      : super(key: key);
 
   @override
   _BgPlayerState createState() => _BgPlayerState();
@@ -223,22 +212,25 @@ class _BgPlayerState extends State<BgPlayer> {
   AudioPlayer? audioPlayer;
   Duration position = Duration();
   Duration musicLength = Duration();
-  bool playerToogle = true;
+  bool playerToogle = false;
   String? audio;
 
   @override
   void initState() {
     audioPlayer = AudioPlayer();
-    audioPlayer?.play(widget.audio, isLocal: false);
+
+    super.initState();
+  }
+
+  void play() async {
     playerToogle = false;
-    bool statePlayer = true;
+    audioPlayer?.play(await widget.audio);
+  }
 
-    audioPlayer?.onPlayerStateChanged.listen((s) {
-      if (s == PlayerState.PLAYING) {
-        context.read<AuthServices>().statePlayer = false;
-      }
-    });
-
+  @override
+  void didChangeDependencies() {
+    context.watch<AuthServices>().indexAudio;
+    play();
     audioPlayer?.onDurationChanged.listen((d) => setState(() {
           musicLength = d;
         }));
@@ -253,19 +245,20 @@ class _BgPlayerState extends State<BgPlayer> {
 
     audioPlayer?.onPlayerCompletion.listen((event) {
       setState(() {
-        audioPlayer?.stop();
         playerToogle = true;
-        position = Duration(milliseconds: 0);
       });
     });
-
-    super.initState();
+    super.didChangeDependencies();
   }
 
   @override
   void dispose() {
     audioPlayer?.dispose();
     super.dispose();
+  }
+
+  void nextAudio() {
+    context.read<AuthServices>().nextAudio(widget.maxLenth);
   }
 
   Widget slider() {
@@ -337,12 +330,12 @@ class _BgPlayerState extends State<BgPlayer> {
                         color: Color(0xFF8C84E2),
                         iconSize: 30,
                         onPressed: playerToogle
-                            ? () async {
+                            ? () {
                                 audioPlayer?.resume();
                                 playerToogle = false;
                                 setState(() {});
                               }
-                            : () async {
+                            : () {
                                 audioPlayer?.pause();
                                 playerToogle = true;
                                 setState(() {});
@@ -403,7 +396,9 @@ class _BgPlayerState extends State<BgPlayer> {
                     ),
                   ),
                   IconButton(
-                      onPressed: () async {},
+                      onPressed: () {
+                        nextAudio();
+                      },
                       icon: ImageIcon(
                         AppImages.arrowNext,
                         size: 40,
@@ -437,10 +432,12 @@ class _AudioPlayerListState extends State<AudioPlayerList> {
   Duration musicLength = Duration();
   bool playerToogle = true;
   String? audio;
+  int? index;
 
   @override
   void initState() {
     audioPlayer = AudioPlayer();
+    playerToogle = true;
 
     audio = widget.audio;
 
@@ -450,22 +447,6 @@ class _AudioPlayerListState extends State<AudioPlayerList> {
           musicLength = d;
         }));
 
-    audioPlayer?.onAudioPositionChanged.listen(
-      (p) => setState(
-        () {
-          position = p;
-        },
-      ),
-    );
-
-    audioPlayer?.onPlayerCompletion.listen((event) {
-      setState(() {
-        audioPlayer?.stop();
-        playerToogle = true;
-        position = Duration(milliseconds: 0);
-      });
-    });
-
     super.initState();
   }
 
@@ -473,6 +454,15 @@ class _AudioPlayerListState extends State<AudioPlayerList> {
   void dispose() {
     audioPlayer?.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    context.watch<AuthServices>().indexAudio == widget.index
+        ? playerToogle = false
+        : playerToogle = true;
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -492,73 +482,82 @@ class _AudioPlayerListState extends State<AudioPlayerList> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ClipOval(
-            child: Container(
-              width: 50,
-              height: 50,
-              color: Color(0xFF5E77CE),
-              child: IconButton(
-                icon: playerToogle ? Icon(Icons.play_arrow) : Icon(Icons.stop),
-                color: Colors.white,
-                iconSize: 30,
-                onPressed: playerToogle
-                    ? () async {
-                        if (context.read<AuthServices>().state) {
-                          context.read<AuthServices>().statePlayer = false;
-                          context.read<AuthServices>().setIndexAudio =
-                              widget.index;
-                          playerToogle = false;
-                          widget.callback(true);
-
-                          setState(() {});
-                        }
-                      }
-                    : () async {
-                        context.read<AuthServices>().statePlayer = true;
-                        audioPlayer?.stop();
-                        playerToogle = true;
-                        widget.callback(false);
-
-                        setState(() {});
-                      },
-              ),
-            ),
+      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.all(
+            Radius.circular(30),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        height: 60,
+        width: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: 200,
-                child: Text(
-                  '${widget.data}',
-                  style: TextStyle(fontFamily: 'ttNormal', fontSize: 14),
+              ClipOval(
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  color: Color(0xFF5E77CE),
+                  child: IconButton(
+                    icon: playerToogle
+                        ? Icon(Icons.play_arrow)
+                        : Icon(Icons.stop),
+                    color: Colors.white,
+                    iconSize: 30,
+                    onPressed: playerToogle
+                        ? () {
+                            playerToogle = false;
+                            context.read<AuthServices>().setIndexAudio =
+                                widget.index;
+                            widget.callback(true);
+                          }
+                        : () {
+                            playerToogle = true;
+                            setState(() {});
+                            widget.callback(false);
+                          },
+                  ),
                 ),
               ),
-              SizedBox(
-                height: 5,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: 200,
+                    child: Text(
+                      '${widget.data}',
+                      style: TextStyle(fontFamily: 'ttNormal', fontSize: 14),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    '${showTimeAudio()}',
+                    style: TextStyle(
+                        fontFamily: 'ttNormal',
+                        fontSize: 14,
+                        color: Colors.grey),
+                  ),
+                ],
               ),
-              Text(
-                '${showTimeAudio()}',
-                style: TextStyle(
-                    fontFamily: 'ttNormal', fontSize: 14, color: Colors.grey),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.more_horiz,
+                  size: 20,
+                ),
               ),
             ],
           ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.more_horiz,
-              size: 20,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -29,6 +29,17 @@ class AuthServices with ChangeNotifier {
     notifyListeners();
   }
 
+  void nextAudio(int max) async {
+    int maxLength = await max - 1;
+    if (_indexAudio == maxLength) {
+      _indexAudio = 0;
+      notifyListeners();
+    } else {
+      _indexAudio++;
+      notifyListeners();
+    }
+  }
+
   bool _state = true;
 
   bool get state => _state;
