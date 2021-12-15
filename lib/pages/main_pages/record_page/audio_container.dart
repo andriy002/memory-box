@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memory_box/view_model/audio_player.dart';
+import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:provider/provider.dart';
 
 import 'widget/audio_player_container_widgets/audio_name.dart';

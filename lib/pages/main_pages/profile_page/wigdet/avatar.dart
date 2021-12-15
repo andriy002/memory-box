@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:memory_box/models/user.dart';
+import 'package:memory_box/models/user_model.dart';
 import 'package:memory_box/pages/main_pages/profile_page/view_model_profile/view_model_profile.dart';
 import 'package:memory_box/resources/app_icons.dart';
 import 'package:memory_box/widget/circle_app_bar.dart';

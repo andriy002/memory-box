@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/resources/app_fonts.dart';
-import 'package:memory_box/view_model/audio_player.dart';
+import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/slider_audio_player.dart';
 import 'package:provider/provider.dart';
 

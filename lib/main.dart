@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memory_box/pages/auth_pages/welcome_page.dart';
 import 'package:memory_box/pages/loading_page.dart';
+import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:memory_box/routes/app_router.dart';
 import 'package:memory_box/view_model/navigation.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,10 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => Navigation(),
         ),
+        StreamProvider(
+          create: (_) => AudioRepositories.instance.audio,
+          initialData: null,
+        )
       ],
       child: const MemoryBox(),
     ),

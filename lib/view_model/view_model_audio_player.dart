@@ -8,6 +8,7 @@ class _ViewModelAudioPlayerState {
   Duration audioLength = const Duration();
   AudioPlayer audioPlayer = AudioPlayer();
   bool isPlaying = false;
+  int? indexAudio;
 }
 
 class ViewModelAudioPlayer with ChangeNotifier {
@@ -51,9 +52,16 @@ class ViewModelAudioPlayer with ChangeNotifier {
     notifyListeners();
   }
 
+  void setPlayingIndex(int index) {
+    _state.indexAudio = index;
+    _state.isPlaying = true;
+    notifyListeners();
+  }
+
   void stop() {
     _state.audioPlayer.stop();
     _state.isPlaying = false;
+    _state.indexAudio = null;
     notifyListeners();
   }
 

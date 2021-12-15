@@ -45,14 +45,14 @@ class ViewModelRecord with ChangeNotifier {
 
   Future<void> addAudio(String path, String duration) async {
     try {
+      if (_state.audioName == 'Аудиозапись') {
+        _state.audioName += ' ${DateTime.now()}}';
+      }
+
       await _audioRepo.addAudio(_state.audioName, path, duration);
     } catch (e) {
       print(e.toString());
     }
-  }
-
-  void a() {
-    _audioRepo.a();
   }
 
   Future<void> _start() async {

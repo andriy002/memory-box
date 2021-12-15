@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_box/pages/main_pages/audio_page/audio_page.dart';
 import 'package:memory_box/pages/main_pages/record_page/record_page.dart';
 import 'package:memory_box/pages/main_pages/widget/bottom_navigation.dart';
 import 'package:memory_box/pages/main_pages/widget/drawer.dart';
@@ -21,7 +22,7 @@ class Main extends StatelessWidget {
       const MainPage(),
       const MainPage(),
       Record.create(),
-      const MainPage(),
+      AudioPage.create(),
       Profile.create(),
     ];
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_icons.dart';
-import 'package:memory_box/view_model/audio_player.dart';
+import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:provider/provider.dart';
 
 class BottomButtonWidget extends StatelessWidget {

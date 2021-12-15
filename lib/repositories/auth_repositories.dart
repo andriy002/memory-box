@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:memory_box/models/user.dart';
+import 'package:memory_box/models/user_model.dart';
 
 class AuthRepositories {
   static final AuthRepositories _repositories = AuthRepositories._instance();

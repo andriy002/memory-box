@@ -5,7 +5,7 @@ import 'package:memory_box/pages/main_pages/profile_page/wigdet/button_edit.dart
 import 'package:memory_box/pages/main_pages/profile_page/wigdet/display_name.dart';
 import 'package:memory_box/pages/main_pages/profile_page/wigdet/phone_numb.dart';
 import 'package:memory_box/repositories/user_repositories.dart';
-import 'package:memory_box/models/user.dart';
+import 'package:memory_box/models/user_model.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:provider/provider.dart';

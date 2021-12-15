@@ -3,7 +3,7 @@ import 'package:memory_box/pages/main_pages/main.dart';
 import 'package:memory_box/pages/main_pages/record_page/view_model_record/view_mode_record.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/resources/app_icons.dart';
-import 'package:memory_box/view_model/audio_player.dart';
+import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:provider/provider.dart';
 
 class TopButtonWidget extends StatelessWidget {
@@ -22,8 +22,8 @@ class TopButtonWidget extends StatelessWidget {
         children: [
           IconButton(
             onPressed: () {
-              // context.read<ViewModelAudioPlayer>().share(_localAudio);
-              context.read<ViewModelRecord>().a();
+              context.read<ViewModelAudioPlayer>().share(_localAudio);
+              // context.read<ViewModelRecord>().a();
             },
             icon: const ImageIcon(AppIcons.upload),
           ),
