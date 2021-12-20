@@ -19,7 +19,7 @@ class _AudioContainerWidgetState extends State<AudioContainerWidget> {
       '/storage/15FD-100D/Android/data/com.andrewdezh.memory_box/cache/Аудизапись.aac';
   @override
   void initState() {
-    context.read<ViewModelAudioPlayer>().setAudioUrl(localAudio, true);
+    context.read<ViewModelAudioPlayer>().setAudioUrl(localAudio, false);
     super.initState();
   }
 

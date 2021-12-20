@@ -43,6 +43,8 @@ dependencies:
   audioplayers: ^0.20.1
   share: ^2.0.4
   uuid: ^3.0.5
+  just_audio: ^0.9.18
+  just_audio_libwinmedia: any
 
 
 
