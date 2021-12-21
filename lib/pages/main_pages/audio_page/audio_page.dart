@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/audio_model.dart';
+import 'package:memory_box/resources/app_colors.dart';
 
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
@@ -38,6 +39,7 @@ class AudioPage extends StatelessWidget {
             SliverAudioList(
               data: data,
               childCount: data.length,
+              colorButton: AppColors.allAudioColor,
             ),
             const SliverToBoxAdapter(
               child: SizedBox(

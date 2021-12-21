@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 
-PopupMenuItem poppupMenuItem(String text, Function onTap) {
+PopupMenuItem popupMenuItem(String text, Function onTap) {
   return PopupMenuItem(
     onTap: () {
       onTap();

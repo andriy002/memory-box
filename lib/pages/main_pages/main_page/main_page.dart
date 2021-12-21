@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memory_box/models/audio_model.dart';
 import 'package:memory_box/pages/main_pages/main_page/widget/sliver_adapter.dart';
 import 'package:memory_box/pages/main_pages/main_page/widget/sliver_app_bar.dart';
+import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
 import 'package:memory_box/widget/audio_widget/list_audio.dart';
@@ -36,6 +37,7 @@ class MainPage extends StatelessWidget {
             SliverAudioList(
               data: data,
               childCount: data.length > 10 ? 10 : data.length,
+              colorButton: AppColors.mainColor,
             ),
             const SliverToBoxAdapter(
               child: SizedBox(height: 160),

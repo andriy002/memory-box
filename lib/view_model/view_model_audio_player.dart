@@ -17,9 +17,8 @@ class _ViewModelAudioPlayerState {
   bool isPlaying = false;
   bool pause = false;
   int? indexAudio;
-  bool repeatPlay = true;
-  int audioListLength = 0;
-  bool playChecker = false;
+  int? indexRename;
+  String? audioName;
 }
 
 class ViewModelAudioPlayer with ChangeNotifier {
@@ -38,6 +37,22 @@ class ViewModelAudioPlayer with ChangeNotifier {
 
   void share(paths) {
     Share.shareFiles([paths]);
+  }
+
+  void setIndexReanme(int index) {
+    _state.indexRename = index;
+    notifyListeners();
+  }
+
+  void renameAudio(String uid, String audioName) {
+    if (audioName.isEmpty) {
+      _state.indexRename = null;
+      notifyListeners();
+      return;
+    }
+    _audioRepo.updateAudioName(uid, audioName);
+    _state.indexRename = null;
+    notifyListeners();
   }
 
   void sendAudioDeleteColection(
@@ -85,8 +100,11 @@ class ViewModelAudioPlayer with ChangeNotifier {
       _state.audioPosition = p;
       notifyListeners();
     });
+    // _state.audioPlayer.onAudioPositionChanged.listen((_) {
 
-    _state.audioPlayer.onPlayerCompletion.listen((event) {
+    // });
+
+    _state.audioPlayer.onPlayerCompletion.listen((_) {
       _state.audioPosition = const Duration(microseconds: 0);
       _state.isPlaying = false;
       _state.indexAudio = null;

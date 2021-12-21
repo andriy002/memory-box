@@ -11,10 +11,12 @@ import '../popup_item.dart';
 class SliverAudioList extends StatelessWidget {
   final List<AudioBuilder> data;
   final int childCount;
+  final Color? colorButton;
   const SliverAudioList({
     Key? key,
     required this.data,
     required this.childCount,
+    this.colorButton,
   }) : super(key: key);
 
   @override
@@ -27,6 +29,7 @@ class SliverAudioList extends StatelessWidget {
           index: index,
           audioUrl: data[index].audioUrl,
           audioUid: data[index].uid,
+          colorButton: colorButton,
         );
       }, childCount: childCount),
     );
@@ -63,16 +66,22 @@ class _AudioUiCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _PlayButtonWidget(index: index!),
+              _PlayButtonWidget(
+                index: index!,
+                colorButton: colorButton,
+              ),
               _NameAndDurationWidget(
                 audioDuration: audioDuration!,
                 audioName: audioName!,
+                index: index!,
+                uidAudio: audioUid!,
               ),
-              _PoppupMenuWidget(
+              _PopupMenuWidget(
                 audioDuration: audioDuration!,
                 audioName: audioName!,
                 audioUid: audioUid!,
                 audioUrl: audioUrl!,
+                index: index!,
               )
             ],
           ),
@@ -90,28 +99,60 @@ class _AudioUiCard extends StatelessWidget {
 class _NameAndDurationWidget extends StatelessWidget {
   final String audioName;
   final String audioDuration;
+  final int index;
+  final String uidAudio;
   const _NameAndDurationWidget({
     Key? key,
     required this.audioName,
     required this.audioDuration,
+    required this.index,
+    required this.uidAudio,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final substringAudio =
+    TextEditingController? textEditingController = TextEditingController();
+
+    final bool? renameAudio;
+
+    final checkerRenameAudio =
+        context.select((ViewModelAudioPlayer vm) => vm.state.indexRename);
+
+    checkerRenameAudio == index ? renameAudio = true : renameAudio = false;
+
+    final String substringAudio =
         audioName.length > 31 ? audioName.substring(0, 31) : audioName;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: 220,
-          child: Text(
-            substringAudio,
-            style: const TextStyle(
-              fontFamily: AppFonts.mainFont,
-            ),
-          ),
+          height: 20,
+          child: !renameAudio
+              ? Text(
+                  substringAudio,
+                  style: const TextStyle(
+                    fontFamily: AppFonts.mainFont,
+                  ),
+                )
+              : TextField(
+                  controller: textEditingController,
+                  onEditingComplete: () {
+                    context
+                        .read<ViewModelAudioPlayer>()
+                        .renameAudio(uidAudio, textEditingController.text);
+                  },
+                  style: const TextStyle(
+                    fontFamily: AppFonts.mainFont,
+                    fontSize: 16,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: substringAudio,
+                    isCollapsed: true,
+                  ),
+                ),
         ),
         Text(
           audioDuration.substring(0, 7),
@@ -125,18 +166,20 @@ class _NameAndDurationWidget extends StatelessWidget {
   }
 }
 
-class _PoppupMenuWidget extends StatelessWidget {
+class _PopupMenuWidget extends StatelessWidget {
   final String audioName;
   final String audioDuration;
   final String audioUrl;
   final String audioUid;
+  final int index;
 
-  const _PoppupMenuWidget({
+  const _PopupMenuWidget({
     Key? key,
     required this.audioDuration,
     required this.audioName,
     required this.audioUrl,
     required this.audioUid,
+    required this.index,
   }) : super(key: key);
 
   @override
@@ -151,13 +194,16 @@ class _PoppupMenuWidget extends StatelessWidget {
         ),
       ),
       itemBuilder: (context) => [
-        poppupMenuItem('Переименовать', () {}),
-        poppupMenuItem('Добавить в подборк', () {}),
-        poppupMenuItem('Удалить', () {
+        popupMenuItem('Переименовать', () {
+          viewModel.setIndexReanme(index);
+          // viewModel.renameAudio(index);
+        }),
+        popupMenuItem('Добавить в подборк', () {}),
+        popupMenuItem('Удалить', () {
           viewModel.sendAudioDeleteColection(
               audioName, audioUrl, audioDuration, audioUid);
         }),
-        poppupMenuItem('Поделиться', () {
+        popupMenuItem('Поделиться', () {
           viewModel.shareUrlFile(audioUrl, audioName);
         }),
       ],
@@ -165,7 +211,7 @@ class _PoppupMenuWidget extends StatelessWidget {
   }
 }
 
-class _PlayButtonWidget extends StatefulWidget {
+class _PlayButtonWidget extends StatelessWidget {
   final int index;
   final Color? colorButton;
   const _PlayButtonWidget({
@@ -175,30 +221,24 @@ class _PlayButtonWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<_PlayButtonWidget> createState() => _PlayButtonWidgetState();
-}
-
-class _PlayButtonWidgetState extends State<_PlayButtonWidget> {
-  @override
   Widget build(BuildContext context) {
     final bool? isPlaying;
 
     final indexAudio =
         context.select((ViewModelAudioPlayer vm) => vm.state.indexAudio);
 
-    indexAudio == widget.index ? isPlaying = true : isPlaying = false;
+    indexAudio == index ? isPlaying = true : isPlaying = false;
 
     final iconCheker =
         !isPlaying ? const Icon(Icons.play_arrow) : const Icon(Icons.stop);
     final onPressedChecker = !isPlaying
-        ? () =>
-            context.read<ViewModelAudioPlayer>().setPlayingIndex(widget.index)
+        ? () => context.read<ViewModelAudioPlayer>().setPlayingIndex(index)
         : () => context.read<ViewModelAudioPlayer>().stop();
     return ClipOval(
       child: Container(
         width: 50,
         height: 50,
-        color: widget.colorButton ?? AppColors.allAudioColor,
+        color: colorButton ?? AppColors.allAudioColor,
         child: IconButton(
             icon: iconCheker,
             iconSize: 30,

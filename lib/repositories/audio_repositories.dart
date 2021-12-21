@@ -68,7 +68,7 @@ class AudioRepositories {
         .map(_audioFromSnap);
   }
 
-  void sendAudioDeleteColection(
+  Future<void> sendAudioDeleteColection(
     String audioName,
     String audioUrl,
     String duration,
@@ -93,8 +93,16 @@ class AudioRepositories {
         .collection('allAudio')
         .doc(uid)
         .delete();
+  }
 
-    print(uid);
+  Future<void> updateAudioName(String uid, String name) async {
+    await _audio
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('allAudio')
+        .doc(uid)
+        .update(
+      {'audioName': name},
+    );
   }
 }
 
