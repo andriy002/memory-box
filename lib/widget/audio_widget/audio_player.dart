@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memory_box/pages/main_pages/audio_page/audio_page.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/resources/app_icons.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
@@ -153,6 +152,36 @@ class PositionAudioWidget extends StatelessWidget {
                 fontSize: 10,
               )),
         ],
+      ),
+    );
+  }
+}
+
+class PlayerPlayPasueButtonWidget extends StatelessWidget {
+  const PlayerPlayPasueButtonWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final bool playPause =
+        context.select((ViewModelAudioPlayer vm) => vm.state.pause);
+    return ClipOval(
+      child: Container(
+        width: 50,
+        height: 50,
+        color: Colors.white,
+        child: IconButton(
+          icon: playPause
+              ? const Icon(Icons.play_arrow)
+              : const Icon(Icons.pause),
+          color: const Color(0xFF8C84E2),
+          onPressed: playPause
+              ? () {
+                  context.read<ViewModelAudioPlayer>().resume();
+                }
+              : () {
+                  context.read<ViewModelAudioPlayer>().pause();
+                },
+        ),
       ),
     );
   }

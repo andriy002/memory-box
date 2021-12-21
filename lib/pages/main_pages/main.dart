@@ -19,8 +19,8 @@ class Main extends StatelessWidget {
   Widget build(BuildContext context) {
     final _currentIndex = context.select((Navigation nc) => nc.currentIndex);
     List<Widget> _pages = <Widget>[
-      const MainPage(),
-      const MainPage(),
+      MainPage.create(),
+      MainPage.create(),
       Record.create(),
       AudioPage.create(),
       Profile.create(),

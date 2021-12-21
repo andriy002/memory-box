@@ -26,8 +26,9 @@ class AudioRepositories {
     String audioUrl,
     String duration,
   ) {
+    final id = _uuid.v1();
     AudioBuilder audio = AudioBuilder(
-      uid: _uuid.v1(),
+      uid: id,
       audioName: audioName,
       audioUrl: audioUrl,
       duration: duration,
@@ -36,7 +37,7 @@ class AudioRepositories {
     _audio
         .doc(_firebaseAuth.currentUser?.uid)
         .collection('allAudio')
-        .doc(_uuid.v1())
+        .doc(id)
         .set(audio.toJson())
         .catchError((e) => print(e.toString()));
   }
@@ -65,6 +66,35 @@ class AudioRepositories {
         .collection('allAudio')
         .snapshots()
         .map(_audioFromSnap);
+  }
+
+  void sendAudioDeleteColection(
+    String audioName,
+    String audioUrl,
+    String duration,
+    String uid,
+  ) async {
+    AudioBuilder audio = AudioBuilder(
+      uid: uid,
+      audioName: audioName,
+      audioUrl: audioUrl,
+      duration: duration,
+    );
+    await _audio
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('deleteAudio')
+        .doc(uid)
+        .set(
+          audio.toJson(),
+        );
+
+    await _audio
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('allAudio')
+        .doc(uid)
+        .delete();
+
+    print(uid);
   }
 }
 

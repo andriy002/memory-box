@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:memory_box/repositories/audio_repositories.dart';
 
 import 'package:memory_box/utils/two_digits.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
+import 'package:http/http.dart' as http;
 
 class _ViewModelAudioPlayerState {
   Duration audioPosition = const Duration();
@@ -21,6 +25,7 @@ class _ViewModelAudioPlayerState {
 class ViewModelAudioPlayer with ChangeNotifier {
   final _ViewModelAudioPlayerState _state = _ViewModelAudioPlayerState();
   _ViewModelAudioPlayerState get state => _state;
+  final AudioRepositories _audioRepo = AudioRepositories.instance;
 
   String audioLengthSecond() =>
       twoDigits(_state.audioLength.inSeconds.remainder(60));
@@ -33,6 +38,26 @@ class ViewModelAudioPlayer with ChangeNotifier {
 
   void share(paths) {
     Share.shareFiles([paths]);
+  }
+
+  void sendAudioDeleteColection(
+    String audioName,
+    String audioUrl,
+    String duration,
+    String uid,
+  ) {
+    _audioRepo.sendAudioDeleteColection(audioName, audioUrl, duration, uid);
+  }
+
+  Future<void> shareUrlFile(String url, String name) async {
+    final urlParse = Uri.parse(url);
+    final respose = await http.get(urlParse);
+    final bytes = respose.bodyBytes;
+
+    final temp = await getTemporaryDirectory();
+    final path = '${temp.path}/$name.aac';
+    File(path).writeAsBytes(bytes);
+    await Share.shareFiles([path]);
   }
 
   void nextAudio(int max) {
