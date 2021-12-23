@@ -7,6 +7,7 @@ import 'package:memory_box/pages/main_pages/widget/drawer.dart';
 import 'package:memory_box/view_model/navigation.dart';
 import 'package:provider/provider.dart';
 
+import 'collections_page/collections_page.dart';
 import 'main_page/main_page.dart';
 
 import 'profile_page/profile_page.dart';
@@ -20,7 +21,7 @@ class Main extends StatelessWidget {
     final _currentIndex = context.select((Navigation nc) => nc.currentIndex);
     List<Widget> _pages = <Widget>[
       MainPage.create(),
-      MainPage.create(),
+      CollectionPage.create(),
       Record.create(),
       AudioPage.create(),
       Profile.create(),

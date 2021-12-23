@@ -87,7 +87,6 @@ class Profile extends StatelessWidget {
             Text(
               'Профиль',
               style: TextStyle(
-                  color: AppColors.titleColor,
                   fontFamily: AppFonts.mainFont,
                   fontSize: 36,
                   fontWeight: FontWeight.bold),

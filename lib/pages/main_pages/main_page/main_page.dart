@@ -47,7 +47,7 @@ class MainPage extends StatelessWidget {
         if (_isPlaying)
           AudioPlayerWidget(
             audioUrl: data[_indexAudio].audioUrl,
-            maxLength: data.length,
+            maxLength: data.length > 10 ? 10 : data.length,
             audioName: data[_indexAudio].audioName,
           )
       ],

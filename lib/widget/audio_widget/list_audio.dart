@@ -196,11 +196,12 @@ class _PopupMenuWidget extends StatelessWidget {
       itemBuilder: (context) => [
         popupMenuItem('Переименовать', () {
           viewModel.setIndexReanme(index);
-          // viewModel.renameAudio(index);
         }),
-        popupMenuItem('Добавить в подборк', () {}),
+        popupMenuItem('Добавить в подборк', () {
+          viewModel.a();
+        }),
         popupMenuItem('Удалить', () {
-          viewModel.sendAudioDeleteColection(
+          viewModel.sendAudioToDeleteColection(
               audioName, audioUrl, audioDuration, audioUid);
         }),
         popupMenuItem('Поделиться', () {

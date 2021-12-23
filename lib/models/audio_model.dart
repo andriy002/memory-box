@@ -3,19 +3,21 @@ class AudioBuilder {
   String? audioName;
   String? audioUrl;
   String? duration;
+  List? collections;
 
-  AudioBuilder({
-    this.uid,
-    this.audioName,
-    this.audioUrl,
-    this.duration,
-  });
+  AudioBuilder(
+      {this.uid,
+      this.audioName,
+      this.audioUrl,
+      this.duration,
+      this.collections});
 
   factory AudioBuilder.fromJson(Map<String, dynamic> json) {
     return AudioBuilder(
         uid: json['uid'],
         audioName: json['audioName'],
         audioUrl: json['audioUrl'],
+        collections: json['collections'],
         duration: json['duration']);
   }
 
@@ -23,6 +25,7 @@ class AudioBuilder {
         'uid': uid,
         'audioName': audioName,
         'audioUrl': audioUrl,
+        'collections': collections,
         'duration': duration
       };
 }

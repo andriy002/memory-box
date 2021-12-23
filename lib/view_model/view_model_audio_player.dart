@@ -55,7 +55,7 @@ class ViewModelAudioPlayer with ChangeNotifier {
     notifyListeners();
   }
 
-  void sendAudioDeleteColection(
+  void sendAudioToDeleteColection(
     String audioName,
     String audioUrl,
     String duration,
@@ -110,6 +110,10 @@ class ViewModelAudioPlayer with ChangeNotifier {
       _state.indexAudio = null;
       notifyListeners();
     });
+  }
+
+  void a() {
+    _audioRepo.a();
   }
 
   void play(String audio) async {

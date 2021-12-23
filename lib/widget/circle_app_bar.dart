@@ -35,8 +35,8 @@ class CircleAppBar extends StatelessWidget {
               title ?? '',
               style: const TextStyle(
                   fontSize: 48,
-                  color: AppColors.titleColor,
                   fontFamily: AppFonts.mainFont,
+                  color: Colors.white,
                   letterSpacing: 2,
                   fontWeight: FontWeight.bold),
             ),
@@ -44,7 +44,7 @@ class CircleAppBar extends StatelessWidget {
               subTitle ?? '',
               style: const TextStyle(
                 fontSize: 14,
-                color: AppColors.titleColor,
+                color: Colors.white,
               ),
             )
           ],
