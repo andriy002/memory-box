@@ -3,6 +3,8 @@ class AudioBuilder {
   String? audioName;
   String? audioUrl;
   String? duration;
+  String? searchKey;
+
   List? collections;
 
   AudioBuilder(
@@ -10,11 +12,13 @@ class AudioBuilder {
       this.audioName,
       this.audioUrl,
       this.duration,
+      this.searchKey,
       this.collections});
 
   factory AudioBuilder.fromJson(Map<String, dynamic> json) {
     return AudioBuilder(
         uid: json['uid'],
+        searchKey: json['searchKey'],
         audioName: json['audioName'],
         audioUrl: json['audioUrl'],
         collections: json['collections'],
@@ -26,6 +30,7 @@ class AudioBuilder {
         'audioName': audioName,
         'audioUrl': audioUrl,
         'collections': collections,
-        'duration': duration
+        'duration': duration,
+        'searchKey': searchKey
       };
 }

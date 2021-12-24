@@ -11,15 +11,6 @@ import 'package:provider/provider.dart';
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
 
-  static Widget create() {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => ViewModelAudioPlayer()),
-      ],
-      child: const MainPage(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final List<AudioBuilder> data = context.watch<List<AudioBuilder>?>() ?? [];
@@ -27,30 +18,33 @@ class MainPage extends StatelessWidget {
         context.select((ViewModelAudioPlayer vm) => vm.state.isPlaying);
     final int _indexAudio =
         context.select((ViewModelAudioPlayer vm) => vm.state.indexAudio ?? 0);
-    return Stack(
-      children: [
-        CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            const SliverAppBarWidget(),
-            const SliverAdapterWidget(),
-            SliverAudioList(
-              data: data,
-              childCount: data.length > 10 ? 10 : data.length,
-              colorButton: AppColors.mainColor,
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 160),
-            ),
-          ],
-        ),
-        if (_isPlaying)
-          AudioPlayerWidget(
-            audioUrl: data[_indexAudio].audioUrl,
-            maxLength: data.length > 10 ? 10 : data.length,
-            audioName: data[_indexAudio].audioName,
-          )
-      ],
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - 80,
+      child: Stack(
+        children: [
+          CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              const SliverAppBarWidget(),
+              const SliverAdapterWidget(),
+              SliverAudioList(
+                data: data,
+                childCount: data.length > 10 ? 10 : data.length,
+                colorButton: AppColors.mainColor,
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 160),
+              ),
+            ],
+          ),
+          if (_isPlaying)
+            AudioPlayerWidget(
+              audioUrl: data[_indexAudio].audioUrl,
+              maxLength: data.length > 10 ? 10 : data.length,
+              audioName: data[_indexAudio].audioName,
+            )
+        ],
+      ),
     );
   }
 }

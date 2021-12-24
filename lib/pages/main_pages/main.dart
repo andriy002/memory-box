@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/pages/main_pages/audio_page/audio_page.dart';
+import 'package:memory_box/pages/main_pages/main_page/search_page/search_page.dart';
 import 'package:memory_box/pages/main_pages/record_page/record_page.dart';
 import 'package:memory_box/pages/main_pages/widget/bottom_navigation.dart';
 import 'package:memory_box/pages/main_pages/widget/drawer.dart';
@@ -20,11 +21,12 @@ class Main extends StatelessWidget {
   Widget build(BuildContext context) {
     final _currentIndex = context.select((Navigation nc) => nc.currentIndex);
     List<Widget> _pages = <Widget>[
-      MainPage.create(),
+      const MainPage(),
       CollectionPage.create(),
       Record.create(),
-      AudioPage.create(),
+      const AudioPage(),
       Profile.create(),
+      const SearchPage()
     ];
 
     return Scaffold(

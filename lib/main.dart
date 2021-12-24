@@ -7,6 +7,8 @@ import 'package:memory_box/pages/loading_page.dart';
 import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:memory_box/routes/app_router.dart';
 import 'package:memory_box/view_model/navigation.dart';
+import 'package:memory_box/view_model/view_model_audio.dart';
+import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -15,9 +17,9 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => Navigation(),
-        ),
+        ChangeNotifierProvider(create: (_) => Navigation()),
+        ChangeNotifierProvider(create: (context) => ViewModelAudioPlayer()),
+        ChangeNotifierProvider(create: (context) => ViewModelAudio()),
         StreamProvider(
           create: (_) => AudioRepositories.instance.audio,
           initialData: null,

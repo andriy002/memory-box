@@ -24,66 +24,63 @@ class AudioPlayerWidget extends StatelessWidget {
 
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 85),
-        child: Container(
-          width: double.infinity,
-          height: 60,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF8C84E2),
-                Color(0xFF6C689F),
-              ],
-            ),
-            border: Border.all(color: Colors.grey),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(30),
-            ),
+      child: Container(
+        width: double.infinity,
+        height: 60,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.bottomLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF8C84E2),
+              Color(0xFF6C689F),
+            ],
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const PlayerPlayPasueButtonWidget(),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 1.4,
-                  height: 60,
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(25, 0, 0, 30),
-                        child: Text(
-                          audioName!.length > 30
-                              ? audioName!.substring(0, 30)
-                              : audioName ?? '',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: AppFonts.mainFont,
-                          ),
+          border: Border.all(color: Colors.grey),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(30),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const _PlayerPlayPasueButtonWidget(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.4,
+                height: 60,
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(25, 0, 0, 30),
+                      child: Text(
+                        audioName!.length > 30
+                            ? audioName!.substring(0, 30)
+                            : audioName ?? '',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: AppFonts.mainFont,
                         ),
                       ),
-                      const SliderAudioPlayerWidget(),
-                      const PositionAudioWidget(),
-                    ],
-                  ),
+                    ),
+                    const _SliderAudioPlayerWidget(),
+                    const _PositionAudioWidget(),
+                  ],
                 ),
-                IconButton(
-                    onPressed: () {
-                      context
-                          .read<ViewModelAudioPlayer>()
-                          .nextAudio(maxLength ?? 0);
-                    },
-                    icon: const ImageIcon(
-                      AppIcons.arrowNext,
-                      size: 40,
-                      color: Colors.white,
-                    ))
-              ],
-            ),
+              ),
+              IconButton(
+                  onPressed: () {
+                    context
+                        .read<ViewModelAudioPlayer>()
+                        .nextAudio(maxLength ?? 0);
+                  },
+                  icon: const ImageIcon(
+                    AppIcons.arrowNext,
+                    size: 40,
+                    color: Colors.white,
+                  ))
+            ],
           ),
         ),
       ),
@@ -91,8 +88,8 @@ class AudioPlayerWidget extends StatelessWidget {
   }
 }
 
-class SliderAudioPlayerWidget extends StatelessWidget {
-  const SliderAudioPlayerWidget({Key? key}) : super(key: key);
+class _SliderAudioPlayerWidget extends StatelessWidget {
+  const _SliderAudioPlayerWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -115,8 +112,8 @@ class SliderAudioPlayerWidget extends StatelessWidget {
   }
 }
 
-class PositionAudioWidget extends StatelessWidget {
-  const PositionAudioWidget({Key? key}) : super(key: key);
+class _PositionAudioWidget extends StatelessWidget {
+  const _PositionAudioWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -157,8 +154,8 @@ class PositionAudioWidget extends StatelessWidget {
   }
 }
 
-class PlayerPlayPasueButtonWidget extends StatelessWidget {
-  const PlayerPlayPasueButtonWidget({Key? key}) : super(key: key);
+class _PlayerPlayPasueButtonWidget extends StatelessWidget {
+  const _PlayerPlayPasueButtonWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

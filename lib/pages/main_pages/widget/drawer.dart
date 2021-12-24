@@ -54,7 +54,7 @@ class Drawwer extends StatelessWidget {
                 title: 'Все аудиофайлы',
               ),
               _DrawerItem(
-                index: 0,
+                index: 5,
                 icon: AppIcons.search,
                 title: 'Поиск',
               ),

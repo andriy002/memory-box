@@ -7,9 +7,9 @@ import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:memory_box/repositories/coolections_repositories.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
+import 'package:memory_box/resources/app_icons.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
-import 'package:memory_box/widget/audio_widget/audio_player.dart';
-import 'package:memory_box/widget/audio_widget/list_audio.dart';
+
 import 'package:memory_box/widget/circle_app_bar.dart';
 import 'package:memory_box/widget/left_arrow_button.dart';
 import 'package:provider/provider.dart';
@@ -210,7 +210,7 @@ class CreateNewCollection extends StatelessWidget {
   static Widget create() {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ViewModelCoolections()),
+        ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
       ],
       child: const CreateNewCollection(),
     );
@@ -218,6 +218,159 @@ class CreateNewCollection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        leading: leftArrowButton(() {
+          context.read<ViewModelCoolections>().setCurrentIndex = 0;
+        }),
+        actions: [
+          TextButton(
+            onPressed: () {},
+            child: const Text(
+              'Готово',
+              style: TextStyle(
+                  fontFamily: AppFonts.mainFont,
+                  color: Colors.white,
+                  fontSize: 16),
+            ),
+          )
+        ],
+        title: const Text(
+          'Создание',
+          style: TextStyle(
+            fontFamily: AppFonts.mainFont,
+            fontWeight: FontWeight.bold,
+            fontSize: 36,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: AppColors.collectionsColor,
+      ),
+      body: SingleChildScrollView(
+        child: SizedBox(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height - 180,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Stack(
+                children: [
+                  CircleAppBar(
+                    heightCircle: MediaQuery.of(context).size.height / 4,
+                    colorCircle: AppColors.collectionsColor,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: const EdgeInsets.only(left: 30, top: 10),
+                        child: FractionallySizedBox(
+                          widthFactor: 0.9,
+                          child: TextField(
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: AppFonts.mainFont,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: AppFonts.mainFont,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold),
+                                hintText: 'Название',
+                                isCollapsed: true),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.width / 2,
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: FractionallySizedBox(
+                              widthFactor: 0.9,
+                              heightFactor: 1,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      blurRadius: 10,
+                                    ),
+                                  ],
+                                  borderRadius: BorderRadius.circular(15),
+                                  // image: DecorationImage(
+                                  //     image: NetworkImage(''), fit: BoxFit.cover),
+                                  color: Colors.white,
+                                ),
+                                child: const Center(
+                                  child: ImageIcon(
+                                    AppIcons.photoEdit,
+                                    size: 80,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height / 10,
+                child: const TextField(
+                  style: TextStyle(fontFamily: AppFonts.mainFont),
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintStyle: TextStyle(fontFamily: AppFonts.mainFont),
+                      hintText: 'Введите описание...'),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                child: SizedBox(
+                    width: MediaQuery.of(context).size.width - 10,
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: Center(
+                      child: TextButton(
+                        child: const Text(
+                          'Добавить аудиофайл',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: AppFonts.mainFont,
+                              decoration: TextDecoration.underline),
+                        ),
+                        onPressed: () {},
+                      ),
+                    )),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
+//  ListView.builder(
+//                   physics: const BouncingScrollPhysics(),
+//                   itemBuilder: (context, index) {
+//                     return Text('10');
+//                   },

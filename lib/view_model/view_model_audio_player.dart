@@ -39,42 +39,6 @@ class ViewModelAudioPlayer with ChangeNotifier {
     Share.shareFiles([paths]);
   }
 
-  void setIndexReanme(int index) {
-    _state.indexRename = index;
-    notifyListeners();
-  }
-
-  void renameAudio(String uid, String audioName) {
-    if (audioName.isEmpty) {
-      _state.indexRename = null;
-      notifyListeners();
-      return;
-    }
-    _audioRepo.updateAudioName(uid, audioName);
-    _state.indexRename = null;
-    notifyListeners();
-  }
-
-  void sendAudioToDeleteColection(
-    String audioName,
-    String audioUrl,
-    String duration,
-    String uid,
-  ) {
-    _audioRepo.sendAudioDeleteColection(audioName, audioUrl, duration, uid);
-  }
-
-  Future<void> shareUrlFile(String url, String name) async {
-    final urlParse = Uri.parse(url);
-    final respose = await http.get(urlParse);
-    final bytes = respose.bodyBytes;
-
-    final temp = await getTemporaryDirectory();
-    final path = '${temp.path}/$name.aac';
-    File(path).writeAsBytes(bytes);
-    await Share.shareFiles([path]);
-  }
-
   void nextAudio(int max) {
     int maxLength = max - 1;
     if (_state.indexAudio == maxLength) {
@@ -89,6 +53,7 @@ class ViewModelAudioPlayer with ChangeNotifier {
   Future<void> setAudioUrl(String audio, bool isLocal) async {
     _state.audioPlayer.release();
     if (audio.isEmpty) return;
+
     await _state.audioPlayer.setUrl(audio, isLocal: isLocal);
     play(audio);
 
@@ -110,10 +75,6 @@ class ViewModelAudioPlayer with ChangeNotifier {
       _state.indexAudio = null;
       notifyListeners();
     });
-  }
-
-  void a() {
-    _audioRepo.a();
   }
 
   void play(String audio) async {

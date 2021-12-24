@@ -32,6 +32,7 @@ class AudioRepositories {
       audioName: audioName,
       audioUrl: audioUrl,
       duration: duration,
+      searchKey: audioName.toLowerCase(),
       collections: [],
     );
 
@@ -78,6 +79,16 @@ class AudioRepositories {
         .map(_audioFromSnap);
   }
 
+  Stream<List<AudioBuilder>> searchAuio(String searchKey) {
+    return _audio
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('allAudio')
+        .where('searchKey', isGreaterThanOrEqualTo: searchKey.toLowerCase())
+        .where('searchKey', isLessThan: searchKey.toLowerCase() + '\uf8ff')
+        .snapshots()
+        .map(_audioFromSnap);
+  }
+
   Future<void> sendAudioDeleteColection(
     String audioName,
     String audioUrl,
@@ -113,19 +124,36 @@ class AudioRepositories {
         .update(
       {'audioName': name},
     );
+    await _audio
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('allAudio')
+        .doc(uid)
+        .update(
+      {'searchKey': name.toLowerCase()},
+    );
   }
 
   void a() {
-    List a = [
-      '138ca9a0-63ec-11ec-954c-b9b24adfce86',
-      '13d635c0-63ec-11ec-954c-b9b24adfce86',
-      '13a7abb0-63ec-11ec-954c-b9b24adfce86',
-      '1193e6e0-63ec-11ec-954c-b9b24adfce86',
-      '13f02660-63ec-11ec-954c-b9b24adfce86'
-    ];
-    a.forEach((element) {
-      b('test123', element);
-    });
+    _audio
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('allAudio')
+        .where('audioName', isGreaterThanOrEqualTo: '56')
+        .where('audioName', isLessThan: '56' + 'z')
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              print(element.data());
+            }));
+
+    // List a = [
+    //   '138ca9a0-63ec-11ec-954c-b9b24adfce86',
+    //   '13d635c0-63ec-11ec-954c-b9b24adfce86',
+    //   '13a7abb0-63ec-11ec-954c-b9b24adfce86',
+    //   '1193e6e0-63ec-11ec-954c-b9b24adfce86',
+    //   '13f02660-63ec-11ec-954c-b9b24adfce86'
+    // ];
+    // a.forEach((element) {
+    //   b('test123', element);
+    // });
   }
 
   void b(String col, String doc) async {

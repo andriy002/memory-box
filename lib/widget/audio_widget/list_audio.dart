@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memory_box/models/audio_model.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
+import 'package:memory_box/view_model/view_model_audio.dart';
 
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:provider/provider.dart';
@@ -116,7 +117,7 @@ class _NameAndDurationWidget extends StatelessWidget {
     final bool? renameAudio;
 
     final checkerRenameAudio =
-        context.select((ViewModelAudioPlayer vm) => vm.state.indexRename);
+        context.select((ViewModelAudio vm) => vm.state.indexRename);
 
     checkerRenameAudio == index ? renameAudio = true : renameAudio = false;
 
@@ -141,7 +142,7 @@ class _NameAndDurationWidget extends StatelessWidget {
                   controller: textEditingController,
                   onEditingComplete: () {
                     context
-                        .read<ViewModelAudioPlayer>()
+                        .read<ViewModelAudio>()
                         .renameAudio(uidAudio, textEditingController.text);
                   },
                   style: const TextStyle(
@@ -184,7 +185,7 @@ class _PopupMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.read<ViewModelAudioPlayer>();
+    final viewModel = context.read<ViewModelAudio>();
 
     return PopupMenuButton(
       icon: const Icon(Icons.more_horiz),
@@ -198,7 +199,7 @@ class _PopupMenuWidget extends StatelessWidget {
           viewModel.setIndexReanme(index);
         }),
         popupMenuItem('Добавить в подборк', () {
-          viewModel.a();
+          // viewModel.a();
         }),
         popupMenuItem('Удалить', () {
           viewModel.sendAudioToDeleteColection(
