@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memory_box/models/audio_model.dart';
 import 'package:memory_box/models/collections.model.dart';
 import 'package:memory_box/pages/main_pages/collections_page/pages/audio_collections.dart';
+import 'package:memory_box/pages/main_pages/collections_page/pages/search_page.dart';
 import 'package:memory_box/pages/main_pages/collections_page/view_model_collections/view_model_collections.dart';
 import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:memory_box/repositories/coolections_repositories.dart';
@@ -9,6 +10,7 @@ import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/resources/app_icons.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
+import 'package:memory_box/widget/audio_widget/list_audio.dart';
 
 import 'package:memory_box/widget/circle_app_bar.dart';
 import 'package:memory_box/widget/left_arrow_button.dart';
@@ -44,6 +46,7 @@ class CollectionPage extends StatelessWidget {
     List<Widget> _pages = <Widget>[
       const CollectionsPageContainer(),
       CollectionsAudioContainer.create(_nameCollections ?? ''),
+      SearchPageCollections.create(),
       CreateNewCollection.create()
     ];
 
@@ -218,6 +221,11 @@ class CreateNewCollection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<AudioBuilder> data = context.watch<List<AudioBuilder>?>() ?? [];
+    final bool _isPlaying =
+        context.select((ViewModelAudioPlayer vm) => vm.state.isPlaying);
+    final int _indexAudio =
+        context.select((ViewModelAudioPlayer vm) => vm.state.indexAudio ?? 0);
     return Scaffold(
       appBar: AppBar(
         leading: leftArrowButton(() {
@@ -265,7 +273,7 @@ class CreateNewCollection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Padding(
-                        padding: const EdgeInsets.only(left: 30, top: 10),
+                        padding: EdgeInsets.only(left: 30, top: 10),
                         child: FractionallySizedBox(
                           widthFactor: 0.9,
                           child: TextField(
@@ -347,20 +355,18 @@ class CreateNewCollection extends StatelessWidget {
                   ],
                 ),
                 child: SizedBox(
-                    width: MediaQuery.of(context).size.width - 10,
-                    height: MediaQuery.of(context).size.height / 3,
-                    child: Center(
-                      child: TextButton(
-                        child: const Text(
-                          'Добавить аудиофайл',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: AppFonts.mainFont,
-                              decoration: TextDecoration.underline),
-                        ),
-                        onPressed: () {},
+                  width: MediaQuery.of(context).size.width - 10,
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverAudioList(
+                        data: data,
+                        childCount: data.length,
+                        stastusButton: ButtonStatus.edit,
                       ),
-                    )),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -369,6 +375,18 @@ class CreateNewCollection extends StatelessWidget {
     );
   }
 }
+
+
+// TextButton(
+//                         child: const Text(
+//                           'Добавить аудиофайл',
+//                           style: TextStyle(
+//                               color: Colors.black,
+//                               fontFamily: AppFonts.mainFont,
+//                               decoration: TextDecoration.underline),
+//                         ),
+//                         onPressed: () {},
+//                       ),
 //  ListView.builder(
 //                   physics: const BouncingScrollPhysics(),
 //                   itemBuilder: (context, index) {

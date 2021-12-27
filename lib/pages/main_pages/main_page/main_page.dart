@@ -3,6 +3,7 @@ import 'package:memory_box/models/audio_model.dart';
 import 'package:memory_box/pages/main_pages/main_page/widget/sliver_adapter.dart';
 import 'package:memory_box/pages/main_pages/main_page/widget/sliver_app_bar.dart';
 import 'package:memory_box/resources/app_colors.dart';
+import 'package:memory_box/view_model/view_model_audio.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
 import 'package:memory_box/widget/audio_widget/list_audio.dart';
@@ -10,6 +11,26 @@ import 'package:provider/provider.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BodyMainPage.create(),
+    );
+  }
+}
+
+class BodyMainPage extends StatelessWidget {
+  const BodyMainPage({Key? key}) : super(key: key);
+  static Widget create() {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ViewModelAudio()),
+        ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
+      ],
+      child: const BodyMainPage(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +49,7 @@ class MainPage extends StatelessWidget {
               const SliverAppBarWidget(),
               const SliverAdapterWidget(),
               SliverAudioList(
+                stastusButton: ButtonStatus.edit,
                 data: data,
                 childCount: data.length > 10 ? 10 : data.length,
                 colorButton: AppColors.mainColor,

@@ -133,30 +133,7 @@ class AudioRepositories {
     );
   }
 
-  void a() {
-    _audio
-        .doc(_firebaseAuth.currentUser!.uid)
-        .collection('allAudio')
-        .where('audioName', isGreaterThanOrEqualTo: '56')
-        .where('audioName', isLessThan: '56' + 'z')
-        .get()
-        .then((value) => value.docs.forEach((element) {
-              print(element.data());
-            }));
-
-    // List a = [
-    //   '138ca9a0-63ec-11ec-954c-b9b24adfce86',
-    //   '13d635c0-63ec-11ec-954c-b9b24adfce86',
-    //   '13a7abb0-63ec-11ec-954c-b9b24adfce86',
-    //   '1193e6e0-63ec-11ec-954c-b9b24adfce86',
-    //   '13f02660-63ec-11ec-954c-b9b24adfce86'
-    // ];
-    // a.forEach((element) {
-    //   b('test123', element);
-    // });
-  }
-
-  void b(String col, String doc) async {
+  void addAudioInCollection(col, doc) async {
     List a = [col];
     await _audio
         .doc(_firebaseAuth.currentUser!.uid)
@@ -165,31 +142,62 @@ class AudioRepositories {
         .get()
         .then((value) {
       final i = value.get('collections');
-      a.addAll(i);
-      //   document("fitness_teams/Team_1").
-      // updateData(["step_counter" : FieldValue.increment(500)])
+      a.toSet().toList().addAll(i);
     });
     _audio
         .doc(_firebaseAuth.currentUser!.uid)
         .collection('allAudio')
         .doc(doc)
         .update({'collections': a});
-    //     .set({
-    //   'nameCol': ['121113']
-    // }, SetOptions(merge: true));
-
-    // _audio
-    //     .doc(_firebaseAuth.currentUser?.uid)
-    //     .collection('allAudio')
-    //     .where('nameCol', arrayContains: 'audioTest2')
-    // .snapshots()
-    // .map((event) => null);
-    // .get()
-    // .then((value) => value.docs.forEach((element) {
-    //       print(element.data());
-    //     }));
   }
+
+  // List a = [
+  //   '138ca9a0-63ec-11ec-954c-b9b24adfce86',
+  //   '13d635c0-63ec-11ec-954c-b9b24adfce86',
+  //   '13a7abb0-63ec-11ec-954c-b9b24adfce86',
+  //   '1193e6e0-63ec-11ec-954c-b9b24adfce86',
+  //   '13f02660-63ec-11ec-954c-b9b24adfce86'
+  // ];
+  // a.forEach((element) {
+  //   b('test123', element);
+  // });
+
+  // void b(String col, String doc) async {
+  //   List a = [col];
+  //   await _audio
+  //       .doc(_firebaseAuth.currentUser!.uid)
+  //       .collection('allAudio')
+  //       .doc(doc)
+  //       .get()
+  //       .then((value) {
+  //     final i = value.get('collections');
+  //     a.addAll(i);
+  //     //   document("fitness_teams/Team_1").
+  //     // updateData(["step_counter" : FieldValue.increment(500)])
+  //   });
+  //   _audio
+  //       .doc(_firebaseAuth.currentUser!.uid)
+  //       .collection('allAudio')
+  //       .doc(doc)
+  //       .update({'collections': a});
+  //   //     .set({
+  //   'nameCol': ['121113']
+  // }, SetOptions(merge: true));
+
+  // _audio
+  //     .doc(_firebaseAuth.currentUser?.uid)
+  //     .collection('allAudio')
+  //     .where('nameCol', arrayContains: 'audioTest2')
+  // .snapshots()
+  // .map((event) => null);
+  // .get()
+  // .then((value) => value.docs.forEach((element) {
+  //       print(element.data());
+  //     }));
+  //   document("fitness_teams/Team_1").
+  // updateData(["step_counter" : FieldValue.increment(500)])
 }
+// }
 
 void a() async {
   // _audio

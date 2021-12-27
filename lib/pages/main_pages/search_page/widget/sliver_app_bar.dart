@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/view_model/view_model_audio.dart';
-import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/circle_app_bar.dart';
 import 'package:memory_box/widget/search_wigdet.dart';
 import 'package:provider/provider.dart';

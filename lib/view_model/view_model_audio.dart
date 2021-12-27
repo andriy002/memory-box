@@ -10,6 +10,10 @@ class _ViewModelAudioState {
   int? indexRename;
   String? audioName;
   String searchKey = '';
+  Set<String> audioList = {};
+  bool ckeckBool = false;
+  int? indexCheck;
+  Map<String, bool> audioMap = {};
 }
 
 class ViewModelAudio with ChangeNotifier {
@@ -36,6 +40,22 @@ class ViewModelAudio with ChangeNotifier {
     _audioRepo.updateAudioName(uid, audioName);
     _state.indexRename = null;
     notifyListeners();
+  }
+
+  void addAudioToMap(String audio) {
+    _state.audioMap[audio] = true;
+    notifyListeners();
+  }
+
+  void removeAudioInMap(String audio) {
+    _state.audioMap.remove(audio);
+    notifyListeners();
+  }
+
+  void addAudioToCollection(String nameCollection) {
+    _state.audioMap.forEach((key, value) {
+      _audioRepo.addAudioInCollection(nameCollection, key);
+    });
   }
 
   void sendAudioToDeleteColection(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memory_box/models/audio_model.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
+import 'package:memory_box/resources/app_icons.dart';
 import 'package:memory_box/view_model/view_model_audio.dart';
 
 import 'package:memory_box/view_model/view_model_audio_player.dart';
@@ -9,15 +10,19 @@ import 'package:provider/provider.dart';
 
 import '../popup_item.dart';
 
+enum ButtonStatus { selected, delete, edit }
+
 class SliverAudioList extends StatelessWidget {
   final List<AudioBuilder> data;
   final int childCount;
   final Color? colorButton;
+  final ButtonStatus stastusButton;
   const SliverAudioList({
     Key? key,
     required this.data,
     required this.childCount,
     this.colorButton,
+    required this.stastusButton,
   }) : super(key: key);
 
   @override
@@ -31,6 +36,7 @@ class SliverAudioList extends StatelessWidget {
           audioUrl: data[index].audioUrl,
           audioUid: data[index].uid,
           colorButton: colorButton,
+          stastusButton: stastusButton,
         );
       }, childCount: childCount),
     );
@@ -44,6 +50,7 @@ class _AudioUiCard extends StatelessWidget {
   final Color? colorButton;
   final String? audioUrl;
   final String? audioUid;
+  final ButtonStatus stastusButton;
 
   const _AudioUiCard({
     Key? key,
@@ -53,6 +60,7 @@ class _AudioUiCard extends StatelessWidget {
     this.colorButton,
     required this.audioUrl,
     required this.audioUid,
+    required this.stastusButton,
   }) : super(key: key);
 
   @override
@@ -77,13 +85,18 @@ class _AudioUiCard extends StatelessWidget {
                 index: index!,
                 uidAudio: audioUid!,
               ),
-              _PopupMenuWidget(
-                audioDuration: audioDuration!,
-                audioName: audioName!,
-                audioUid: audioUid!,
-                audioUrl: audioUrl!,
-                index: index!,
-              )
+              if (stastusButton == ButtonStatus.selected)
+                _AddAudioToList(
+                  audioUid: audioUid,
+                ),
+              if (stastusButton == ButtonStatus.edit)
+                _PopupMenuWidget(
+                  audioDuration: audioDuration!,
+                  audioName: audioName!,
+                  audioUid: audioUid!,
+                  audioUrl: audioUrl!,
+                  index: index!,
+                )
             ],
           ),
         ),
@@ -92,6 +105,58 @@ class _AudioUiCard extends StatelessWidget {
             color: Colors.grey,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _AddAudioToList extends StatefulWidget {
+  final String? audioUid;
+  const _AddAudioToList({
+    Key? key,
+    required this.audioUid,
+  }) : super(key: key);
+
+  @override
+  State<_AddAudioToList> createState() => _AddAudioToListState();
+}
+
+class _AddAudioToListState extends State<_AddAudioToList> {
+  @override
+  Widget build(BuildContext context) {
+    bool isCheck = false;
+    final chekUid = context.select((ViewModelAudio vm) => vm.state.audioMap);
+
+    if (chekUid[widget.audioUid] == true) {
+      isCheck = true;
+    }
+
+    return GestureDetector(
+      onTap: () {
+        if (isCheck) {
+          context
+              .read<ViewModelAudio>()
+              .removeAudioInMap(widget.audioUid ?? '');
+        } else {
+          isCheck = false;
+          context.read<ViewModelAudio>().addAudioToMap(widget.audioUid ?? '');
+        }
+        setState(() {});
+      },
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(60),
+            ),
+          ),
+          if (isCheck) const ImageIcon(AppIcons.done)
+        ],
       ),
     );
   }

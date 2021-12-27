@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/pages/main_pages/audio_page/audio_page.dart';
-import 'package:memory_box/pages/main_pages/main_page/search_page/search_page.dart';
 import 'package:memory_box/pages/main_pages/record_page/record_page.dart';
+import 'package:memory_box/pages/main_pages/search_page/search_page.dart';
 import 'package:memory_box/pages/main_pages/widget/bottom_navigation.dart';
 import 'package:memory_box/pages/main_pages/widget/drawer.dart';
 
@@ -9,8 +9,8 @@ import 'package:memory_box/view_model/navigation.dart';
 import 'package:provider/provider.dart';
 
 import 'collections_page/collections_page.dart';
-import 'main_page/main_page.dart';
 
+import 'main_page/main_page.dart';
 import 'profile_page/profile_page.dart';
 
 class Main extends StatelessWidget {

@@ -1,14 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:memory_box/repositories/audio_repositories.dart';
-
 import 'package:memory_box/utils/two_digits.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
-import 'package:http/http.dart' as http;
 
 class _ViewModelAudioPlayerState {
   Duration audioPosition = const Duration();
@@ -17,14 +12,11 @@ class _ViewModelAudioPlayerState {
   bool isPlaying = false;
   bool pause = false;
   int? indexAudio;
-  int? indexRename;
-  String? audioName;
 }
 
 class ViewModelAudioPlayer with ChangeNotifier {
   final _ViewModelAudioPlayerState _state = _ViewModelAudioPlayerState();
   _ViewModelAudioPlayerState get state => _state;
-  final AudioRepositories _audioRepo = AudioRepositories.instance;
 
   String audioLengthSecond() =>
       twoDigits(_state.audioLength.inSeconds.remainder(60));
@@ -151,6 +143,7 @@ class ViewModelAudioPlayer with ChangeNotifier {
   void dispose() {
     _state.audioPlayer.stop();
     _state.audioPlayer.dispose();
+    print('ssss');
     super.dispose();
   }
 }

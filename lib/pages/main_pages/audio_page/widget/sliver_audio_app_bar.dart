@@ -19,9 +19,7 @@ class SliverAudioAppBar extends StatelessWidget {
             Icons.more_horiz,
             size: 40,
           ),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
+          onPressed: () {},
         ),
         const SizedBox(
           width: 10,

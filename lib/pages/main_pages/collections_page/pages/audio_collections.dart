@@ -4,6 +4,7 @@ import 'package:memory_box/pages/main_pages/collections_page/view_model_collecti
 import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
+import 'package:memory_box/view_model/view_model_audio.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
 import 'package:memory_box/widget/audio_widget/list_audio.dart';
@@ -19,7 +20,8 @@ class CollectionsAudioContainer extends StatelessWidget {
   static Widget create(String nameCollections) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ViewModelAudioPlayer()),
+        ChangeNotifierProvider.value(value: ViewModelAudio()),
+        ChangeNotifierProvider.value(value: ViewModelAudioPlayer()),
         StreamProvider(
             create: (_) => AudioRepositories.instance.audioFromCollection(
                   nameCollections,
@@ -151,6 +153,7 @@ class CollectionsAudioContainer extends StatelessWidget {
               ),
             ),
             SliverAudioList(
+              stastusButton: ButtonStatus.edit,
               data: data,
               childCount: data.length,
               colorButton: AppColors.collectionsColor,

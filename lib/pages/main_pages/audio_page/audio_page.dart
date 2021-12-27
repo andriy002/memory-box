@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/audio_model.dart';
 import 'package:memory_box/view_model/view_model_audio.dart';
-
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
 import 'package:memory_box/widget/audio_widget/list_audio.dart';
@@ -12,6 +11,27 @@ import 'widget/sliver_audio_app_bar.dart';
 
 class AudioPage extends StatelessWidget {
   const AudioPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _BodyAudioPage.create(),
+    );
+  }
+}
+
+class _BodyAudioPage extends StatelessWidget {
+  const _BodyAudioPage({Key? key}) : super(key: key);
+
+  static Widget create() {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ViewModelAudio()),
+        ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
+      ],
+      child: const _BodyAudioPage(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +50,7 @@ class AudioPage extends StatelessWidget {
             slivers: [
               SliverAudioAppBar(data: data),
               SliverAudioList(
+                stastusButton: ButtonStatus.edit,
                 data: data,
                 childCount: data.length,
               ),
