@@ -18,7 +18,7 @@ class _ViewModelRecordState {
   double incWidth = 0;
   List listAmplitude = [];
   bool recordToogle = false;
-  bool redactionAudioName = false;
+  bool editAudioName = false;
   String audioName = 'Аудиозапись';
 }
 
@@ -63,14 +63,20 @@ class ViewModelRecord with ChangeNotifier {
     _getAmplituder();
   }
 
-  void redactionAudioNameToogle(String audioName) {
-    if (_state.redactionAudioName) {
-      _state.redactionAudioName = false;
+  Future<String> getLoacalAudio() async {
+    final temp = await getTemporaryDirectory();
+    final pathAudio = '${temp.path}/Аудиозапись.aac';
+    return pathAudio;
+  }
+
+  void editAudioNameToogle(String audioName) {
+    if (_state.editAudioName) {
+      _state.editAudioName = false;
       _state.audioName = audioName;
 
       notifyListeners();
     } else {
-      _state.redactionAudioName = true;
+      _state.editAudioName = true;
       notifyListeners();
     }
   }
@@ -93,21 +99,20 @@ class ViewModelRecord with ChangeNotifier {
 
   Future<File> saveAudioFileToLocalStorage() async {
     String name = _state.audioName;
-    String file =
-        '/storage/15FD-100D/Android/data/com.andrewdezh.memory_box/cache/Аудизапись.aac';
+    final temp = await getTemporaryDirectory();
+    final pathAudio = '${temp.path}/Аудиозапись.aac';
     if (name == 'Аудиозапись') {
       name += ' ${DateTime.now()}';
     }
     final appStorage = await getExternalStorageDirectory();
     final newFile = File('${appStorage?.path}/$name.aac');
-    return File(file).copy(newFile.path);
+    return File(pathAudio).copy(newFile.path);
   }
 
   Future<void> _record() async {
     _state.record = Record();
-    final appStorage = await getExternalCacheDirectories();
-    const pathAudio =
-        '/storage/15FD-100D/Android/data/com.andrewdezh.memory_box/cache/Аудизапись.aac';
+    final temp = await getTemporaryDirectory();
+    final pathAudio = '${temp.path}/Аудиозапись.aac';
     _state.record?.start(path: pathAudio);
   }
 

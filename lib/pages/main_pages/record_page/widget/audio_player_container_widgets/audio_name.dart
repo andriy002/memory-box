@@ -23,13 +23,13 @@ class _AudioNameWidgetState extends State<AudioNameWidget> {
   @override
   Widget build(BuildContext context) {
     final watchToogleRedactionAudioName =
-        context.select((ViewModelRecord vm) => vm.state.redactionAudioName);
+        context.select((ViewModelRecord vm) => vm.state.editAudioName);
     return Center(
       child: GestureDetector(
         onTap: () {
           context
               .read<ViewModelRecord>()
-              .redactionAudioNameToogle(_audioNameController!.text);
+              .editAudioNameToogle(_audioNameController!.text);
         },
         child: !watchToogleRedactionAudioName
             ? Text(
@@ -49,7 +49,7 @@ class _AudioNameWidgetState extends State<AudioNameWidget> {
                   onEditingComplete: () {
                     context
                         .read<ViewModelRecord>()
-                        .redactionAudioNameToogle(_audioNameController!.text);
+                        .editAudioNameToogle(_audioNameController!.text);
                   },
                 ),
               ),

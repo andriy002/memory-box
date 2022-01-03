@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_box/pages/main_pages/record_page/view_model_record/view_mode_record.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_icons.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
@@ -9,8 +10,6 @@ class BottomButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const localAudio =
-        '/storage/15FD-100D/Android/data/com.andrewdezh.memory_box/cache/Аудизапись.aac';
     final isPlaying =
         context.select((ViewModelAudioPlayer vm) => vm.state.isPlaying);
     return Row(
@@ -40,8 +39,13 @@ class BottomButtonWidget extends StatelessWidget {
               color: Colors.white,
               iconSize: 40,
               onPressed: !isPlaying
-                  ? () {
-                      context.read<ViewModelAudioPlayer>().play(localAudio);
+                  ? () async {
+                      final localAudio =
+                          context.read<ViewModelRecord>().getLoacalAudio();
+
+                      context
+                          .read<ViewModelAudioPlayer>()
+                          .play(await localAudio);
                     }
                   : () {
                       context.read<ViewModelAudioPlayer>().stop();

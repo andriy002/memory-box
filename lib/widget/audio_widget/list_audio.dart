@@ -264,7 +264,7 @@ class _PopupMenuWidget extends StatelessWidget {
           viewModel.setIndexReanme(index);
         }),
         popupMenuItem('Добавить в подборк', () {
-          // viewModel.a();
+          // viewModel.deleteSelectedAudio();
         }),
         popupMenuItem('Удалить', () {
           viewModel.sendAudioToDeleteColection(

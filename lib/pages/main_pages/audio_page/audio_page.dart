@@ -14,9 +14,7 @@ class AudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _BodyAudioPage.create(),
-    );
+    return _BodyAudioPage.create();
   }
 }
 
@@ -35,11 +33,15 @@ class _BodyAudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<AudioBuilder> data = context.watch<List<AudioBuilder>?>() ?? [];
+    final List<AudioBuilder>? data = context.watch<List<AudioBuilder>?>();
     final bool _isPlaying =
         context.select((ViewModelAudioPlayer vm) => vm.state.isPlaying);
     final int _indexAudio =
         context.select((ViewModelAudioPlayer vm) => vm.state.indexAudio ?? 0);
+
+    if (data == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     return SizedBox(
       height: MediaQuery.of(context).size.height - 80,
@@ -56,7 +58,7 @@ class _BodyAudioPage extends StatelessWidget {
               ),
               const SliverToBoxAdapter(
                 child: SizedBox(
-                  height: 160,
+                  height: 80,
                 ),
               ),
             ],

@@ -22,10 +22,7 @@ class AudioRepositories {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   void _addAudioInFirestore(
-    String audioName,
-    String audioUrl,
-    String duration,
-  ) {
+      String audioName, String audioUrl, String duration) {
     final id = _uuid.v1();
     AudioBuilder audio = AudioBuilder(
       uid: id,
@@ -70,15 +67,6 @@ class AudioRepositories {
         .map(_audioFromSnap);
   }
 
-  Stream<List<AudioBuilder>> audioFromCollection(String collectionName) {
-    return _audio
-        .doc(_firebaseAuth.currentUser!.uid)
-        .collection('allAudio')
-        .where('collections', arrayContains: collectionName)
-        .snapshots()
-        .map(_audioFromSnap);
-  }
-
   Stream<List<AudioBuilder>> searchAuio(String searchKey) {
     return _audio
         .doc(_firebaseAuth.currentUser!.uid)
@@ -89,12 +77,8 @@ class AudioRepositories {
         .map(_audioFromSnap);
   }
 
-  Future<void> sendAudioDeleteColection(
-    String audioName,
-    String audioUrl,
-    String duration,
-    String uid,
-  ) async {
+  Future<void> sendAudioDeleteToColection(
+      String audioName, String audioUrl, String duration, String uid) async {
     AudioBuilder audio = AudioBuilder(
       uid: uid,
       audioName: audioName,
@@ -131,24 +115,6 @@ class AudioRepositories {
         .update(
       {'searchKey': name.toLowerCase()},
     );
-  }
-
-  void addAudioInCollection(col, doc) async {
-    List a = [col];
-    await _audio
-        .doc(_firebaseAuth.currentUser!.uid)
-        .collection('allAudio')
-        .doc(doc)
-        .get()
-        .then((value) {
-      final i = value.get('collections');
-      a.toSet().toList().addAll(i);
-    });
-    _audio
-        .doc(_firebaseAuth.currentUser!.uid)
-        .collection('allAudio')
-        .doc(doc)
-        .update({'collections': a});
   }
 
   // List a = [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memory_box/pages/main_pages/record_page/view_model_record/view_mode_record.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:provider/provider.dart';
 
@@ -15,11 +16,14 @@ class AudioContainerWidget extends StatefulWidget {
 }
 
 class _AudioContainerWidgetState extends State<AudioContainerWidget> {
-  final localAudio =
-      '/storage/15FD-100D/Android/data/com.andrewdezh.memory_box/cache/Аудизапись.aac';
+  Future<void> setAudio() async {
+    final localAudio = context.read<ViewModelRecord>().getLoacalAudio();
+    context.read<ViewModelAudioPlayer>().setLocalAudio(await localAudio, false);
+  }
+
   @override
   void initState() {
-    context.read<ViewModelAudioPlayer>().setAudioUrl(localAudio, false);
+    setAudio();
     super.initState();
   }
 

@@ -3,9 +3,6 @@ import 'package:memory_box/pages/auth_pages/auth/auth_page.dart';
 import 'package:memory_box/pages/auth_pages/welcome_page.dart';
 import 'package:memory_box/pages/loading_page.dart';
 import 'package:memory_box/pages/main_pages/main.dart';
-import 'package:memory_box/pages/main_pages/main_page/main_page.dart';
-import 'package:memory_box/pages/main_pages/profile_page/profile_page.dart';
-import 'package:memory_box/pages/main_pages/record_page/record_page.dart';
 
 abstract class Routes {
   static Map<String, Widget Function(BuildContext)> routes =
@@ -13,9 +10,7 @@ abstract class Routes {
     WelcomPage.routeName: (context) => const WelcomPage(),
     AuthPage.routeName: (context) => AuthPage.create(),
     LoadingPage.routeName: (context) => const LoadingPage(),
-    Main.routeName: (context) => const Main(),
-    Profile.routeName: (context) => Profile.create(),
-    Record.routeName: (context) => Record.create(),
+    Main.routeName: (context) => Main.create(),
   };
 }
 

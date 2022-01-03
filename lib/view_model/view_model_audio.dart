@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:http/http.dart' as http;
+import 'package:memory_box/repositories/coolections_repositories.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 
@@ -20,6 +21,8 @@ class ViewModelAudio with ChangeNotifier {
   final _ViewModelAudioState _state = _ViewModelAudioState();
   _ViewModelAudioState get state => _state;
   final AudioRepositories _audioRepo = AudioRepositories.instance;
+  final CollectionsRepositories _collectionRepo =
+      CollectionsRepositories.instance;
 
   void setIndexReanme(int index) {
     _state.indexRename = index;
@@ -54,7 +57,7 @@ class ViewModelAudio with ChangeNotifier {
 
   void addAudioToCollection(String nameCollection) {
     _state.audioMap.forEach((key, value) {
-      _audioRepo.addAudioInCollection(nameCollection, key);
+      _collectionRepo.addAudioInCollection(nameCollection, key);
     });
   }
 
@@ -64,7 +67,7 @@ class ViewModelAudio with ChangeNotifier {
     String duration,
     String uid,
   ) {
-    _audioRepo.sendAudioDeleteColection(audioName, audioUrl, duration, uid);
+    _audioRepo.sendAudioDeleteToColection(audioName, audioUrl, duration, uid);
   }
 
   Future<void> shareUrlFile(String url, String name) async {

@@ -69,6 +69,27 @@ class ViewModelAudioPlayer with ChangeNotifier {
     });
   }
 
+  Future<void> setLocalAudio(String audio, bool isLocal) async {
+    if (audio.isEmpty) return;
+
+    await _state.audioPlayer.setUrl(audio, isLocal: isLocal);
+
+    _state.audioPlayer.onDurationChanged.listen((d) {
+      _state.audioLength = d;
+      notifyListeners();
+    });
+    _state.audioPlayer.onAudioPositionChanged.listen((p) {
+      _state.audioPosition = p;
+      notifyListeners();
+    });
+    _state.audioPlayer.onPlayerCompletion.listen((_) {
+      _state.audioPosition = const Duration(microseconds: 0);
+      _state.isPlaying = false;
+      _state.indexAudio = null;
+      notifyListeners();
+    });
+  }
+
   void play(String audio) async {
     if (audio.isEmpty) return;
     await _state.audioPlayer.play(audio);
@@ -143,146 +164,6 @@ class ViewModelAudioPlayer with ChangeNotifier {
   void dispose() {
     _state.audioPlayer.stop();
     _state.audioPlayer.dispose();
-    print('ssss');
     super.dispose();
   }
 }
-
-// class _ViewModelAudioPlayerState {
-//   Duration audioPosition = const Duration();
-//   Duration audioLength = const Duration();
-//   AudioPlayer audioPlayer = AudioPlayer();
-//   bool isPlaying = false;
-//   int? indexAudio;
-// }
-
-// class ViewModelAudioPlayer with ChangeNotifier {
-//   final _ViewModelAudioPlayerState _state = _ViewModelAudioPlayerState();
-//   _ViewModelAudioPlayerState get state => _state;
-
-//   String audioLengthSecond() =>
-//       twoDigits(_state.audioLength.inSeconds.remainder(60));
-//   String audioLengthMinutes() =>
-//       twoDigits(_state.audioLength.inMinutes.remainder(60));
-//   String audioPositionSecond() =>
-//       twoDigits(_state.audioPosition.inSeconds.remainder(60));
-//   String audioPositionMinutes() =>
-//       twoDigits(_state.audioPosition.inMinutes.remainder(60));
-
-//   void share(paths) {
-//     Share.shareFiles([paths]);
-//   }
-
-//   void setAudioLocal(String audio) {
-//     _state.audioPlayer.setFilePath(audio);
-//     _state.audioPlayer.positionStream.listen((p) {
-//       _state.audioPosition = p;
-
-//       notifyListeners();
-//     });
-//     _state.audioPlayer.durationStream.listen((d) {
-//       _state.audioLength = d ?? const Duration(seconds: 0);
-//       notifyListeners();
-//     });
-//   }
-
-
-
-//   void play() {
-//     _state.audioPlayer.play();
-//     _state.isPlaying = true;
-//     notifyListeners();
-//   }
-
-//   void setAudioUrl(String url) {
-//     _state.audioPlayer.setUrl(url).then(
-//           (_) => _state.audioPlayer.play(),
-//         );
-//   }
-
-// //   await player.setAudioSource(
-// //   ConcatenatingAudioSource(
-// //     // Start loading next item just before reaching it.
-// //     useLazyPreparation: true, // default
-// //     // Customise the shuffle algorithm.
-// //     shuffleOrder: DefaultShuffleOrder(), // default
-// //     // Specify the items in the playlist.
-// //     children: [
-// //       AudioSource.uri(Uri.parse("https://example.com/track1.mp3")),
-// //       AudioSource.uri(Uri.parse("https://example.com/track2.mp3")),
-// //       AudioSource.uri(Uri.parse("https://example.com/track3.mp3")),
-// //     ],
-// //   ),
-// //   // Playback will be prepared to start from track1.mp3
-// //   initialIndex: 0, // default
-// //   // Playback will be prepared to start from position zero.
-// //   initialPosition: Duration.zero, // default
-// // );
-// // await player.seekToNext();
-// // await player.seekToPrevious();
-// // // Jump to the beginning of track3.mp3.
-// // await player.seek(Duration(milliseconds: 0), index: 2);
-
-//   // if ((_state.audioPosition.inSeconds - _state.audioLength.inSeconds) ==
-//   //     0) {
-//   //   _state.audioPlayer.seek(const Duration(seconds: 0));
-//   //   _state.isPlaying = false;
-//   //   _state.indexAudio = null;
-//   //   _state.audioPlayer.stop();
-//   //   notifyListeners();
-//   // }
-
-//   void setPlayingIndex(int index) {
-//     _state.indexAudio = index;
-//     _state.isPlaying = true;
-//     notifyListeners();
-//   }
-
-//   void printDuration() {
-//     print(_state.audioPlayer.duration);
-//   }
-
-//   void stop() {
-//     _state.audioPlayer.stop();
-//     _state.audioPlayer.seek(const Duration(seconds: 0));
-
-//     _state.isPlaying = false;
-//     notifyListeners();
-//   }
-
-//   void sekToSec(int sec) {
-//     Duration newPosition = Duration(seconds: sec);
-//     _state.audioPlayer.seek(newPosition);
-//     notifyListeners();
-//   }
-
-//   void secUp() {
-//     if ((_state.audioPosition.inSeconds - _state.audioLength.inSeconds) <=
-//         -15) {
-//       _state.audioPlayer.seek(
-//         _state.audioPosition + const Duration(seconds: 15),
-//       );
-//       notifyListeners();
-//     } else {
-//       _state.audioPlayer.seek(
-//         _state.audioPosition =
-//             Duration(seconds: _state.audioLength.inSeconds - 0),
-//       );
-//       notifyListeners();
-//     }
-//   }
-
-//   void secDown() {
-//     if (_state.audioPosition.inSeconds >= 15) {
-//       _state.audioPlayer.seek(
-//         _state.audioPosition - const Duration(seconds: 15),
-//       );
-//       notifyListeners();
-//     } else {
-//       _state.audioPlayer.seek(
-//         _state.audioPosition = const Duration(seconds: 0),
-//       );
-//       notifyListeners();
-//     }
-//   }
-// }

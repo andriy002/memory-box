@@ -16,8 +16,7 @@ class Record extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ViewModelRecord()),
-        ChangeNotifierProvider.value(value: ViewModelAudio()),
-        ChangeNotifierProvider.value(value: ViewModelAudioPlayer()),
+        ChangeNotifierProvider(create: (context) => ViewModelAudioPlayer()),
       ],
       child: const Record(),
     );

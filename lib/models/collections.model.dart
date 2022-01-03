@@ -1,7 +1,7 @@
 class CollectionsBuilder {
   String? descriptions;
   String? image;
-  String? length;
+  int? length;
   String? name;
   String? displayName;
 

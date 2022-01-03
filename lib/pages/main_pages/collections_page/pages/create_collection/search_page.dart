@@ -17,16 +17,6 @@ import 'package:provider/provider.dart';
 class SearchPageCollections extends StatelessWidget {
   const SearchPageCollections({Key? key}) : super(key: key);
 
-  static Widget create() {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ViewModelAudio()),
-        ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
-      ],
-      child: const SearchPageCollections(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final String _searchKey =
@@ -44,35 +34,32 @@ class SearchPageCollections extends StatelessWidget {
           final List<AudioBuilder> _data = snapshot.data as List<AudioBuilder>;
 
           return Scaffold(
-            body: SizedBox(
-              height: MediaQuery.of(context).size.height - 80,
-              child: Stack(
-                children: [
-                  CustomScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    slivers: [
-                      const SliverAppBarSearchPage(),
-                      SliverAudioList(
-                        stastusButton: ButtonStatus.selected,
-                        data: _data,
-                        childCount: _data.length,
-                        colorButton: AppColors.collectionsColor,
+            body: Stack(
+              children: [
+                CustomScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  slivers: [
+                    const SliverAppBarSearchPage(),
+                    SliverAudioList(
+                      stastusButton: ButtonStatus.selected,
+                      data: _data,
+                      childCount: _data.length,
+                      colorButton: AppColors.collectionsColor,
+                    ),
+                    const SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 80,
                       ),
-                      const SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 80,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (_isPlaying)
-                    AudioPlayerWidget(
-                      audioUrl: _data[_indexAudio].audioUrl,
-                      maxLength: _data.length,
-                      audioName: _data[_indexAudio].audioName,
-                    )
-                ],
-              ),
+                    ),
+                  ],
+                ),
+                if (_isPlaying)
+                  AudioPlayerWidget(
+                    audioUrl: _data[_indexAudio].audioUrl,
+                    maxLength: _data.length,
+                    audioName: _data[_indexAudio].audioName,
+                  )
+              ],
             ),
           );
         } else {
@@ -92,14 +79,15 @@ class SliverAppBarSearchPage extends StatelessWidget {
 
     return SliverAppBar(
       leading: leftArrowButton(() {
-        context.read<ViewModelCoolections>().setCurrentIndex = 0;
+        context.read<ViewModelCoolections>().openAddAudioPage();
       }),
       actions: [
         Padding(
           padding: const EdgeInsets.only(top: 10),
           child: TextButton(
               onPressed: () {
-                context.read<ViewModelAudio>().addAudioToCollection('test');
+                context.read<ViewModelAudio>().addAudioToCollection('selected');
+                context.read<ViewModelCoolections>().openAddAudioPage();
               },
               child: const Text(
                 'Добавить',

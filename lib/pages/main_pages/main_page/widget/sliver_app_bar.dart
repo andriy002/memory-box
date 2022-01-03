@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:memory_box/models/collections.model.dart';
+import 'package:memory_box/pages/main_pages/collections_page/view_model_collections/view_model_collections.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/view_model/navigation.dart';
 import 'package:memory_box/widget/circle_app_bar.dart';
@@ -9,6 +12,8 @@ class SliverAppBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<CollectionsBuilder> _dataCollections =
+        context.watch<List<CollectionsBuilder>?>() ?? [];
     return SliverAppBar(
         leading: IconButton(
           icon: const Icon(
@@ -43,8 +48,10 @@ class SliverAppBarWidget extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _bigCard(context),
-                          _smallCards(context),
+                          _BigCard(dataCollections: _dataCollections),
+                          _SmallCard(
+                            dataCollections: _dataCollections,
+                          )
                         ],
                       ),
                     )
@@ -85,95 +92,199 @@ class SliverAppBarWidget extends StatelessWidget {
   }
 }
 
-SizedBox _bigCard(BuildContext context) {
-  return SizedBox(
-    width: MediaQuery.of(context).size.width / 2.3,
-    height: MediaQuery.of(context).size.height,
-    child: Card(
-      color: const Color(0xE671A59F),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(
-            width: 150,
-            child: Text(
-              'Здесь будет твой набор сказок',
-              style: TextStyle(
-                fontFamily: AppFonts.mainFont,
-                color: Colors.white,
-                fontSize: 20,
+class _BigCard extends StatelessWidget {
+  final List dataCollections;
+
+  const _BigCard({Key? key, required this.dataCollections}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width / 2.3,
+      height: MediaQuery.of(context).size.height,
+      child: dataCollections.length > 2
+          ? _SliverCollectionsWidget(
+              img: dataCollections[2].image,
+              name: dataCollections[2].name,
+              length: dataCollections[2].length,
+              displayName: dataCollections[2].displayName,
+              description: dataCollections[2].descriptions)
+          : Card(
+              color: const Color(0xE671A59F),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
               ),
-              textAlign: TextAlign.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    width: 150,
+                    child: Text(
+                      'Здесь будет твой набор сказок',
+                      style: TextStyle(
+                        fontFamily: AppFonts.mainFont,
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  TextButton(
+                      onPressed: () {
+                        context.read<Navigation>().setCurrentIndex = 1;
+                        context.read<ViewModelCoolections>().setCurrentIndex =
+                            2;
+                      },
+                      child: const Text(
+                        'Добавить',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: AppFonts.mainFont,
+                          fontSize: 14,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ))
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 30),
-          TextButton(
-              onPressed: () {},
-              child: const Text(
-                'Добавить',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: AppFonts.mainFont,
-                  fontSize: 14,
-                  decoration: TextDecoration.underline,
-                ),
-              ))
-        ],
-      ),
-    ),
-  );
+    );
+  }
 }
 
-SizedBox _smallCards(BuildContext context) {
-  return SizedBox(
-    width: MediaQuery.of(context).size.width / 2.3,
-    height: MediaQuery.of(context).size.height,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height / 7.2,
-          width: double.infinity,
-          child: Card(
-            color: const Color(0xE6F1B488),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: const Center(
-              child: Text(
-                'Тут',
-                style: TextStyle(
-                    fontFamily: AppFonts.mainFont,
-                    color: Colors.white,
-                    fontSize: 20),
-              ),
+class _SmallCard extends StatelessWidget {
+  final List dataCollections;
+  const _SmallCard({Key? key, required this.dataCollections}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width / 2.3,
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 7.2,
+            width: double.infinity,
+            child: dataCollections.isEmpty
+                ? Card(
+                    color: const Color(0xE6F1B488),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Тут',
+                        style: TextStyle(
+                            fontFamily: AppFonts.mainFont,
+                            color: Colors.white,
+                            fontSize: 20),
+                      ),
+                    ),
+                  )
+                : _SliverCollectionsWidget(
+                    img: dataCollections[0].image,
+                    name: dataCollections[0].name,
+                    length: dataCollections[0].length,
+                    displayName: dataCollections[0].displayName,
+                    description: dataCollections[0].descriptions),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 7.2,
+            width: double.infinity,
+            child: dataCollections.length > 1
+                ? _SliverCollectionsWidget(
+                    img: dataCollections[1].image,
+                    name: dataCollections[1].name,
+                    length: dataCollections[1].length,
+                    displayName: dataCollections[1].displayName,
+                    description: dataCollections[1].descriptions)
+                : Card(
+                    color: const Color(0xE6678BD2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'И тут',
+                        style: TextStyle(
+                            fontFamily: AppFonts.mainFont,
+                            color: Colors.white,
+                            fontSize: 20),
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SliverCollectionsWidget extends StatelessWidget {
+  final int? length;
+  final String? img;
+  final String? name;
+  final String? displayName;
+  final String? description;
+
+  const _SliverCollectionsWidget(
+      {Key? key,
+      required this.img,
+      required this.name,
+      required this.length,
+      required this.displayName,
+      required this.description})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      child: GestureDetector(
+        onTap: () {
+          context.read<ViewModelCoolections>().sendInfoCollecion(
+                descriptionCollections: description,
+                displayNameCollections: displayName,
+                lengthCollections: length,
+                imgCollections: img,
+              );
+
+          context.read<ViewModelCoolections>().setCurrentIndex = 1;
+          context.read<Navigation>().setCurrentIndex = 1;
+
+          context.read<ViewModelCoolections>().nameCollections(name!);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            image:
+                DecorationImage(image: NetworkImage(img!), fit: BoxFit.cover),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    displayName ?? '',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+                Text(
+                  '$length',
+                  style: const TextStyle(color: Colors.white),
+                )
+              ],
             ),
           ),
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height / 7.2,
-          width: double.infinity,
-          child: Card(
-            color: const Color(0xE6678BD2),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: const Center(
-              child: Text(
-                'И тут',
-                style: TextStyle(
-                    fontFamily: AppFonts.mainFont,
-                    color: Colors.white,
-                    fontSize: 20),
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
+      ),
+    );
+  }
 }

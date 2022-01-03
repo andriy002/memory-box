@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/audio_model.dart';
+import 'package:memory_box/pages/main_pages/collections_page/view_model_collections/view_model_collections.dart';
 import 'package:memory_box/pages/main_pages/main_page/widget/sliver_adapter.dart';
 import 'package:memory_box/pages/main_pages/main_page/widget/sliver_app_bar.dart';
+import 'package:memory_box/repositories/coolections_repositories.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/view_model/view_model_audio.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
@@ -12,23 +14,18 @@ import 'package:provider/provider.dart';
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: BodyMainPage.create(),
-    );
-  }
-}
-
-class BodyMainPage extends StatelessWidget {
-  const BodyMainPage({Key? key}) : super(key: key);
   static Widget create() {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ViewModelCoolections()),
         ChangeNotifierProvider(create: (_) => ViewModelAudio()),
         ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
+        StreamProvider(
+          create: (_) => CollectionsRepositories.instance.colllections,
+          initialData: null,
+        ),
       ],
-      child: const BodyMainPage(),
+      child: const MainPage(),
     );
   }
 
@@ -55,7 +52,7 @@ class BodyMainPage extends StatelessWidget {
                 colorButton: AppColors.mainColor,
               ),
               const SliverToBoxAdapter(
-                child: SizedBox(height: 160),
+                child: SizedBox(height: 80),
               ),
             ],
           ),

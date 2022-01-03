@@ -11,8 +11,6 @@ class TopButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const _localAudio =
-        '/storage/15FD-100D/Android/data/com.andrewdezh.memory_box/cache/Аудизапись.aac';
     final _duration =
         context.select((ViewModelAudioPlayer vm) => vm.state.audioLength);
     return Padding(
@@ -21,8 +19,11 @@ class TopButtonWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            onPressed: () {
-              context.read<ViewModelAudioPlayer>().share(_localAudio);
+            onPressed: () async {
+              final _localAudio =
+                  context.read<ViewModelRecord>().getLoacalAudio();
+
+              context.read<ViewModelAudioPlayer>().share(await _localAudio);
               // context.read<ViewModelRecord>().a();
             },
             icon: const ImageIcon(AppIcons.upload),
@@ -43,10 +44,12 @@ class TopButtonWidget extends StatelessWidget {
             width: 50,
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
+              final _localAudio =
+                  context.read<ViewModelRecord>().getLoacalAudio();
               context
                   .read<ViewModelRecord>()
-                  .addAudio(_localAudio, _duration.toString());
+                  .addAudio(await _localAudio, _duration.toString());
             },
             child: const Text(
               'Сохранить',
