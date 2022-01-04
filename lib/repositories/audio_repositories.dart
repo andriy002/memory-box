@@ -14,6 +14,8 @@ class AudioRepositories {
   static AudioRepositories get instance => _repositories;
   final Uuid _uuid = const Uuid();
 
+  // final _idAudio = DateTime.now().toString();
+
   final CollectionReference _audio =
       FirebaseFirestore.instance.collection('audio');
   _firebase_storage.FirebaseStorage storage =
@@ -21,13 +23,18 @@ class AudioRepositories {
           bucket: 'gs://memory-box-9c2a3.appspot.com/');
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  void _addAudioInFirestore(
-      String audioName, String audioUrl, String duration) {
-    final id = _uuid.v1();
+  Future<void> addAudioInFirestore(
+      String audioName, String duration, String idAudio) async {
+    final String id = _uuid.v1();
+    Reference storageRef =
+        storage.ref('users/${_firebaseAuth.currentUser?.uid}/audio/$idAudio');
+
+    String url = (await storageRef.getDownloadURL()).toString();
+
     AudioBuilder audio = AudioBuilder(
       uid: id,
       audioName: audioName,
-      audioUrl: audioUrl,
+      audioUrl: url,
       duration: duration,
       searchKey: audioName.toLowerCase(),
       collections: [],
@@ -41,16 +48,13 @@ class AudioRepositories {
         .catchError((e) => print(e.toString()));
   }
 
-  Future<void> addAudio(String name, String path, String duration) async {
+  Future<String> addAudio(String path) async {
+    final audioId = _uuid.v1();
     Reference storageRef =
-        storage.ref('users/${_firebaseAuth.currentUser?.uid}/audio/$name');
+        storage.ref('users/${_firebaseAuth.currentUser?.uid}/audio/$audioId');
     storageRef.putFile(File(path));
 
-    String url = (await storageRef.getDownloadURL()).toString();
-
-    _addAudioInFirestore(name, url, duration);
-    //   document("fitness_teams/Team_1").
-    // updateData(["step_counter" : FieldValue.increment(500)])
+    return audioId;
   }
 
   List<AudioBuilder> _audioFromSnap(QuerySnapshot snapshot) {

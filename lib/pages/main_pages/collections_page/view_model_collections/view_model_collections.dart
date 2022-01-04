@@ -133,7 +133,6 @@ class ViewModelCoolections with ChangeNotifier {
   @override
   void dispose() {
     removeSelected();
-    print('ddd');
     super.dispose();
   }
 }

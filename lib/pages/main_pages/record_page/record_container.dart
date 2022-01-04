@@ -99,7 +99,12 @@ class RecordContainerWidget extends StatelessWidget {
           icon: const Icon(Icons.pause),
           color: Colors.white,
           iconSize: 40,
-          onPressed: () {
+          onPressed: () async {
+            final _localAudio =
+                context.read<ViewModelRecord>().getLoacalAudio();
+            context
+                .read<ViewModelRecord>()
+                .addAudioToStorage(await _localAudio);
             context.read<ViewModelRecord>().stop();
           },
         ),

@@ -252,28 +252,32 @@ class _PopupMenuWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.read<ViewModelAudio>();
 
-    return PopupMenuButton(
-      icon: const Icon(Icons.more_horiz),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(15),
+    return GestureDetector(
+      child: PopupMenuButton(
+        icon: const Icon(Icons.more_horiz),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(15),
+          ),
         ),
+        itemBuilder: (context) => [
+          popupMenuItem('Переименовать', () {
+            viewModel.setIndexReanme(index);
+          }),
+          popupMenuItem('Добавить в подборку', () {
+            // viewModel.deleteSelectedAudio();
+          }),
+          popupMenuItem('Удалить', () {
+            context.read<ViewModelAudioPlayer>().stop();
+
+            viewModel.sendAudioToDeleteColection(
+                audioName, audioUrl, audioDuration, audioUid);
+          }),
+          popupMenuItem('Поделиться', () {
+            viewModel.shareUrlFile(audioUrl, audioName);
+          }),
+        ],
       ),
-      itemBuilder: (context) => [
-        popupMenuItem('Переименовать', () {
-          viewModel.setIndexReanme(index);
-        }),
-        popupMenuItem('Добавить в подборк', () {
-          // viewModel.deleteSelectedAudio();
-        }),
-        popupMenuItem('Удалить', () {
-          viewModel.sendAudioToDeleteColection(
-              audioName, audioUrl, audioDuration, audioUid);
-        }),
-        popupMenuItem('Поделиться', () {
-          viewModel.shareUrlFile(audioUrl, audioName);
-        }),
-      ],
     );
   }
 }

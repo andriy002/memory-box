@@ -8,6 +8,7 @@ import 'package:memory_box/repositories/user_repositories.dart';
 import 'package:memory_box/models/user_model.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
+import 'package:memory_box/widget/left_arrow_button.dart';
 import 'package:provider/provider.dart';
 
 import 'view_model_profile/view_model_profile.dart';
@@ -67,42 +68,41 @@ class Profile extends StatelessWidget {
   }
 
   AppBar _appBar(BuildContext context) {
+    final _editToogleWatch = context.select(
+      (ViewModelProfile vm) => vm.state.editToogle,
+    );
     return AppBar(
-        toolbarHeight: 85,
-        backgroundColor: AppColors.mainColor,
-        elevation: 0,
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-          icon: const Icon(Icons.menu),
-        ),
-        title: Column(
-          children: const [
-            SizedBox(
-              height: 20,
+      backgroundColor: AppColors.mainColor,
+      elevation: 0,
+      centerTitle: true,
+      automaticallyImplyLeading: false,
+      leading: _editToogleWatch
+          ? leftArrowButton(context.read<ViewModelProfile>().editToogle)
+          : IconButton(
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              icon: const Icon(Icons.menu),
             ),
-            Text(
-              'Профиль',
-              style: TextStyle(
-                  fontFamily: AppFonts.mainFont,
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              'Твоя частичка',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: AppFonts.mainFont,
-                  fontSize: 16),
-            )
-          ],
-        ));
+      title: Column(
+        children: const [
+          Text(
+            'Профиль',
+            style: TextStyle(
+                fontFamily: AppFonts.mainFont,
+                fontSize: 36,
+                fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            'Твоя частичка',
+            style: TextStyle(
+                color: Colors.white,
+                fontFamily: AppFonts.mainFont,
+                fontSize: 16),
+          )
+        ],
+      ),
+    );
   }
 }

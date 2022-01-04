@@ -3,6 +3,7 @@ import 'package:memory_box/pages/main_pages/main.dart';
 import 'package:memory_box/pages/main_pages/record_page/view_model_record/view_mode_record.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/resources/app_icons.dart';
+import 'package:memory_box/view_model/navigation.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +25,6 @@ class TopButtonWidget extends StatelessWidget {
                   context.read<ViewModelRecord>().getLoacalAudio();
 
               context.read<ViewModelAudioPlayer>().share(await _localAudio);
-              // context.read<ViewModelRecord>().a();
             },
             icon: const ImageIcon(AppIcons.upload),
           ),
@@ -45,11 +45,11 @@ class TopButtonWidget extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
-              final _localAudio =
-                  context.read<ViewModelRecord>().getLoacalAudio();
               context
                   .read<ViewModelRecord>()
-                  .addAudio(await _localAudio, _duration.toString());
+                  .adddAudioToFireStore(_duration.toString());
+
+              context.read<Navigation>().setCurrentIndex = 3;
             },
             child: const Text(
               'Сохранить',

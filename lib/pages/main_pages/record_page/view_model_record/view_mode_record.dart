@@ -20,6 +20,7 @@ class _ViewModelRecordState {
   bool recordToogle = false;
   bool editAudioName = false;
   String audioName = 'Аудиозапись';
+  String? audioId;
 }
 
 class ViewModelRecord with ChangeNotifier {
@@ -43,16 +44,20 @@ class ViewModelRecord with ChangeNotifier {
     Timer(const Duration(seconds: 1), _start);
   }
 
-  Future<void> addAudio(String path, String duration) async {
+  Future<void> addAudioToStorage(String path) async {
     try {
-      if (_state.audioName == 'Аудиозапись') {
-        _state.audioName += ' ${DateTime.now()}';
-      }
-
-      await _audioRepo.addAudio(_state.audioName, path, duration);
+      _state.audioId = await _audioRepo.addAudio(path);
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<void> adddAudioToFireStore(String duration) async {
+    if (_state.audioName == 'Аудиозапись') {
+      _state.audioName += ' ${DateTime.now()}';
+    }
+    await _audioRepo.addAudioInFirestore(
+        _state.audioName, duration, _state.audioId!);
   }
 
   Future<void> _start() async {
@@ -81,7 +86,7 @@ class ViewModelRecord with ChangeNotifier {
     }
   }
 
-  Future<void> _getAmplituder() async {
+  void _getAmplituder() {
     _state.timerAmplitude = Timer.periodic(
       const Duration(milliseconds: 40),
       (_) async {
@@ -132,7 +137,7 @@ class ViewModelRecord with ChangeNotifier {
 
   @override
   void dispose() {
-    _state.timerAmplitude?.cancel();
+    _state.record = null;
     stop();
     super.dispose();
   }

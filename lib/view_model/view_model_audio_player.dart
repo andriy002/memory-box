@@ -32,6 +32,8 @@ class ViewModelAudioPlayer with ChangeNotifier {
   }
 
   void nextAudio(int max) {
+    _state.audioPlayer.release();
+
     int maxLength = max - 1;
     if (_state.indexAudio == maxLength) {
       _state.indexAudio = 0;
@@ -43,7 +45,6 @@ class ViewModelAudioPlayer with ChangeNotifier {
   }
 
   Future<void> setAudioUrl(String audio, bool isLocal) async {
-    _state.audioPlayer.release();
     if (audio.isEmpty) return;
 
     await _state.audioPlayer.setUrl(audio, isLocal: isLocal);
@@ -112,6 +113,8 @@ class ViewModelAudioPlayer with ChangeNotifier {
   }
 
   void setPlayingIndex(int index) {
+    _state.audioPlayer.release();
+
     _state.indexAudio = index;
     _state.isPlaying = true;
     notifyListeners();

@@ -21,7 +21,6 @@ class Main extends StatelessWidget {
   static Widget create() {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => Navigation()),
         StreamProvider(
           create: (_) => AudioRepositories.instance.audio,
           initialData: null,
