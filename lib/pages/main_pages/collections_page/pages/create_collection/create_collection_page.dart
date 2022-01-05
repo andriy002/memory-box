@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/audio_model.dart';
 import 'package:memory_box/pages/main_pages/collections_page/pages/create_collection/widget/app_bar_collection.dart';
-import 'package:memory_box/pages/main_pages/collections_page/view_model_collections/view_model_collections.dart';
+import 'package:memory_box/view_model/view_model_collections.dart';
 import 'package:memory_box/repositories/coolections_repositories.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/view_model/view_model_audio.dart';

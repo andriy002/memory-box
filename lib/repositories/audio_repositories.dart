@@ -71,7 +71,7 @@ class AudioRepositories {
         .map(_audioFromSnap);
   }
 
-  Stream<List<AudioBuilder>> searchAuio(String searchKey) {
+  Stream<List<AudioBuilder>> searchAudio(String searchKey) {
     return _audio
         .doc(_firebaseAuth.currentUser!.uid)
         .collection('allAudio')
@@ -81,14 +81,48 @@ class AudioRepositories {
         .map(_audioFromSnap);
   }
 
-  Future<void> sendAudioDeleteToColection(
-      String audioName, String audioUrl, String duration, String uid) async {
-    AudioBuilder audio = AudioBuilder(
-      uid: uid,
-      audioName: audioName,
-      audioUrl: audioUrl,
-      duration: duration,
-    );
+  void _decLengthAudio(String name) {
+    if (name.isEmpty) return;
+    _audio
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('collections')
+        .doc(name)
+        .update({'length': FieldValue.increment(-1)});
+  }
+
+  Future<void> sendAudioToDeleteColection(String uid) async {
+    if (uid.isEmpty) return;
+
+    AudioBuilder audio = AudioBuilder();
+
+    await _audio
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('allAudio')
+        .doc(uid)
+        .get()
+        .then((value) {
+      audio = AudioBuilder(
+          uid: uid,
+          audioName: value.get('audioName'),
+          audioUrl: value.get('audioUrl'),
+          duration: value.get('duration'),
+          searchKey: value.get('audioName').toLowerCase(),
+          collections: []);
+    });
+
+    await _audio
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('allAudio')
+        .doc(uid)
+        .get()
+        .then((value) {
+      final List collections = value.get('collections');
+      if (collections.isEmpty) return;
+      for (var element in collections) {
+        _decLengthAudio(element);
+      }
+    });
+
     await _audio
         .doc(_firebaseAuth.currentUser!.uid)
         .collection('deleteAudio')

@@ -64,13 +64,12 @@ class ViewModelCoolections with ChangeNotifier {
     notifyListeners();
   }
 
-  void createCollection() async {
+  void createCollection(int length) async {
     if (_state.imageUrl == null || _state.newCollectionName == null) {
       _state.error = true;
       notifyListeners();
       return;
     }
-
     _state.error = false;
     setCurrentIndex = 0;
     notifyListeners();
@@ -78,13 +77,14 @@ class ViewModelCoolections with ChangeNotifier {
     final imageNameUrl =
         await _collectionRepo.updatePhoto(_state.newCollectionName ?? '');
     _collectionRepo.createNewCollection(_state.newCollectionName ?? '',
-        _state.newCollectionDescription ?? '', imageNameUrl);
+        _state.newCollectionDescription ?? '', imageNameUrl, length);
     deleteFields();
   }
 
   void openAddAudioPage() {
     if (_state.openSearchAudio == false) {
       _state.openSearchAudio = true;
+      _state.error = false;
       notifyListeners();
     } else {
       _state.openSearchAudio = false;

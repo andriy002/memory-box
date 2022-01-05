@@ -91,7 +91,6 @@ class _AudioUiCard extends StatelessWidget {
                 ),
               if (stastusButton == ButtonStatus.edit)
                 _PopupMenuWidget(
-                  audioDuration: audioDuration!,
                   audioName: audioName!,
                   audioUid: audioUid!,
                   audioUrl: audioUrl!,
@@ -105,58 +104,6 @@ class _AudioUiCard extends StatelessWidget {
             color: Colors.grey,
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _AddAudioToList extends StatefulWidget {
-  final String? audioUid;
-  const _AddAudioToList({
-    Key? key,
-    required this.audioUid,
-  }) : super(key: key);
-
-  @override
-  State<_AddAudioToList> createState() => _AddAudioToListState();
-}
-
-class _AddAudioToListState extends State<_AddAudioToList> {
-  @override
-  Widget build(BuildContext context) {
-    bool isCheck = false;
-    final chekUid = context.select((ViewModelAudio vm) => vm.state.audioMap);
-
-    if (chekUid[widget.audioUid] == true) {
-      isCheck = true;
-    }
-
-    return GestureDetector(
-      onTap: () {
-        if (isCheck) {
-          context
-              .read<ViewModelAudio>()
-              .removeAudioInMap(widget.audioUid ?? '');
-        } else {
-          isCheck = false;
-          context.read<ViewModelAudio>().addAudioToMap(widget.audioUid ?? '');
-        }
-        setState(() {});
-      },
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(60),
-            ),
-          ),
-          if (isCheck) const ImageIcon(AppIcons.done)
-        ],
       ),
     );
   }
@@ -232,56 +179,6 @@ class _NameAndDurationWidget extends StatelessWidget {
   }
 }
 
-class _PopupMenuWidget extends StatelessWidget {
-  final String audioName;
-  final String audioDuration;
-  final String audioUrl;
-  final String audioUid;
-  final int index;
-
-  const _PopupMenuWidget({
-    Key? key,
-    required this.audioDuration,
-    required this.audioName,
-    required this.audioUrl,
-    required this.audioUid,
-    required this.index,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final viewModel = context.read<ViewModelAudio>();
-
-    return GestureDetector(
-      child: PopupMenuButton(
-        icon: const Icon(Icons.more_horiz),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(15),
-          ),
-        ),
-        itemBuilder: (context) => [
-          popupMenuItem('Переименовать', () {
-            viewModel.setIndexReanme(index);
-          }),
-          popupMenuItem('Добавить в подборку', () {
-            // viewModel.deleteSelectedAudio();
-          }),
-          popupMenuItem('Удалить', () {
-            context.read<ViewModelAudioPlayer>().stop();
-
-            viewModel.sendAudioToDeleteColection(
-                audioName, audioUrl, audioDuration, audioUid);
-          }),
-          popupMenuItem('Поделиться', () {
-            viewModel.shareUrlFile(audioUrl, audioName);
-          }),
-        ],
-      ),
-    );
-  }
-}
-
 class _PlayButtonWidget extends StatelessWidget {
   final int index;
   final Color? colorButton;
@@ -315,6 +212,102 @@ class _PlayButtonWidget extends StatelessWidget {
             iconSize: 30,
             color: Colors.white,
             onPressed: onPressedChecker),
+      ),
+    );
+  }
+}
+
+class _PopupMenuWidget extends StatelessWidget {
+  final String audioName;
+  final String audioUrl;
+  final String audioUid;
+  final int index;
+
+  const _PopupMenuWidget({
+    Key? key,
+    required this.audioName,
+    required this.audioUrl,
+    required this.audioUid,
+    required this.index,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.read<ViewModelAudio>();
+
+    return PopupMenuButton(
+      icon: const Icon(Icons.more_horiz),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(15),
+        ),
+      ),
+      itemBuilder: (context) => [
+        popupMenuItem('Переименовать', () {
+          viewModel.setIndexReanme(index);
+        }),
+        popupMenuItem('Добавить в подборку', () {
+          // viewModel.d(audioUid);
+        }),
+        popupMenuItem('Удалить', () {
+          context.read<ViewModelAudioPlayer>().stop();
+          viewModel.sendAudioToDeleteColection(audioUid);
+        }),
+        popupMenuItem('Поделиться', () {
+          viewModel.shareUrlFile(audioUrl, audioName);
+        }),
+      ],
+    );
+  }
+}
+
+class _AddAudioToList extends StatefulWidget {
+  final String? audioUid;
+  const _AddAudioToList({
+    Key? key,
+    required this.audioUid,
+  }) : super(key: key);
+
+  @override
+  State<_AddAudioToList> createState() => _AddAudioToListState();
+}
+
+class _AddAudioToListState extends State<_AddAudioToList> {
+  @override
+  Widget build(BuildContext context) {
+    bool isCheck = false;
+    final chekUid = context.select((ViewModelAudio vm) => vm.state.audioMap);
+
+    if (chekUid[widget.audioUid] == true) {
+      isCheck = true;
+    }
+
+    return GestureDetector(
+      onTap: () {
+        if (isCheck) {
+          context
+              .read<ViewModelAudio>()
+              .removeAudioInMap(widget.audioUid ?? '');
+        } else {
+          isCheck = false;
+          context.read<ViewModelAudio>().addAudioToMap(widget.audioUid ?? '');
+        }
+        setState(() {});
+      },
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(60),
+            ),
+          ),
+          if (isCheck) const ImageIcon(AppIcons.done)
+        ],
       ),
     );
   }

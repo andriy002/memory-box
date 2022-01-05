@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/audio_model.dart';
-import 'package:memory_box/pages/main_pages/collections_page/view_model_collections/view_model_collections.dart';
+import 'package:memory_box/view_model/view_model_collections.dart';
 import 'package:memory_box/pages/main_pages/main_page/widget/sliver_adapter.dart';
 import 'package:memory_box/pages/main_pages/main_page/widget/sliver_app_bar.dart';
 import 'package:memory_box/repositories/coolections_repositories.dart';

@@ -11,10 +11,11 @@ class _ViewModelAudioState {
   int? indexRename;
   String? audioName;
   String searchKey = '';
-  Set<String> audioList = {};
   bool ckeckBool = false;
   int? indexCheck;
   Map<String, bool> audioMap = {};
+
+  bool selected = false;
 }
 
 class ViewModelAudio with ChangeNotifier {
@@ -27,6 +28,23 @@ class ViewModelAudio with ChangeNotifier {
   void setIndexReanme(int index) {
     _state.indexRename = index;
     notifyListeners();
+  }
+
+  void selected() {
+    if (_state.selected) {
+      _state.selected = false;
+      notifyListeners();
+    } else {
+      _state.selected = true;
+      notifyListeners();
+    }
+  }
+
+  void removeAudioList() {
+    if (_state.audioMap.isEmpty) return;
+    _state.audioMap.forEach((key, value) {
+      _audioRepo.sendAudioToDeleteColection(key);
+    });
   }
 
   void searchKeyInput(String searchKey) {
@@ -55,19 +73,18 @@ class ViewModelAudio with ChangeNotifier {
     notifyListeners();
   }
 
+  void d(uid) {
+    _audioRepo.sendAudioToDeleteColection(uid);
+  }
+
   void addAudioToCollection(String nameCollection) {
     _state.audioMap.forEach((key, value) {
       _collectionRepo.addAudioInCollection(nameCollection, key);
     });
   }
 
-  void sendAudioToDeleteColection(
-    String audioName,
-    String audioUrl,
-    String duration,
-    String uid,
-  ) {
-    _audioRepo.sendAudioDeleteToColection(audioName, audioUrl, duration, uid);
+  void sendAudioToDeleteColection(String uid) {
+    _audioRepo.sendAudioToDeleteColection(uid);
   }
 
   Future<void> shareUrlFile(String url, String name) async {

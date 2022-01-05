@@ -12,6 +12,8 @@ class _ViewModelAudioPlayerState {
   bool isPlaying = false;
   bool pause = false;
   int? indexAudio;
+  bool repeatAudio = false;
+  int lengthAudio = 0;
 }
 
 class ViewModelAudioPlayer with ChangeNotifier {
@@ -31,6 +33,21 @@ class ViewModelAudioPlayer with ChangeNotifier {
     Share.shareFiles([paths]);
   }
 
+  void toogleRepeatAudio(int lengthAudio) {
+    if (_state.repeatAudio) {
+      _state.repeatAudio = false;
+      stop();
+
+      notifyListeners();
+    } else {
+      _state.repeatAudio = true;
+      setPlayingIndex(0);
+      _state.lengthAudio = lengthAudio;
+
+      notifyListeners();
+    }
+  }
+
   void nextAudio(int max) {
     _state.audioPlayer.release();
 
@@ -46,6 +63,7 @@ class ViewModelAudioPlayer with ChangeNotifier {
 
   Future<void> setAudioUrl(String audio, bool isLocal) async {
     if (audio.isEmpty) return;
+    _state.audioPlayer = AudioPlayer();
 
     await _state.audioPlayer.setUrl(audio, isLocal: isLocal);
     play(audio);
@@ -58,15 +76,16 @@ class ViewModelAudioPlayer with ChangeNotifier {
       _state.audioPosition = p;
       notifyListeners();
     });
-    // _state.audioPlayer.onAudioPositionChanged.listen((_) {
 
-    // });
-
-    _state.audioPlayer.onPlayerCompletion.listen((_) {
-      _state.audioPosition = const Duration(microseconds: 0);
-      _state.isPlaying = false;
-      _state.indexAudio = null;
-      notifyListeners();
+    _state.audioPlayer.onPlayerCompletion.listen((e) {
+      if (_state.repeatAudio) {
+        nextAudio(_state.lengthAudio);
+      } else {
+        _state.audioPosition = const Duration(microseconds: 0);
+        _state.isPlaying = false;
+        _state.indexAudio = null;
+        notifyListeners();
+      }
     });
   }
 
@@ -96,8 +115,6 @@ class ViewModelAudioPlayer with ChangeNotifier {
     await _state.audioPlayer.play(audio);
     _state.isPlaying = true;
     _state.pause = false;
-
-    notifyListeners();
   }
 
   void resume() {

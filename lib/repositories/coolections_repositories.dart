@@ -81,9 +81,9 @@ class CollectionsRepositories {
         .doc(doc)
         .get()
         .then((value) {
-      final i = value.get('collections');
-      i.toSet().toList();
-      colectionName.addAll(i);
+      final List collections = value.get('collections');
+      collections.toSet().toList();
+      colectionName.addAll(collections);
     });
     _collections
         .doc(_firebaseAuth.currentUser!.uid)
@@ -92,11 +92,12 @@ class CollectionsRepositories {
         .update({'collections': colectionName});
   }
 
-  void createNewCollection(String name, String description, String image) {
+  void createNewCollection(
+      String name, String description, String image, int length) {
     CollectionsBuilder collections = CollectionsBuilder(
         descriptions: description,
         name: name,
-        length: 0,
+        length: length,
         image: image,
         displayName: name);
     _collections

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:memory_box/pages/main_pages/collections_page/view_model_collections/view_model_collections.dart';
+import 'package:memory_box/view_model/view_model_collections.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/resources/app_icons.dart';
@@ -24,6 +24,9 @@ class AppBarCollectionCreate extends StatelessWidget {
     final bool _error =
         context.select((ViewModelCoolections vm) => vm.state.error);
 
+    final int _lengthAudio =
+        context.select((ViewModelAudio vm) => vm.state.audioMap.length);
+
     return SliverAppBar(
       leading: leftArrowButton(
         () {
@@ -34,7 +37,7 @@ class AppBarCollectionCreate extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
-            context.read<ViewModelCoolections>().createCollection();
+            context.read<ViewModelCoolections>().createCollection(_lengthAudio);
             if (!_error) {
               context.read<ViewModelAudio>().addAudioToCollection(
                     _nameCollection ?? '',

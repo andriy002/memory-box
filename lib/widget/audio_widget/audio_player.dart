@@ -26,7 +26,7 @@ class AudioPlayerWidget extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: Container(
         width: double.infinity,
-        height: 60,
+        height: 60.0,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             begin: Alignment.bottomLeft,
@@ -38,24 +38,24 @@ class AudioPlayerWidget extends StatelessWidget {
           ),
           border: Border.all(color: Colors.grey),
           borderRadius: const BorderRadius.all(
-            Radius.circular(30),
+            Radius.circular(30.0),
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const _PlayerPlayPasueButtonWidget(),
               SizedBox(
                 width: MediaQuery.of(context).size.width / 1.4,
-                height: 60,
+                height: 60.0,
                 child: Stack(
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(25, 0, 0, 30),
                       child: Text(
-                        audioName!.length > 30
+                        audioName!.length > 30.0
                             ? audioName!.substring(0, 30)
                             : audioName ?? '',
                         style: const TextStyle(
@@ -77,7 +77,7 @@ class AudioPlayerWidget extends StatelessWidget {
                   },
                   icon: const ImageIcon(
                     AppIcons.arrowNext,
-                    size: 40,
+                    size: 40.0,
                     color: Colors.white,
                   ))
             ],
@@ -99,7 +99,7 @@ class _SliderAudioPlayerWidget extends StatelessWidget {
     final audioLength =
         context.select((ViewModelAudioPlayer vm) => vm.state.audioLength);
     return Padding(
-      padding: const EdgeInsets.only(top: 2),
+      padding: const EdgeInsets.only(top: 2.0),
       child: SliderAudioPlayer(
         position: audioPosition.inSeconds.toDouble(),
         audioLength: audioLength.inSeconds.toDouble(),

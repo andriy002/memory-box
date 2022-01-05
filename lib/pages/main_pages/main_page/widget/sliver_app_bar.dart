@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/collections.model.dart';
-import 'package:memory_box/pages/main_pages/collections_page/view_model_collections/view_model_collections.dart';
+import 'package:memory_box/view_model/view_model_collections.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/view_model/navigation.dart';
 import 'package:memory_box/widget/circle_app_bar.dart';
@@ -270,14 +270,16 @@ class _SliverCollectionsWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: 100,
+                  width: 50,
                   child: Text(
-                    displayName ?? '',
+                    displayName!.length > 20
+                        ? displayName!.substring(0, 20)
+                        : displayName!,
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
                 Text(
-                  '$length',
+                  '$length аудио',
                   style: const TextStyle(color: Colors.white),
                 )
               ],

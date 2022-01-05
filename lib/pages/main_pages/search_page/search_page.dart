@@ -44,10 +44,12 @@ class _BodySearchPage extends StatelessWidget {
     );
 
     return StreamBuilder<Object>(
-      stream: AudioRepositories.instance.searchAuio(_searchKey),
+      stream: AudioRepositories.instance.searchAudio(_searchKey),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final List<AudioBuilder> _data = snapshot.data as List<AudioBuilder>;
+          final bool _selected =
+              context.select((ViewModelAudio vm) => vm.state.selected);
 
           return Scaffold(
             body: SizedBox(
@@ -59,7 +61,9 @@ class _BodySearchPage extends StatelessWidget {
                     slivers: [
                       const SliverAppBarSearchPage(),
                       SliverAudioList(
-                        stastusButton: ButtonStatus.edit,
+                        stastusButton: _selected
+                            ? ButtonStatus.selected
+                            : ButtonStatus.edit,
                         data: _data,
                         childCount: _data.length,
                       ),

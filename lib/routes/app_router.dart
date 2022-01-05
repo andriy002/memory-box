@@ -13,33 +13,3 @@ abstract class Routes {
     Main.routeName: (context) => Main.create(),
   };
 }
-
-// class AppRouter {
-//   const AppRouter._();
-
-//   static Route<dynamic> generateRoute(RouteSettings settings) {
-//     final Object? arguments = settings.arguments;
-
-//     WidgetBuilder builder;
-
-//     switch (settings.name) {
-//       case WelcomPage.routeName:
-//         builder = (_) => const WelcomPage();
-//         break;
-
-//       case AuthPage.routeName:
-//         builder = (_) => AuthPage.create();
-//         break;
-
-//       default:
-//         throw Exception('Invalid route: ${settings.name}');
-//     }
-
-//     return MaterialPageRoute(
-//       builder: builder,
-//       settings: settings,
-//     );
-//   }
-// }
-
-

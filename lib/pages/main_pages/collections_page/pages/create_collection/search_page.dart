@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/audio_model.dart';
-import 'package:memory_box/pages/main_pages/collections_page/view_model_collections/view_model_collections.dart';
+import 'package:memory_box/view_model/view_model_collections.dart';
 import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
@@ -28,7 +28,7 @@ class SearchPageCollections extends StatelessWidget {
     );
 
     return StreamBuilder<Object>(
-      stream: AudioRepositories.instance.searchAuio(_searchKey),
+      stream: AudioRepositories.instance.searchAudio(_searchKey),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final List<AudioBuilder> _data = snapshot.data as List<AudioBuilder>;

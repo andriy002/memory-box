@@ -24,8 +24,8 @@ class _BodyAudioPage extends StatelessWidget {
   static Widget create() {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ViewModelAudio()),
         ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
+        ChangeNotifierProvider(create: (_) => ViewModelAudio()),
       ],
       child: const _BodyAudioPage(),
     );
@@ -38,6 +38,8 @@ class _BodyAudioPage extends StatelessWidget {
         context.select((ViewModelAudioPlayer vm) => vm.state.isPlaying);
     final int _indexAudio =
         context.select((ViewModelAudioPlayer vm) => vm.state.indexAudio ?? 0);
+    final bool _selected =
+        context.select((ViewModelAudio vm) => vm.state.selected);
 
     if (data == null) {
       return const Center(child: CircularProgressIndicator());
@@ -50,9 +52,10 @@ class _BodyAudioPage extends StatelessWidget {
           CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              SliverAudioAppBar(data: data),
+              SliverAudioAppBar(data: data.length),
               SliverAudioList(
-                stastusButton: ButtonStatus.edit,
+                stastusButton:
+                    _selected ? ButtonStatus.selected : ButtonStatus.edit,
                 data: data,
                 childCount: data.length,
               ),
