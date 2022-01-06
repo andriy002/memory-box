@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/collections.model.dart';
+import 'package:memory_box/pages/auth_pages/welcome_page.dart';
 import 'package:memory_box/pages/main_pages/collections_page/pages/audio_collections.dart';
 import 'package:memory_box/pages/main_pages/collections_page/pages/create_collection/create_collection_page.dart';
 import 'package:memory_box/view_model/view_model_audio.dart';

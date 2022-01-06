@@ -14,6 +14,9 @@ class _ViewModelCoolectionsState {
   String? newCollectionDescription;
   File? imageUrl;
   bool error = false;
+  Map<String, bool> collectionMap = {};
+
+  bool selected = false;
 
   String? nameCollections;
   String? dispalyNameCollections;
@@ -31,6 +34,48 @@ class ViewModelCoolections with ChangeNotifier {
   void nameCollections(String nameCollections) {
     if (nameCollections.isEmpty) return;
     _state.nameCollections = nameCollections;
+    notifyListeners();
+  }
+
+  void selected() {
+    if (_state.selected) {
+      _state.selected = false;
+      notifyListeners();
+    } else {
+      _state.selected = true;
+      notifyListeners();
+    }
+  }
+
+  void addCollectionToMap(String name) {
+    _state.collectionMap[name] = true;
+    notifyListeners();
+  }
+
+  void addAudioToCollection(String uid) {
+    _state.collectionMap.forEach((key, value) {
+      _collectionRepo.addAudioInCollection(key, uid);
+    });
+  }
+
+  void addAudioToCollectionList(Map uid) {
+    List uidAudio = [];
+    uid.forEach((key, value) {
+      uidAudio.add(key);
+    });
+
+    List col = [];
+    _state.collectionMap.forEach((key, value) {
+      col.add(key);
+    });
+
+    for (String element in uidAudio) {
+      _collectionRepo.addAudioInCollectionList(col, element);
+    }
+  }
+
+  void removeCollectionInMap(String audio) {
+    _state.collectionMap.remove(audio);
     notifyListeners();
   }
 

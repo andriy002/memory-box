@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/audio_model.dart';
+import 'package:memory_box/pages/main_pages/collections_page/pages/add_audio_in_collection/add_audio_in_collection_page.dart';
+
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/resources/app_icons.dart';
+import 'package:memory_box/view_model/navigation.dart';
 import 'package:memory_box/view_model/view_model_audio.dart';
 
 import 'package:memory_box/view_model/view_model_audio_player.dart';
@@ -233,10 +236,18 @@ class _PopupMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.read<ViewModelAudio>();
+    final _viewModel = context.read<ViewModelAudio>();
 
     return PopupMenuButton(
       icon: const Icon(Icons.more_horiz),
+      onSelected: (value) async {
+        if (value == 1) {
+          _viewModel.addAudioToMap(audioUid);
+          await Navigator.pushNamed(context, AddAudioInCollectionPage.routeName,
+              arguments: _viewModel.state.audioMap);
+          _viewModel.removeAudioInMap(audioUid);
+        }
+      },
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(15),
@@ -244,18 +255,16 @@ class _PopupMenuWidget extends StatelessWidget {
       ),
       itemBuilder: (context) => [
         popupMenuItem('Переименовать', () {
-          viewModel.setIndexReanme(index);
-        }),
-        popupMenuItem('Добавить в подборку', () {
-          // viewModel.d(audioUid);
-        }),
+          _viewModel.setIndexReanme(index);
+        }, 0),
+        popupMenuItem('Добавить в подборку', () {}, 1),
         popupMenuItem('Удалить', () {
           context.read<ViewModelAudioPlayer>().stop();
-          viewModel.sendAudioToDeleteColection(audioUid);
-        }),
+          _viewModel.sendAudioToDeleteColection(audioUid);
+        }, 2),
         popupMenuItem('Поделиться', () {
-          viewModel.shareUrlFile(audioUrl, audioName);
-        }),
+          _viewModel.shareUrlFile(audioUrl, audioName);
+        }, 3),
       ],
     );
   }

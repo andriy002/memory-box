@@ -73,7 +73,7 @@ class CollectionsRepositories {
     });
   }
 
-  Future<void> addAudioInCollection(col, doc) async {
+  Future<void> addAudioInCollection(String col, String doc) async {
     List colectionName = [col];
     await _collections
         .doc(_firebaseAuth.currentUser!.uid)
@@ -82,7 +82,7 @@ class CollectionsRepositories {
         .get()
         .then((value) {
       final List collections = value.get('collections');
-      collections.toSet().toList();
+
       colectionName.addAll(collections);
     });
     _collections
@@ -90,6 +90,23 @@ class CollectionsRepositories {
         .collection('allAudio')
         .doc(doc)
         .update({'collections': colectionName});
+  }
+
+  Future<void> addAudioInCollectionList(List col, String doc) async {
+    await _collections
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('allAudio')
+        .doc(doc)
+        .get()
+        .then((value) {
+      final List collections = value.get('collections');
+      col.addAll(collections);
+    });
+    _collections
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('allAudio')
+        .doc(doc)
+        .update({'collections': col.toSet().toList()});
   }
 
   void createNewCollection(
