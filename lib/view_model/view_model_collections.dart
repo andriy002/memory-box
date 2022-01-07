@@ -138,7 +138,20 @@ class ViewModelCoolections with ChangeNotifier {
   }
 
   void removeSelected() {
-    _collectionRepo.deleteSelectedAudio();
+    _collectionRepo.deletedAudioInCollection(['selected']);
+  }
+
+  void deletedCollection() {
+    List colection = [];
+    _state.collectionMap.forEach((key, value) {
+      colection.add(key);
+    });
+    _collectionRepo.deletedAudioInCollection(colection);
+
+    for (var element in colection) {
+      _collectionRepo.deleteCollection(element);
+      _state.collectionMap.remove(element);
+    }
   }
 
   void deleteFields() {

@@ -40,7 +40,8 @@ class CollectionsRepositories {
     storageRef.putFile(file);
   }
 
-  void _deleteAudioInCollections(String doc) async {
+  Future<void> _deleteAudioInCollections(
+      String doc, List collectionName) async {
     List listCollectionName = [];
     await _collections
         .doc(_firebaseAuth.currentUser!.uid)
@@ -49,7 +50,10 @@ class CollectionsRepositories {
         .get()
         .then((value) {
       final List listNameCol = value.get('collections');
-      listNameCol.removeWhere((element) => element == 'selected');
+      for (String element in collectionName) {
+        listNameCol.remove(element);
+      }
+
       listCollectionName.addAll(listNameCol);
     });
 
@@ -60,17 +64,28 @@ class CollectionsRepositories {
         .update({'collections': listCollectionName});
   }
 
-  void deleteSelectedAudio() {
+  void deleteCollection(String name) {
+    if (name.isEmpty) return;
+    _collections
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('collections')
+        .doc(name)
+        .delete();
+  }
+
+  void deletedAudioInCollection(List colectionName) {
     _collections
         .doc(_firebaseAuth.currentUser!.uid)
         .collection('allAudio')
-        .where('collections', arrayContains: 'selected')
+        .where('collections', arrayContainsAny: colectionName)
         .get()
-        .then((value) {
-      for (var element in value.docs) {
-        _deleteAudioInCollections(element.data()['uid']);
-      }
-    });
+        .then(
+      (value) {
+        for (var element in value.docs) {
+          _deleteAudioInCollections(element.data()['uid'], colectionName);
+        }
+      },
+    );
   }
 
   Future<void> addAudioInCollection(String col, String doc) async {
