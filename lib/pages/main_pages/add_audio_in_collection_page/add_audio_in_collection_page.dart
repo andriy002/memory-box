@@ -13,9 +13,12 @@ import 'package:provider/provider.dart';
 
 class AddAudioInCollectionPage extends StatelessWidget {
   static const routeName = '/add_audio_in_collection_page';
-  const AddAudioInCollectionPage({Key? key}) : super(key: key);
+  final Map args;
 
-  static Widget create() {
+  const AddAudioInCollectionPage({Key? key, required this.args})
+      : super(key: key);
+
+  static Widget create(Map args) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ViewModelCoolections()),
@@ -24,13 +27,14 @@ class AddAudioInCollectionPage extends StatelessWidget {
           initialData: null,
         ),
       ],
-      child: const AddAudioInCollectionPage(),
+      child: AddAudioInCollectionPage(
+        args: args,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
     final List<CollectionsBuilder>? dataCollections =
         context.watch<List<CollectionsBuilder>?>();
 

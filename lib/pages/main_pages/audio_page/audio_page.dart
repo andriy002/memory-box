@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/audio_model.dart';
+import 'package:memory_box/pages/main_pages/audio_page/widget/sliver_audio_app_bar.dart';
 import 'package:memory_box/view_model/view_model_audio.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
@@ -7,19 +8,10 @@ import 'package:memory_box/widget/audio_widget/list_audio.dart';
 
 import 'package:provider/provider.dart';
 
-import 'widget/sliver_audio_app_bar.dart';
-
 class AudioPage extends StatelessWidget {
   const AudioPage({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return _BodyAudioPage.create();
-  }
-}
-
-class _BodyAudioPage extends StatelessWidget {
-  const _BodyAudioPage({Key? key}) : super(key: key);
+  static const routeName = '/audio_page';
 
   static Widget create() {
     return MultiProvider(
@@ -27,7 +19,7 @@ class _BodyAudioPage extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
         ChangeNotifierProvider(create: (_) => ViewModelAudio()),
       ],
-      child: const _BodyAudioPage(),
+      child: const AudioPage(),
     );
   }
 
@@ -61,7 +53,7 @@ class _BodyAudioPage extends StatelessWidget {
               ),
               const SliverToBoxAdapter(
                 child: SizedBox(
-                  height: 80,
+                  height: 160,
                 ),
               ),
             ],
@@ -71,9 +63,25 @@ class _BodyAudioPage extends StatelessWidget {
               audioUrl: data[_indexAudio].audioUrl,
               maxLength: data.length,
               audioName: data[_indexAudio].audioName,
-            )
+            ),
         ],
       ),
     );
   }
 }
+
+
+// class _BodyAudioPage extends StatelessWidget {
+//   const _BodyAudioPage({Key? key}) : super(key: key);
+
+//   static Widget create() {
+//     return MultiProvider(
+//       providers: [
+//         ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
+//         ChangeNotifierProvider(create: (_) => ViewModelAudio()),
+//       ],
+//       child: const _BodyAudioPage(),
+//     );
+//   }
+
+  

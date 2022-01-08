@@ -9,19 +9,20 @@ import 'package:memory_box/widget/audio_widget/list_audio.dart';
 
 import 'package:provider/provider.dart';
 
+// class SearchPage extends StatelessWidget {
+//   const SearchPage({Key? key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: _BodySearchPage.create(),
+//     );
+//   }
+// }
+
 class SearchPage extends StatelessWidget {
   const SearchPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _BodySearchPage.create(),
-    );
-  }
-}
-
-class _BodySearchPage extends StatelessWidget {
-  const _BodySearchPage({Key? key}) : super(key: key);
+  static const routeName = '/search_page';
 
   static Widget create() {
     return MultiProvider(
@@ -29,7 +30,7 @@ class _BodySearchPage extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ViewModelAudio()),
         ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
       ],
-      child: const _BodySearchPage(),
+      child: const SearchPage(),
     );
   }
 

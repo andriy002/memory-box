@@ -11,7 +11,8 @@ class EditAccountWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void nav() {
-      Navigator.of(context).pushReplacementNamed(WelcomPage.routeName);
+      Navigator.of(context, rootNavigator: true)
+          .pushReplacementNamed(WelcomPage.routeName);
     }
 
     return Row(
@@ -48,7 +49,8 @@ class EditAccountWidget extends StatelessWidget {
 
   Future<dynamic> _deleteDialog(BuildContext context) {
     void nav() {
-      Navigator.of(context).pushReplacementNamed(WelcomPage.routeName);
+      Navigator.of(context, rootNavigator: true)
+          .pushReplacementNamed(WelcomPage.routeName);
     }
 
     return showDialog(

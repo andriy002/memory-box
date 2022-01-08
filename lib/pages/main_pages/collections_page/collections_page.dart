@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/collections.model.dart';
-import 'package:memory_box/pages/main_pages/collections_page/pages/audio_collections.dart';
-import 'package:memory_box/pages/main_pages/collections_page/pages/create_collection/create_collection_page.dart';
+import 'package:memory_box/pages/main_pages/audio_collections_page/audio_collections_page.dart';
+import 'package:memory_box/pages/main_pages/create_collection_page/create_collection_page.dart';
 import 'package:memory_box/resources/app_icons.dart';
 import 'package:memory_box/view_model/view_model_collections.dart';
 import 'package:memory_box/repositories/coolections_repositories.dart';
@@ -13,6 +13,8 @@ import 'package:provider/provider.dart';
 
 class CollectionPage extends StatelessWidget {
   const CollectionPage({Key? key}) : super(key: key);
+
+  static const String routeName = '/collection_page';
 
   static Widget create() {
     return MultiProvider(
@@ -36,8 +38,7 @@ class CollectionPage extends StatelessWidget {
 
     List<Widget> _pages = <Widget>[
       const CollectionsPageContainer(),
-      CollectionsAudioContainer.create(_nameCollections ?? ''),
-      CreateNewCollection.create(),
+      // CollectionsAudioContainer.create(_nameCollections ?? ''),
     ];
 
     return Scaffold(
@@ -72,7 +73,8 @@ class CollectionsPageContainer extends StatelessWidget {
               SliverAppBar(
                 leading: IconButton(
                   onPressed: () {
-                    context.read<ViewModelCoolections>().setCurrentIndex = 2;
+                    Navigator.of(context)
+                        .pushNamed(CreateNewCollection.routeName);
                   },
                   icon: const Icon(Icons.add),
                 ),
@@ -185,17 +187,27 @@ class _SliverCollectionsWidgetState extends State<SliverCollectionsWidget> {
                 setState(() {});
               }
             : () {
-                context.read<ViewModelCoolections>().sendInfoCollecion(
-                      descriptionCollections: widget.description,
-                      displayNameCollections: widget.displayName,
-                      lengthCollections: widget.length,
-                      imgCollections: widget.img,
-                    );
+                Navigator.pushNamed(
+                  context,
+                  CollectionsAudioPage.routeName,
+                  arguments: {
+                    'img': widget.img,
+                    'displayName': widget.displayName,
+                    'nameCollections': widget.name,
+                    'description': widget.description
+                  },
+                );
+                // context.read<ViewModelCoolections>().sendInfoCollecion(
+                //       descriptionCollections: widget.description,
+                //       displayNameCollections: widget.displayName,
+                //       lengthCollections: widget.length,
+                //       imgCollections: widget.img,
+                //     );
 
-                context.read<ViewModelCoolections>().setCurrentIndex = 1;
-                context
-                    .read<ViewModelCoolections>()
-                    .nameCollections(widget.name!);
+                // context.read<ViewModelCoolections>().setCurrentIndex = 1;
+                // context
+                //     .read<ViewModelCoolections>()
+                //     .nameCollections(widget.name!);
               },
         child: Stack(
           alignment: Alignment.center,

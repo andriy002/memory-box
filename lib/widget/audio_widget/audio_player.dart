@@ -22,65 +22,68 @@ class AudioPlayerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<ViewModelAudioPlayer>().setAudioUrl(audioUrl ?? '', false);
 
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        width: double.infinity,
-        height: 60.0,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF8C84E2),
-              Color(0xFF6C689F),
-            ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 80),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          width: double.infinity,
+          height: 60.0,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.bottomLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF8C84E2),
+                Color(0xFF6C689F),
+              ],
+            ),
+            border: Border.all(color: Colors.grey),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(30.0),
+            ),
           ),
-          border: Border.all(color: Colors.grey),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(30.0),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const _PlayerPlayPasueButtonWidget(),
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 1.4,
-                height: 60.0,
-                child: Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(25, 0, 0, 30),
-                      child: Text(
-                        audioName!.length > 30.0
-                            ? audioName!.substring(0, 30)
-                            : audioName ?? '',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontFamily: AppFonts.mainFont,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const _PlayerPlayPasueButtonWidget(),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 1.4,
+                  height: 60.0,
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(25, 0, 0, 30),
+                        child: Text(
+                          audioName!.length > 30.0
+                              ? audioName!.substring(0, 30)
+                              : audioName ?? '',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: AppFonts.mainFont,
+                          ),
                         ),
                       ),
-                    ),
-                    const _SliderAudioPlayerWidget(),
-                    const _PositionAudioWidget(),
-                  ],
+                      const _SliderAudioPlayerWidget(),
+                      const _PositionAudioWidget(),
+                    ],
+                  ),
                 ),
-              ),
-              IconButton(
-                  onPressed: () {
-                    context
-                        .read<ViewModelAudioPlayer>()
-                        .nextAudio(maxLength ?? 0);
-                  },
-                  icon: const ImageIcon(
-                    AppIcons.arrowNext,
-                    size: 40.0,
-                    color: Colors.white,
-                  ))
-            ],
+                IconButton(
+                    onPressed: () {
+                      context
+                          .read<ViewModelAudioPlayer>()
+                          .nextAudio(maxLength ?? 0);
+                    },
+                    icon: const ImageIcon(
+                      AppIcons.arrowNext,
+                      size: 40.0,
+                      color: Colors.white,
+                    ))
+              ],
+            ),
           ),
         ),
       ),

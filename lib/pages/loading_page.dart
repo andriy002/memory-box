@@ -1,23 +1,31 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:memory_box/pages/main_pages/main.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/widget/circle_app_bar.dart';
 import 'package:memory_box/widget/heart_picker.dart';
 
-import 'main_pages/main.dart';
-
-class LoadingPage extends StatelessWidget {
+class LoadingPage extends StatefulWidget {
   const LoadingPage({Key? key}) : super(key: key);
   static const routeName = '/loading_page';
 
   @override
-  Widget build(BuildContext context) {
+  State<LoadingPage> createState() => _LoadingPageState();
+}
+
+class _LoadingPageState extends State<LoadingPage> {
+  @override
+  void initState() {
     Timer(
       const Duration(seconds: 3),
       () => Navigator.of(context).pushReplacementNamed(Main.routeName),
     );
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: SizedBox(

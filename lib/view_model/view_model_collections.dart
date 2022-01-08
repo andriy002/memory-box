@@ -116,7 +116,6 @@ class ViewModelCoolections with ChangeNotifier {
       return;
     }
     _state.error = false;
-    setCurrentIndex = 0;
     notifyListeners();
 
     final imageNameUrl =

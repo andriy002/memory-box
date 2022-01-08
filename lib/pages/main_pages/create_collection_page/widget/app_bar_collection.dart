@@ -30,8 +30,8 @@ class AppBarCollectionCreate extends StatelessWidget {
     return SliverAppBar(
       leading: leftArrowButton(
         () {
-          context.read<ViewModelCoolections>().setCurrentIndex = 0;
           context.read<ViewModelCoolections>().deleteFields();
+          Navigator.of(context).pop();
         },
       ),
       actions: [
@@ -42,6 +42,7 @@ class AppBarCollectionCreate extends StatelessWidget {
               context.read<ViewModelAudio>().addAudioToCollection(
                     _nameCollection ?? '',
                   );
+              Navigator.of(context).pop();
             }
           },
           child: const Text(

@@ -5,17 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:memory_box/pages/auth_pages/welcome_page.dart';
 import 'package:memory_box/pages/loading_page.dart';
 import 'package:memory_box/routes/app_router.dart';
-import 'package:memory_box/view_model/navigation.dart';
-import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => Navigation(),
-      child: const MemoryBox(),
-    ),
+    const MemoryBox(),
   );
 }
 
@@ -38,7 +33,7 @@ class MemoryBox extends StatelessWidget {
 
     return MaterialApp(
       home: _checkAuth(),
-      routes: Routes.routes,
+      onGenerateRoute: AppRouter.generateRoute,
       debugShowCheckedModeBanner: false,
     );
   }

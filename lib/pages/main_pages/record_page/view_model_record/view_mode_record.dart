@@ -41,7 +41,7 @@ class ViewModelRecord with ChangeNotifier {
   }
 
   ViewModelRecord() {
-    Timer(const Duration(seconds: 1), _start);
+    _start();
   }
 
   Future<void> addAudioToStorage(String path) async {

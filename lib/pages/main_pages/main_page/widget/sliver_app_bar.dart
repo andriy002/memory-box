@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/collections.model.dart';
+import 'package:memory_box/pages/main_pages/audio_collections_page/audio_collections_page.dart';
+import 'package:memory_box/pages/main_pages/create_collection_page/create_collection_page.dart';
+
 import 'package:memory_box/view_model/view_model_collections.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/view_model/navigation.dart';
@@ -132,9 +135,8 @@ class _BigCard extends StatelessWidget {
                   const SizedBox(height: 30),
                   TextButton(
                       onPressed: () {
-                        context.read<Navigation>().setCurrentIndex = 1;
-                        context.read<ViewModelCoolections>().setCurrentIndex =
-                            2;
+                        Navigator.of(context)
+                            .pushNamed(CreateNewCollection.routeName);
                       },
                       child: const Text(
                         'Добавить',
@@ -168,8 +170,14 @@ class _SmallCard extends StatelessWidget {
           SizedBox(
             height: MediaQuery.of(context).size.height / 7.2,
             width: double.infinity,
-            child: dataCollections.isEmpty
-                ? Card(
+            child: dataCollections.length > 1
+                ? _SliverCollectionsWidget(
+                    img: dataCollections[1].image,
+                    name: dataCollections[1].name,
+                    length: dataCollections[1].length,
+                    displayName: dataCollections[1].displayName,
+                    description: dataCollections[1].descriptions)
+                : Card(
                     color: const Color(0xE6F1B488),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -183,24 +191,18 @@ class _SmallCard extends StatelessWidget {
                             fontSize: 20),
                       ),
                     ),
-                  )
-                : _SliverCollectionsWidget(
-                    img: dataCollections[0].image,
-                    name: dataCollections[0].name,
-                    length: dataCollections[0].length,
-                    displayName: dataCollections[0].displayName,
-                    description: dataCollections[0].descriptions),
+                  ),
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height / 7.2,
             width: double.infinity,
-            child: dataCollections.length > 1
+            child: dataCollections.isNotEmpty
                 ? _SliverCollectionsWidget(
-                    img: dataCollections[1].image,
-                    name: dataCollections[1].name,
-                    length: dataCollections[1].length,
-                    displayName: dataCollections[1].displayName,
-                    description: dataCollections[1].descriptions)
+                    img: dataCollections[0].image,
+                    name: dataCollections[0].name,
+                    length: dataCollections[0].length,
+                    displayName: dataCollections[0].displayName,
+                    description: dataCollections[0].descriptions)
                 : Card(
                     color: const Color(0xE6678BD2),
                     shape: RoundedRectangleBorder(
@@ -245,17 +247,16 @@ class _SliverCollectionsWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 2),
       child: GestureDetector(
         onTap: () {
-          context.read<ViewModelCoolections>().sendInfoCollecion(
-                descriptionCollections: description,
-                displayNameCollections: displayName,
-                lengthCollections: length,
-                imgCollections: img,
-              );
-
-          context.read<ViewModelCoolections>().setCurrentIndex = 1;
-          context.read<Navigation>().setCurrentIndex = 1;
-
-          context.read<ViewModelCoolections>().nameCollections(name!);
+          Navigator.pushNamed(
+            context,
+            CollectionsAudioPage.routeName,
+            arguments: {
+              'img': img,
+              'displayName': displayName,
+              'nameCollections': name,
+              'description': description
+            },
+          );
         },
         child: Container(
           decoration: BoxDecoration(
@@ -270,7 +271,6 @@ class _SliverCollectionsWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: 50,
                   child: Text(
                     displayName!.length > 20
                         ? displayName!.substring(0, 20)
@@ -278,10 +278,6 @@ class _SliverCollectionsWidget extends StatelessWidget {
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
-                Text(
-                  '$length аудио',
-                  style: const TextStyle(color: Colors.white),
-                )
               ],
             ),
           ),

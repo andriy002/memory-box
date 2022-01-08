@@ -51,13 +51,12 @@ class Profile extends StatelessWidget {
             width: double.infinity,
             height: MediaQuery.of(context).size.height - 180,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
                 AvatarWidget(),
                 DisplayNameWidget(),
                 EditPhoneNumbWidget(),
                 ButtonEditWidget(),
-                SizedBox(height: 30),
                 EditAccountWidget(),
               ],
             ),
