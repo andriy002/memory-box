@@ -46,9 +46,10 @@ class TopButtonWidget extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
-              context
-                  .read<ViewModelRecord>()
-                  .adddAudioToFireStore(_duration.toString());
+              final _localAudio =
+                  context.read<ViewModelRecord>().getLoacalAudio();
+              await context.read<ViewModelRecord>().adddAudioToFireStore(
+                  _duration.toString(), await _localAudio);
 
               context.read<Navigation>().setCurrentIndex = 3;
             },

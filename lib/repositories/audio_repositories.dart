@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:memory_box/models/audio_model.dart';
 import 'package:firebase_storage/firebase_storage.dart' as _firebase_storage;
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class AudioRepositories {
@@ -18,18 +19,16 @@ class AudioRepositories {
 
   final CollectionReference _audio =
       FirebaseFirestore.instance.collection('audio');
+
   _firebase_storage.FirebaseStorage storage =
       _firebase_storage.FirebaseStorage.instanceFor(
-          bucket: 'gs://memory-box-9c2a3.appspot.com/');
+          bucket: 'memory-box-9c2a3.appspot.com');
+
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  Future<void> addAudioInFirestore(
-      String audioName, String duration, String idAudio) async {
+  Future<void> _addAudioInFirestore(
+      String audioName, String duration, String url) async {
     final String id = _uuid.v1();
-    Reference storageRef =
-        storage.ref('users/${_firebaseAuth.currentUser?.uid}/audio/$idAudio');
-
-    String url = (await storageRef.getDownloadURL()).toString();
 
     AudioBuilder audio = AudioBuilder(
       uid: id,
@@ -48,13 +47,18 @@ class AudioRepositories {
         .catchError((e) => print(e.toString()));
   }
 
-  Future<String> addAudio(String path) async {
-    final audioId = _uuid.v1();
-    Reference storageRef =
-        storage.ref('users/${_firebaseAuth.currentUser?.uid}/audio/$audioId');
-    storageRef.putFile(File(path));
+  Future<void> addAudio(String path, String audioName, String duration) async {
+    try {
+      Reference storageRef = storage
+          .ref('users/${_firebaseAuth.currentUser?.uid}/audio/$audioName');
 
-    return audioId;
+      await storageRef.putFile(File(path));
+      final String url = (await storageRef.getDownloadURL()).toString();
+
+      _addAudioInFirestore(audioName, duration, url);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   List<AudioBuilder> _audioFromSnap(QuerySnapshot snapshot) {
@@ -81,15 +85,6 @@ class AudioRepositories {
         .map(_audioFromSnap);
   }
 
-  void _decLengthAudio(String name) {
-    if (name.isEmpty) return;
-    _audio
-        .doc(_firebaseAuth.currentUser!.uid)
-        .collection('collections')
-        .doc(name)
-        .update({'length': FieldValue.increment(-1)});
-  }
-
   Future<void> sendAudioToDeleteColection(String uid) async {
     if (uid.isEmpty) return;
 
@@ -108,19 +103,6 @@ class AudioRepositories {
           duration: value.get('duration'),
           searchKey: value.get('audioName').toLowerCase(),
           collections: []);
-    });
-
-    await _audio
-        .doc(_firebaseAuth.currentUser!.uid)
-        .collection('allAudio')
-        .doc(uid)
-        .get()
-        .then((value) {
-      final List collections = value.get('collections');
-      if (collections.isEmpty) return;
-      for (var element in collections) {
-        _decLengthAudio(element);
-      }
     });
 
     await _audio

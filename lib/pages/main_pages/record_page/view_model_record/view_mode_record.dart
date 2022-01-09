@@ -44,20 +44,11 @@ class ViewModelRecord with ChangeNotifier {
     _start();
   }
 
-  Future<void> addAudioToStorage(String path) async {
-    try {
-      _state.audioId = await _audioRepo.addAudio(path);
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  Future<void> adddAudioToFireStore(String duration) async {
+  Future<void> adddAudioToFireStore(String duration, String patch) async {
     if (_state.audioName == 'Аудиозапись') {
       _state.audioName += ' ${DateTime.now()}';
     }
-    await _audioRepo.addAudioInFirestore(
-        _state.audioName, duration, _state.audioId!);
+    await _audioRepo.addAudio(patch, _state.audioName, duration);
   }
 
   Future<void> _start() async {

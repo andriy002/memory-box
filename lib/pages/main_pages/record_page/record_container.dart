@@ -100,11 +100,6 @@ class RecordContainerWidget extends StatelessWidget {
           color: Colors.white,
           iconSize: 40,
           onPressed: () async {
-            final _localAudio =
-                context.read<ViewModelRecord>().getLoacalAudio();
-            context
-                .read<ViewModelRecord>()
-                .addAudioToStorage(await _localAudio);
             context.read<ViewModelRecord>().stop();
           },
         ),

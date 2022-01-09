@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/collections.model.dart';
-import 'package:memory_box/pages/main_pages/audio_collections_page/audio_collections_page.dart';
+import 'package:memory_box/pages/main_pages/collections_audio_page/audio_collections_page.dart';
 import 'package:memory_box/pages/main_pages/create_collection_page/create_collection_page.dart';
 import 'package:memory_box/resources/app_icons.dart';
 import 'package:memory_box/view_model/view_model_collections.dart';
@@ -28,27 +28,6 @@ class CollectionPage extends StatelessWidget {
       child: const CollectionPage(),
     );
   }
-
-  @override
-  Widget build(BuildContext context) {
-    final _currentIndex =
-        context.select((ViewModelCoolections vm) => vm.state.currentIndex);
-    final _nameCollections =
-        context.select((ViewModelCoolections vm) => vm.state.nameCollections);
-
-    List<Widget> _pages = <Widget>[
-      const CollectionsPageContainer(),
-      // CollectionsAudioContainer.create(_nameCollections ?? ''),
-    ];
-
-    return Scaffold(
-      body: _pages[_currentIndex],
-    );
-  }
-}
-
-class CollectionsPageContainer extends StatelessWidget {
-  const CollectionsPageContainer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -197,17 +176,6 @@ class _SliverCollectionsWidgetState extends State<SliverCollectionsWidget> {
                     'description': widget.description
                   },
                 );
-                // context.read<ViewModelCoolections>().sendInfoCollecion(
-                //       descriptionCollections: widget.description,
-                //       displayNameCollections: widget.displayName,
-                //       lengthCollections: widget.length,
-                //       imgCollections: widget.img,
-                //     );
-
-                // context.read<ViewModelCoolections>().setCurrentIndex = 1;
-                // context
-                //     .read<ViewModelCoolections>()
-                //     .nameCollections(widget.name!);
               },
         child: Stack(
           alignment: Alignment.center,

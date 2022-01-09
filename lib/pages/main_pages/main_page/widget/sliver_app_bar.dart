@@ -1,10 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/collections.model.dart';
-import 'package:memory_box/pages/main_pages/audio_collections_page/audio_collections_page.dart';
+import 'package:memory_box/pages/main_pages/collections_audio_page/audio_collections_page.dart';
 import 'package:memory_box/pages/main_pages/create_collection_page/create_collection_page.dart';
 
-import 'package:memory_box/view_model/view_model_collections.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/view_model/navigation.dart';
 import 'package:memory_box/widget/circle_app_bar.dart';

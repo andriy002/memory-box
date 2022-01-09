@@ -69,19 +69,3 @@ class AudioPage extends StatelessWidget {
     );
   }
 }
-
-
-// class _BodyAudioPage extends StatelessWidget {
-//   const _BodyAudioPage({Key? key}) : super(key: key);
-
-//   static Widget create() {
-//     return MultiProvider(
-//       providers: [
-//         ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
-//         ChangeNotifierProvider(create: (_) => ViewModelAudio()),
-//       ],
-//       child: const _BodyAudioPage(),
-//     );
-//   }
-
-  
