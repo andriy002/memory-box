@@ -15,8 +15,6 @@ class AudioRepositories {
   static AudioRepositories get instance => _repositories;
   final Uuid _uuid = const Uuid();
 
-  // final _idAudio = DateTime.now().toString();
-
   final CollectionReference _audio =
       FirebaseFirestore.instance.collection('audio');
 
@@ -43,8 +41,9 @@ class AudioRepositories {
         .doc(_firebaseAuth.currentUser?.uid)
         .collection('allAudio')
         .doc(id)
-        .set(audio.toJson())
-        .catchError((e) => print(e.toString()));
+        .set(
+          audio.toJson(),
+        );
   }
 
   Future<void> addAudio(String path, String audioName, String duration) async {
@@ -53,7 +52,7 @@ class AudioRepositories {
           .ref('users/${_firebaseAuth.currentUser?.uid}/audio/$audioName');
 
       await storageRef.putFile(File(path));
-      final String url = (await storageRef.getDownloadURL()).toString();
+      final String url = await storageRef.getDownloadURL();
 
       _addAudioInFirestore(audioName, duration, url);
     } catch (e) {
@@ -136,95 +135,4 @@ class AudioRepositories {
       {'searchKey': name.toLowerCase()},
     );
   }
-
-  // List a = [
-  //   '138ca9a0-63ec-11ec-954c-b9b24adfce86',
-  //   '13d635c0-63ec-11ec-954c-b9b24adfce86',
-  //   '13a7abb0-63ec-11ec-954c-b9b24adfce86',
-  //   '1193e6e0-63ec-11ec-954c-b9b24adfce86',
-  //   '13f02660-63ec-11ec-954c-b9b24adfce86'
-  // ];
-  // a.forEach((element) {
-  //   b('test123', element);
-  // });
-
-  // void b(String col, String doc) async {
-  //   List a = [col];
-  //   await _audio
-  //       .doc(_firebaseAuth.currentUser!.uid)
-  //       .collection('allAudio')
-  //       .doc(doc)
-  //       .get()
-  //       .then((value) {
-  //     final i = value.get('collections');
-  //     a.addAll(i);
-  //     //   document("fitness_teams/Team_1").
-  //     // updateData(["step_counter" : FieldValue.increment(500)])
-  //   });
-  //   _audio
-  //       .doc(_firebaseAuth.currentUser!.uid)
-  //       .collection('allAudio')
-  //       .doc(doc)
-  //       .update({'collections': a});
-  //   //     .set({
-  //   'nameCol': ['121113']
-  // }, SetOptions(merge: true));
-
-  // _audio
-  //     .doc(_firebaseAuth.currentUser?.uid)
-  //     .collection('allAudio')
-  //     .where('nameCol', arrayContains: 'audioTest2')
-  // .snapshots()
-  // .map((event) => null);
-  // .get()
-  // .then((value) => value.docs.forEach((element) {
-  //       print(element.data());
-  //     }));
-  //   document("fitness_teams/Team_1").
-  // updateData(["step_counter" : FieldValue.increment(500)])
-}
-// }
-
-void a() async {
-  // _audio
-  //     .doc(_firebaseAuth.currentUser?.uid)
-  //     .collection('allAudio')
-  //     .where('audioName')
-  //     .get()
-  //     .then(
-  //       (value) => value.docs[2].data().update('duration', (value) {
-  //         value = 'ddddddddd';
-  //         print(value);
-  //       }, ifAbsent: () => true),
-  //     );
-
-  // var a = _audio
-  //     .doc(_firebaseAuth.currentUser?.uid)
-  //     .collection('allAudio')
-  //     .get()
-  //     .then((value) => value.docs.forEach((element) {
-  //           print(element.data().remove('audioName'));
-  //         }));
-
-  // var a = await _audio
-  //     .doc(_firebaseAuth.currentUser?.uid)
-  //     .collection('allAudio')
-  //     .doc('7d818fd0-5ce2-11ec-8e80-ff52c1f1b689')
-  //     .snapshots()
-  //     .length;
-  // print(a);
-
-  //  return _db
-  //   .collection('jobs')
-  //   .where("categoryId", isEqualTo: categoryId)
-  //   .getDocuments()
-  //   .then((v) {
-  //     try{
-  //       v.documents[0].data.update('isApproved', (bool) => true,ifAbsent: ()=>true);
-
-  // _audio
-  //     .doc(_firebaseAuth.currentUser?.uid)
-  //     .collection('allAudio')
-  //     .doc('b5035bb0-5ccd-11ec-9f8f-e585543a5183')
-  //     .delete();
 }

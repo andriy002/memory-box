@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/collections.model.dart';
 import 'package:memory_box/pages/main_pages/collections_audio_page/audio_collections_page.dart';
@@ -108,7 +107,6 @@ class _BigCard extends StatelessWidget {
           ? _SliverCollectionsWidget(
               img: dataCollections[2].image,
               name: dataCollections[2].name,
-              length: dataCollections[2].length,
               displayName: dataCollections[2].displayName,
               description: dataCollections[2].descriptions)
           : Card(
@@ -173,7 +171,6 @@ class _SmallCard extends StatelessWidget {
                 ? _SliverCollectionsWidget(
                     img: dataCollections[1].image,
                     name: dataCollections[1].name,
-                    length: dataCollections[1].length,
                     displayName: dataCollections[1].displayName,
                     description: dataCollections[1].descriptions)
                 : Card(
@@ -199,7 +196,6 @@ class _SmallCard extends StatelessWidget {
                 ? _SliverCollectionsWidget(
                     img: dataCollections[0].image,
                     name: dataCollections[0].name,
-                    length: dataCollections[0].length,
                     displayName: dataCollections[0].displayName,
                     description: dataCollections[0].descriptions)
                 : Card(
@@ -225,7 +221,6 @@ class _SmallCard extends StatelessWidget {
 }
 
 class _SliverCollectionsWidget extends StatelessWidget {
-  final int? length;
   final String? img;
   final String? name;
   final String? displayName;
@@ -235,7 +230,6 @@ class _SliverCollectionsWidget extends StatelessWidget {
       {Key? key,
       required this.img,
       required this.name,
-      required this.length,
       required this.displayName,
       required this.description})
       : super(key: key);
@@ -271,8 +265,8 @@ class _SliverCollectionsWidget extends StatelessWidget {
               children: [
                 SizedBox(
                   child: Text(
-                    displayName!.length > 20
-                        ? displayName!.substring(0, 20)
+                    displayName!.length > 15
+                        ? displayName!.substring(0, 15)
                         : displayName!,
                     style: const TextStyle(color: Colors.white),
                   ),

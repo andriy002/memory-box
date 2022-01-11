@@ -39,9 +39,13 @@ class _AudioContainerWidgetState extends State<AudioContainerWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
               TopButtonWidget(),
+              SizedBox(),
               AudioNameWidget(),
+              SizedBox(),
               SliderAudioWidget(),
-              BottomButtonWidget()
+              SizedBox(),
+              BottomButtonWidget(),
+              SizedBox()
             ],
           ),
         ),

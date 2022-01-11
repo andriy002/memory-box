@@ -11,6 +11,7 @@ import 'package:memory_box/view_model/navigation.dart';
 import 'package:provider/provider.dart';
 
 import 'audio_page/audio_page.dart';
+import 'deleted_audio_page/deleted_audio_page.dart';
 import 'main_page/main_page.dart';
 import 'profile_page/profile_page.dart';
 
@@ -63,6 +64,11 @@ class Main extends StatelessWidget {
         break;
       case 5:
         _globalKey.currentState?.pushReplacementNamed(SearchPage.routeName);
+
+        break;
+      case 6:
+        _globalKey.currentState
+            ?.pushReplacementNamed(DeletedAudioPage.routeName);
 
         break;
       default:

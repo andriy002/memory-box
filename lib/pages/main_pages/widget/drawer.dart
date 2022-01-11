@@ -59,7 +59,7 @@ class Drawwer extends StatelessWidget {
                 title: 'Поиск',
               ),
               _DrawerItem(
-                index: 0,
+                index: 6,
                 icon: AppIcons.delete,
                 title: 'Недавно удаленные',
               ),

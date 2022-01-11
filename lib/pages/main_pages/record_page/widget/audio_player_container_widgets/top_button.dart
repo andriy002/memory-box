@@ -48,7 +48,7 @@ class TopButtonWidget extends StatelessWidget {
             onPressed: () async {
               final _localAudio =
                   context.read<ViewModelRecord>().getLoacalAudio();
-              await context.read<ViewModelRecord>().adddAudioToFireStore(
+              context.read<ViewModelRecord>().adddAudioToFireStore(
                   _duration.toString(), await _localAudio);
 
               context.read<Navigation>().setCurrentIndex = 3;

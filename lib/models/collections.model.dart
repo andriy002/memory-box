@@ -1,30 +1,24 @@
 class CollectionsBuilder {
   String? descriptions;
   String? image;
-  int? length;
   String? name;
   String? displayName;
 
   CollectionsBuilder(
-      {this.descriptions,
-      this.image,
-      this.length,
-      this.name,
-      this.displayName});
+      {this.descriptions, this.image, this.name, this.displayName});
 
   factory CollectionsBuilder.fromJson(Map<String, dynamic> json) {
     return CollectionsBuilder(
-        descriptions: json['descriptions'],
-        name: json['name'],
-        image: json['image'],
-        displayName: json['displayName'],
-        length: json['length']);
+      descriptions: json['descriptions'],
+      name: json['name'],
+      image: json['image'],
+      displayName: json['displayName'],
+    );
   }
 
   Map<String, dynamic> toJson() => {
         'descriptions': descriptions,
         'image': image,
-        'length': length,
         'name': name,
         'displayName': displayName
       };

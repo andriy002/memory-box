@@ -51,17 +51,19 @@ class SliverAppBarSearchPage extends StatelessWidget {
         ],
       ),
       centerTitle: true,
-      flexibleSpace: Stack(
-        alignment: Alignment.center,
-        children: [
-          CircleAppBar(
-            heightCircle: MediaQuery.of(context).size.height / 6,
-            colorCircle: AppColors.allAudioColor,
-          ),
-          SearchWidget(
-            onChanged: _searchKeyChanged,
-          )
-        ],
+      flexibleSpace: FlexibleSpaceBar(
+        background: Stack(
+          alignment: Alignment.center,
+          children: [
+            CircleAppBar(
+              heightCircle: MediaQuery.of(context).size.height / 6,
+              colorCircle: AppColors.allAudioColor,
+            ),
+            SearchWidget(
+              onChanged: _searchKeyChanged,
+            )
+          ],
+        ),
       ),
     );
   }

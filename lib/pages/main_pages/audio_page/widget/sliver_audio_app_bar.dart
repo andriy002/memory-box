@@ -47,35 +47,37 @@ class SliverAudioAppBar extends StatelessWidget {
         ],
       ),
       centerTitle: true,
-      flexibleSpace: Stack(
-        alignment: Alignment.center,
-        children: [
-          CircleAppBar(
-            heightCircle: MediaQuery.of(context).size.height / 5,
-            colorCircle: AppColors.allAudioColor,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 60),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '$data аудио',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: AppFonts.mainFont,
-                        fontSize: 18),
-                  ),
-                  PlayRepeatButton(
-                    dataLength: data,
-                  )
-                ],
-              ),
+      flexibleSpace: FlexibleSpaceBar(
+        background: Stack(
+          alignment: Alignment.center,
+          children: [
+            CircleAppBar(
+              heightCircle: MediaQuery.of(context).size.height / 5,
+              colorCircle: AppColors.allAudioColor,
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.only(top: 60),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '$data аудио',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: AppFonts.mainFont,
+                          fontSize: 18),
+                    ),
+                    PlayRepeatButton(
+                      dataLength: data,
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

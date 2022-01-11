@@ -42,32 +42,30 @@ class CreateNewCollection extends StatelessWidget {
     );
     final bool openSearchAudio =
         context.select((ViewModelCoolections vm) => vm.state.openSearchAudio);
-    return Scaffold(
-      body: openSearchAudio
-          ? const SearchPageCollections()
-          : Stack(
-              children: [
-                CustomScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  slivers: [
-                    const AppBarCollectionCreate(),
-                    const OpenAudioSearchWidget(),
-                    SliverAudioList(
-                      stastusButton: ButtonStatus.edit,
-                      data: _data,
-                      childCount: _data.length,
-                      colorButton: AppColors.collectionsColor,
-                    )
-                  ],
-                ),
-                if (_isPlaying)
-                  AudioPlayerWidget(
-                    audioUrl: _data[_indexAudio].audioUrl,
-                    maxLength: _data.length,
-                    audioName: _data[_indexAudio].audioName,
+    return openSearchAudio
+        ? const SearchPageCollections()
+        : Stack(
+            children: [
+              CustomScrollView(
+                physics: const BouncingScrollPhysics(),
+                slivers: [
+                  const AppBarCollectionCreate(),
+                  const OpenAudioSearchWidget(),
+                  SliverAudioList(
+                    stastusButton: ButtonStatus.edit,
+                    data: _data,
+                    childCount: _data.length,
+                    colorButton: AppColors.collectionsColor,
                   )
-              ],
-            ),
-    );
+                ],
+              ),
+              if (_isPlaying)
+                AudioPlayerWidget(
+                  audioUrl: _data[_indexAudio].audioUrl,
+                  maxLength: _data.length,
+                  audioName: _data[_indexAudio].audioName,
+                )
+            ],
+          );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:http/http.dart' as http;
 import 'package:memory_box/repositories/coolections_repositories.dart';
+import 'package:memory_box/repositories/deleted_audio_repositories.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 
@@ -24,6 +25,8 @@ class ViewModelAudio with ChangeNotifier {
   final AudioRepositories _audioRepo = AudioRepositories.instance;
   final CollectionsRepositories _collectionRepo =
       CollectionsRepositories.instance;
+  final DeletedAudioRepositories _deletedAudioRepo =
+      DeletedAudioRepositories.instance;
 
   void setIndexReanme(int index) {
     _state.indexRename = index;
@@ -73,10 +76,6 @@ class ViewModelAudio with ChangeNotifier {
     notifyListeners();
   }
 
-  void d(uid) {
-    _audioRepo.sendAudioToDeleteColection(uid);
-  }
-
   void addAudioToCollection(String nameCollection) {
     _state.audioMap.forEach((key, value) {
       _collectionRepo.addAudioInCollection(nameCollection, key);
@@ -85,6 +84,24 @@ class ViewModelAudio with ChangeNotifier {
 
   void sendAudioToDeleteColection(String uid) {
     _audioRepo.sendAudioToDeleteColection(uid);
+  }
+
+  void deletedAudioInStorage(String doc) {
+    _deletedAudioRepo.deletedAudioInStorage(doc);
+  }
+
+  void deletedAudioInStorageList() {
+    if (_state.audioMap.isEmpty) return;
+    _state.audioMap.forEach((key, value) {
+      _deletedAudioRepo.deletedAudioInStorage(key);
+    });
+  }
+
+  void restoreAudioList() {
+    if (_state.audioMap.isEmpty) return;
+    _state.audioMap.forEach((key, value) {
+      _deletedAudioRepo.restoreAudio(key);
+    });
   }
 
   Future<void> shareUrlFile(String url, String name) async {

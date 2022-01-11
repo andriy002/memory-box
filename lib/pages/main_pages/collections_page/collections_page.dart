@@ -38,15 +38,15 @@ class CollectionPage extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return SizedBox(
-      height: MediaQuery.of(context).size.height - 80,
-      child: Stack(
-        children: [
-          const CircleAppBar(
-            heightCircle: 0,
-            colorCircle: AppColors.collectionsColor,
-          ),
-          CustomScrollView(
+    return Stack(
+      children: [
+        const CircleAppBar(
+          heightCircle: 0,
+          colorCircle: AppColors.collectionsColor,
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height - 80,
+          child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
               SliverAppBar(
@@ -95,7 +95,6 @@ class CollectionPage extends StatelessWidget {
                       img: dataCollections[index].image,
                       name: dataCollections[index].name,
                       displayName: dataCollections[index].displayName,
-                      length: dataCollections[index].length,
                       description: dataCollections[index].descriptions,
                     );
                   },
@@ -110,14 +109,13 @@ class CollectionPage extends StatelessWidget {
               )
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
 class SliverCollectionsWidget extends StatefulWidget {
-  final int? length;
   final String? img;
   final String? name;
   final String? displayName;
@@ -127,7 +125,6 @@ class SliverCollectionsWidget extends StatefulWidget {
       {Key? key,
       required this.img,
       required this.name,
-      required this.length,
       required this.displayName,
       required this.description})
       : super(key: key);

@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 import '../popup_item.dart';
 
-enum ButtonStatus { selected, delete, edit }
+enum ButtonStatus { selected, deleted, edit }
 
 class SliverAudioList extends StatelessWidget {
   final List<AudioBuilder> data;
@@ -97,7 +97,11 @@ class _AudioUiCard extends StatelessWidget {
                   audioUid: audioUid!,
                   audioUrl: audioUrl!,
                   index: index!,
-                )
+                ),
+              if (stastusButton == ButtonStatus.deleted)
+                DeletedButton(
+                  doc: audioUid!,
+                ),
             ],
           ),
         ),
@@ -316,6 +320,31 @@ class _AddAudioToListState extends State<_AddAudioToList> {
           ),
           if (isCheck) const ImageIcon(AppIcons.done)
         ],
+      ),
+    );
+  }
+}
+
+class DeletedButton extends StatelessWidget {
+  final String doc;
+
+  const DeletedButton({
+    Key? key,
+    required this.doc,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: IconButton(
+        onPressed: () {
+          context.read<ViewModelAudio>().deletedAudioInStorage(doc);
+        },
+        icon: const ImageIcon(
+          AppIcons.delete,
+          size: 30,
+        ),
       ),
     );
   }

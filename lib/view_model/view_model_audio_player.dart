@@ -34,6 +34,7 @@ class ViewModelAudioPlayer with ChangeNotifier {
   }
 
   void toogleRepeatAudio(int lengthAudio) {
+    if (lengthAudio == 0) return;
     if (_state.repeatAudio) {
       _state.repeatAudio = false;
       stop();

@@ -7,6 +7,7 @@ import 'package:memory_box/pages/main_pages/audio_page/audio_page.dart';
 import 'package:memory_box/pages/main_pages/collections_audio_page/audio_collections_page.dart';
 import 'package:memory_box/pages/main_pages/collections_page/collections_page.dart';
 import 'package:memory_box/pages/main_pages/create_collection_page/create_collection_page.dart';
+import 'package:memory_box/pages/main_pages/deleted_audio_page/deleted_audio_page.dart';
 import 'package:memory_box/pages/main_pages/main.dart';
 import 'package:memory_box/pages/main_pages/main_page/main_page.dart';
 import 'package:memory_box/pages/main_pages/profile_page/profile_page.dart';
@@ -92,6 +93,12 @@ class AppRouter {
       case CollectionPage.routeName:
         builder = PageRouteBuilder(
           pageBuilder: (_, __, ___) => CollectionPage.create(),
+          transitionDuration: const Duration(seconds: 0),
+        );
+        break;
+      case DeletedAudioPage.routeName:
+        builder = PageRouteBuilder(
+          pageBuilder: (_, __, ___) => DeletedAudioPage.create(),
           transitionDuration: const Duration(seconds: 0),
         );
         break;

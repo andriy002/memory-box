@@ -37,35 +37,32 @@ class AudioPage extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return SizedBox(
-      height: MediaQuery.of(context).size.height - 80,
-      child: Stack(
-        children: [
-          CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverAudioAppBar(data: data.length),
-              SliverAudioList(
-                stastusButton:
-                    _selected ? ButtonStatus.selected : ButtonStatus.edit,
-                data: data,
-                childCount: data.length,
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 160,
-                ),
-              ),
-            ],
-          ),
-          if (_isPlaying)
-            AudioPlayerWidget(
-              audioUrl: data[_indexAudio].audioUrl,
-              maxLength: data.length,
-              audioName: data[_indexAudio].audioName,
+    return Stack(
+      children: [
+        CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            SliverAudioAppBar(data: data.length),
+            SliverAudioList(
+              stastusButton:
+                  _selected ? ButtonStatus.selected : ButtonStatus.edit,
+              data: data,
+              childCount: data.length,
             ),
-        ],
-      ),
+            const SliverToBoxAdapter(
+              child: SizedBox(
+                height: 160,
+              ),
+            ),
+          ],
+        ),
+        if (_isPlaying)
+          AudioPlayerWidget(
+            audioUrl: data[_indexAudio].audioUrl,
+            maxLength: data.length,
+            audioName: data[_indexAudio].audioName,
+          ),
+      ],
     );
   }
 }

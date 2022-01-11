@@ -124,14 +124,9 @@ class CollectionsRepositories {
         .update({'collections': col.toSet().toList()});
   }
 
-  void createNewCollection(
-      String name, String description, String image, int length) {
+  void createNewCollection(String name, String description, String image) {
     CollectionsBuilder collections = CollectionsBuilder(
-        descriptions: description,
-        name: name,
-        length: length,
-        image: image,
-        displayName: name);
+        descriptions: description, name: name, image: image, displayName: name);
     _collections
         .doc(_firebaseAuth.currentUser?.uid)
         .collection('collections')

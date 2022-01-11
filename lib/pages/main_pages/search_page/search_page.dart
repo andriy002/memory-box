@@ -9,17 +9,6 @@ import 'package:memory_box/widget/audio_widget/list_audio.dart';
 
 import 'package:provider/provider.dart';
 
-// class SearchPage extends StatelessWidget {
-//   const SearchPage({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: _BodySearchPage.create(),
-//     );
-//   }
-// }
-
 class SearchPage extends StatelessWidget {
   const SearchPage({Key? key}) : super(key: key);
   static const routeName = '/search_page';
@@ -52,37 +41,34 @@ class SearchPage extends StatelessWidget {
           final bool _selected =
               context.select((ViewModelAudio vm) => vm.state.selected);
 
-          return Scaffold(
-            body: SizedBox(
-              height: MediaQuery.of(context).size.height - 80,
-              child: Stack(
-                children: [
-                  CustomScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    slivers: [
-                      const SliverAppBarSearchPage(),
-                      SliverAudioList(
-                        stastusButton: _selected
-                            ? ButtonStatus.selected
-                            : ButtonStatus.edit,
-                        data: _data,
-                        childCount: _data.length,
+          return SizedBox(
+            height: MediaQuery.of(context).size.height - 80,
+            child: Stack(
+              children: [
+                CustomScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  slivers: [
+                    const SliverAppBarSearchPage(),
+                    SliverAudioList(
+                      stastusButton:
+                          _selected ? ButtonStatus.selected : ButtonStatus.edit,
+                      data: _data,
+                      childCount: _data.length,
+                    ),
+                    const SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 80,
                       ),
-                      const SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 80,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (_isPlaying)
-                    AudioPlayerWidget(
-                      audioUrl: _data[_indexAudio].audioUrl,
-                      maxLength: _data.length,
-                      audioName: _data[_indexAudio].audioName,
-                    )
-                ],
-              ),
+                    ),
+                  ],
+                ),
+                if (_isPlaying)
+                  AudioPlayerWidget(
+                    audioUrl: _data[_indexAudio].audioUrl,
+                    maxLength: _data.length,
+                    audioName: _data[_indexAudio].audioName,
+                  )
+              ],
             ),
           );
         } else {

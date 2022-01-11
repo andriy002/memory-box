@@ -19,10 +19,6 @@ class _ViewModelCoolectionsState {
   bool selected = false;
 
   String? nameCollections;
-  String? dispalyNameCollections;
-  String? imgCollections;
-  int? lengthCollections;
-  String? descriptionCollections;
 }
 
 class ViewModelCoolections with ChangeNotifier {
@@ -79,19 +75,6 @@ class ViewModelCoolections with ChangeNotifier {
     notifyListeners();
   }
 
-  void sendInfoCollecion({
-    required String? displayNameCollections,
-    required String? descriptionCollections,
-    required int? lengthCollections,
-    required String? imgCollections,
-  }) {
-    _state.descriptionCollections = descriptionCollections;
-    _state.dispalyNameCollections = displayNameCollections;
-    _state.imgCollections = imgCollections;
-    _state.lengthCollections = lengthCollections;
-    notifyListeners();
-  }
-
   set setCurrentIndex(int inx) {
     if (_state.currentIndex != inx) {
       _state.currentIndex = inx;
@@ -109,20 +92,22 @@ class ViewModelCoolections with ChangeNotifier {
     notifyListeners();
   }
 
-  void createCollection(int length) async {
+  Future<bool> createCollection() async {
     if (_state.imageUrl == null || _state.newCollectionName == null) {
       _state.error = true;
       notifyListeners();
-      return;
-    }
-    _state.error = false;
-    notifyListeners();
+      return _state.error;
+    } else {
+      _state.error = false;
+      notifyListeners();
 
-    final imageNameUrl =
-        await _collectionRepo.updatePhoto(_state.newCollectionName ?? '');
-    _collectionRepo.createNewCollection(_state.newCollectionName ?? '',
-        _state.newCollectionDescription ?? '', imageNameUrl, length);
-    deleteFields();
+      final imageNameUrl =
+          await _collectionRepo.updatePhoto(_state.newCollectionName ?? '');
+      _collectionRepo.createNewCollection(_state.newCollectionName ?? '',
+          _state.newCollectionDescription ?? '', imageNameUrl);
+      deleteFields();
+      return _state.error;
+    }
   }
 
   void openAddAudioPage() {

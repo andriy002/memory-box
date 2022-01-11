@@ -24,9 +24,6 @@ class AppBarCollectionCreate extends StatelessWidget {
     final bool _error =
         context.select((ViewModelCoolections vm) => vm.state.error);
 
-    final int _lengthAudio =
-        context.select((ViewModelAudio vm) => vm.state.audioMap.length);
-
     return SliverAppBar(
       leading: leftArrowButton(
         () {
@@ -36,13 +33,14 @@ class AppBarCollectionCreate extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () {
-            context.read<ViewModelCoolections>().createCollection(_lengthAudio);
-            if (!_error) {
-              context.read<ViewModelAudio>().addAudioToCollection(
-                    _nameCollection ?? '',
-                  );
+          onPressed: () async {
+            if (await context.read<ViewModelCoolections>().createCollection() ==
+                false) {
               Navigator.of(context).pop();
+
+              context.read<ViewModelAudio>().addAudioToCollection(
+                    _nameCollection!,
+                  );
             }
           },
           child: const Text(
@@ -69,101 +67,109 @@ class AppBarCollectionCreate extends StatelessWidget {
           fontSize: 36,
         ),
       ),
-      flexibleSpace: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            CircleAppBar(
-              heightCircle: MediaQuery.of(context).size.height / 8,
-              colorCircle: AppColors.collectionsColor,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 75),
-              child: FractionallySizedBox(
-                widthFactor: 0.9,
-                child: TextField(
-                  onChanged:
-                      context.read<ViewModelCoolections>().setCollectionName,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: AppFonts.mainFont,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold),
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(
-                          color: _error ? Colors.red : Colors.white,
-                          fontFamily: AppFonts.mainFont,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold),
-                      hintText: _nameCollection ?? 'Название',
-                      isCollapsed: true),
+      flexibleSpace: FlexibleSpaceBar(
+        background: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              CircleAppBar(
+                heightCircle: MediaQuery.of(context).size.height / 8,
+                colorCircle: AppColors.collectionsColor,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 75),
+                child: FractionallySizedBox(
+                  widthFactor: 0.9,
+                  child: TextField(
+                    maxLength: 28,
+                    onChanged:
+                        context.read<ViewModelCoolections>().setCollectionName,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: AppFonts.mainFont,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold),
+                    decoration: InputDecoration(
+                        counterText: '',
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(
+                            color: _error ? Colors.red : Colors.white,
+                            fontFamily: AppFonts.mainFont,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
+                        hintText: _error
+                            ? 'Cначала введите название '
+                            : _nameCollection ?? 'Название',
+                        isCollapsed: true),
+                  ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: SizedBox(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.width / 2,
-                child: GestureDetector(
-                  onTap: () {
-                    context.read<ViewModelCoolections>().imagePicker();
-                  },
-                  child: FractionallySizedBox(
-                    widthFactor: 0.9,
-                    heightFactor: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: _error ? Colors.red : Colors.grey,
-                            blurRadius: 10,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(15),
-                        image: _image != null
-                            ? DecorationImage(
-                                image: FileImage(_image), fit: BoxFit.cover)
-                            : null,
-                        color: Colors.white,
+              Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.width / 2,
+                  child: GestureDetector(
+                    onTap: () {
+                      context.read<ViewModelCoolections>().imagePicker();
+                    },
+                    child: FractionallySizedBox(
+                      widthFactor: 0.9,
+                      heightFactor: 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: _error ? Colors.red : Colors.grey,
+                              blurRadius: 10,
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                          image: _image != null
+                              ? DecorationImage(
+                                  image: FileImage(_image), fit: BoxFit.cover)
+                              : null,
+                          color: Colors.white,
+                        ),
+                        child: Center(
+                            child: _image == null
+                                ? const ImageIcon(
+                                    AppIcons.photoEdit,
+                                    size: 80,
+                                  )
+                                : null),
                       ),
-                      child: Center(
-                          child: _image == null
-                              ? const ImageIcon(
-                                  AppIcons.photoEdit,
-                                  size: 80,
-                                )
-                              : null),
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 23),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height / 10,
-                  child: TextField(
-                    maxLines: 3,
-                    onChanged: context
-                        .read<ViewModelCoolections>()
-                        .setCollectionDescription,
-                    style: const TextStyle(fontFamily: AppFonts.mainFont),
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintStyle:
-                            const TextStyle(fontFamily: AppFonts.mainFont),
-                        hintText: _nameDescription ?? 'Введите описание...'),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 23),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height / 10,
+                    child: TextField(
+                      maxLength: 200,
+                      maxLines: 3,
+                      onChanged: context
+                          .read<ViewModelCoolections>()
+                          .setCollectionDescription,
+                      style: const TextStyle(fontFamily: AppFonts.mainFont),
+                      decoration: InputDecoration(
+                          counterText: '',
+                          border: InputBorder.none,
+                          hintStyle:
+                              const TextStyle(fontFamily: AppFonts.mainFont),
+                          hintText: _nameDescription ?? 'Введите описание...'),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
