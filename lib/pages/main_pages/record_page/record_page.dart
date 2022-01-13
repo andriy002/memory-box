@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/pages/main_pages/record_page/view_model_record/view_mode_record.dart';
 import 'package:memory_box/resources/app_colors.dart';
-import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/circle_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'audio_container.dart';
@@ -15,7 +14,6 @@ class Record extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ViewModelRecord()),
-        ChangeNotifierProvider(create: (context) => ViewModelAudioPlayer()),
       ],
       child: const Record(),
     );
@@ -47,7 +45,7 @@ class Record extends StatelessWidget {
                   ),
                   child: !recordToogle
                       ? const RecordContainerWidget()
-                      : const AudioContainerWidget(),
+                      : AudioContainerWidget.create(),
                 ),
               ),
             )

@@ -8,6 +8,7 @@ import 'package:memory_box/repositories/coolections_repositories.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
 import 'package:memory_box/widget/circle_app_bar.dart';
+import 'package:memory_box/widget/no_collections_widget.dart';
 import 'package:memory_box/widget/popup_item.dart';
 import 'package:provider/provider.dart';
 
@@ -31,10 +32,10 @@ class CollectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<CollectionsBuilder>? dataCollections =
+    final List<CollectionsBuilder>? _dataCollections =
         context.watch<List<CollectionsBuilder>?>();
 
-    if (dataCollections == null) {
+    if (_dataCollections == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -45,7 +46,7 @@ class CollectionPage extends StatelessWidget {
           colorCircle: AppColors.collectionsColor,
         ),
         SizedBox(
-          height: MediaQuery.of(context).size.height - 80,
+          height: MediaQuery.of(context).size.height * 0.9,
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
@@ -92,13 +93,13 @@ class CollectionPage extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     return SliverCollectionsWidget(
-                      img: dataCollections[index].image,
-                      name: dataCollections[index].name,
-                      displayName: dataCollections[index].displayName,
-                      description: dataCollections[index].descriptions,
+                      img: _dataCollections[index].image,
+                      name: _dataCollections[index].name,
+                      displayName: _dataCollections[index].displayName,
+                      description: _dataCollections[index].descriptions,
                     );
                   },
-                  childCount: dataCollections.length,
+                  childCount: _dataCollections.length,
                 ),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -110,6 +111,7 @@ class CollectionPage extends StatelessWidget {
             ],
           ),
         ),
+        if (_dataCollections.isEmpty) const NoCollectionWidget()
       ],
     );
   }
@@ -218,7 +220,7 @@ class _SliverCollectionsWidgetState extends State<SliverCollectionsWidget> {
               const ImageIcon(
                 AppIcons.done,
                 color: Colors.white,
-              )
+              ),
           ],
         ),
       ),

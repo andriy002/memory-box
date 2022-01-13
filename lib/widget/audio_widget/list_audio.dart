@@ -30,17 +30,20 @@ class SliverAudioList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverList(
-      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-        return _AudioUiCard(
-          audioDuration: data[index].duration,
-          audioName: data[index].audioName,
-          index: index,
-          audioUrl: data[index].audioUrl,
-          audioUid: data[index].uid,
-          colorButton: colorButton,
-          stastusButton: stastusButton,
-        );
-      }, childCount: childCount),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          return _AudioUiCard(
+            audioDuration: data[index].duration,
+            audioName: data[index].audioName,
+            index: index,
+            audioUrl: data[index].audioUrl,
+            audioUid: data[index].uid,
+            colorButton: colorButton,
+            stastusButton: stastusButton,
+          );
+        },
+        childCount: childCount,
+      ),
     );
   }
 }

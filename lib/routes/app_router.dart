@@ -104,20 +104,24 @@ class AppRouter {
         break;
       case CreateNewCollection.routeName:
         builder = PageRouteBuilder(
-          pageBuilder: (_, __, ___) => CreateNewCollection.create(),
-          transitionDuration: const Duration(seconds: 0),
+          pageBuilder: (c, a1, a2) => CreateNewCollection.create(),
+          transitionsBuilder: (c, anim, a2, child) =>
+              FadeTransition(opacity: anim, child: child),
+          transitionDuration: const Duration(milliseconds: 10),
         );
         break;
       case CollectionsAudioPage.routeName:
         final args = arguments as Map;
 
         builder = PageRouteBuilder(
-          pageBuilder: (_, __, ___) => CollectionsAudioPage.create(
+          pageBuilder: (c, a1, a2) => CollectionsAudioPage.create(
               img: args['img'],
               displayName: args['displayName'],
               description: args['description'],
               nameCollections: args['nameCollections']),
-          transitionDuration: const Duration(seconds: 0),
+          transitionsBuilder: (c, anim, a2, child) =>
+              FadeTransition(opacity: anim, child: child),
+          transitionDuration: const Duration(milliseconds: 10),
         );
         break;
 

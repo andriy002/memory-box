@@ -9,34 +9,36 @@ class SliverAdapterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Аудиозаписи',
-              style: TextStyle(
-                fontFamily: AppFonts.mainFont,
-                fontSize: 24,
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                context.read<Navigation>().setCurrentIndex = 3;
-              },
-              child: const Text(
-                'Открыть все',
+      child: ClipRRect(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Аудиозаписи',
                 style: TextStyle(
                   fontFamily: AppFonts.mainFont,
-                  fontSize: 14,
-                  color: Colors.black,
+                  fontSize: 24,
                 ),
               ),
-            )
-          ],
+              TextButton(
+                onPressed: () {
+                  context.read<Navigation>().setCurrentIndex = 3;
+                },
+                child: const Text(
+                  'Открыть все',
+                  style: TextStyle(
+                    fontFamily: AppFonts.mainFont,
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

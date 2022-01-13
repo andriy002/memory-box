@@ -5,10 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:memory_box/pages/auth_pages/welcome_page.dart';
 import 'package:memory_box/pages/loading_page.dart';
 import 'package:memory_box/routes/app_router.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(
     const MemoryBox(),
   );

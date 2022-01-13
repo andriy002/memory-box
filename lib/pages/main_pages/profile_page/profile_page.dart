@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:memory_box/pages/main_pages/profile_page/wigdet/button_edit.dart';
 import 'package:memory_box/pages/main_pages/profile_page/wigdet/display_name.dart';
@@ -44,22 +42,23 @@ class Profile extends StatelessWidget {
 
     return Scaffold(
       appBar: _appBar(context),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: SizedBox(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height - 180,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                AvatarWidget(),
-                DisplayNameWidget(),
-                EditPhoneNumbWidget(),
-                ButtonEditWidget(),
-                EditAccountWidget(),
-              ],
-            ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: SizedBox(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height / 1.1,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: const [
+              AvatarWidget(),
+              DisplayNameWidget(),
+              EditPhoneNumbWidget(),
+              ButtonEditWidget(),
+              EditAccountWidget(),
+              SizedBox(
+                height: 80,
+              )
+            ],
           ),
         ),
       ),
@@ -99,6 +98,9 @@ class Profile extends StatelessWidget {
                 color: Colors.white,
                 fontFamily: AppFonts.mainFont,
                 fontSize: 16),
+          ),
+          SizedBox(
+            height: 15,
           )
         ],
       ),

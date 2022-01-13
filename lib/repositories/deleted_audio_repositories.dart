@@ -8,8 +8,7 @@ class DeletedAudioRepositories {
       DeletedAudioRepositories._instance();
   DeletedAudioRepositories._instance();
   static DeletedAudioRepositories get instance => _repositories;
-  final String? _firebaseAuthCurrentUser =
-      FirebaseAuth.instance.currentUser?.uid;
+  final _firebaseAuthCurrentUser = FirebaseAuth.instance;
 
   final CollectionReference _audio =
       FirebaseFirestore.instance.collection('audio');
@@ -20,7 +19,7 @@ class DeletedAudioRepositories {
 
   Future<void> deletedAudioInStorage(String doc) async {
     await _audio
-        .doc(_firebaseAuthCurrentUser)
+        .doc(_firebaseAuthCurrentUser.currentUser?.uid)
         .collection('deleteAudio')
         .doc(doc)
         .get()
@@ -29,7 +28,7 @@ class DeletedAudioRepositories {
       storage.refFromURL(url).delete();
     });
     _audio
-        .doc(_firebaseAuthCurrentUser)
+        .doc(_firebaseAuthCurrentUser.currentUser?.uid)
         .collection('deleteAudio')
         .doc(doc)
         .delete();
@@ -41,7 +40,7 @@ class DeletedAudioRepositories {
     AudioBuilder audio = AudioBuilder();
 
     await _audio
-        .doc(_firebaseAuthCurrentUser)
+        .doc(_firebaseAuthCurrentUser.currentUser?.uid)
         .collection('deleteAudio')
         .doc(doc)
         .get()
@@ -58,14 +57,14 @@ class DeletedAudioRepositories {
       },
     );
     await _audio
-        .doc(_firebaseAuthCurrentUser)
+        .doc(_firebaseAuthCurrentUser.currentUser?.uid)
         .collection('allAudio')
         .doc(doc)
         .set(
           audio.toJson(),
         );
     _audio
-        .doc(_firebaseAuthCurrentUser)
+        .doc(_firebaseAuthCurrentUser.currentUser?.uid)
         .collection('deleteAudio')
         .doc(doc)
         .delete();
@@ -79,7 +78,7 @@ class DeletedAudioRepositories {
 
   Stream<List<AudioBuilder>> get audio {
     return _audio
-        .doc(_firebaseAuthCurrentUser)
+        .doc(_firebaseAuthCurrentUser.currentUser?.uid)
         .collection('deleteAudio')
         .snapshots()
         .map(_audioFromSnap);

@@ -142,6 +142,7 @@ class ViewModelAudioPlayer with ChangeNotifier {
     _state.audioPlayer.stop();
     _state.isPlaying = false;
     _state.indexAudio = null;
+    _state.repeatAudio = false;
     notifyListeners();
   }
 

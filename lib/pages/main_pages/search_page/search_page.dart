@@ -6,6 +6,7 @@ import 'package:memory_box/view_model/view_model_audio.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
 import 'package:memory_box/widget/audio_widget/list_audio.dart';
+import 'package:memory_box/widget/no_audio_widget.dart';
 
 import 'package:provider/provider.dart';
 
@@ -67,12 +68,13 @@ class SearchPage extends StatelessWidget {
                     audioUrl: _data[_indexAudio].audioUrl,
                     maxLength: _data.length,
                     audioName: _data[_indexAudio].audioName,
-                  )
+                  ),
+                if (_data.isEmpty) const NoAudioWidget()
               ],
             ),
           );
         } else {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );

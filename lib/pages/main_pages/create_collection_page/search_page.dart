@@ -10,6 +10,7 @@ import 'package:memory_box/widget/audio_widget/audio_player.dart';
 import 'package:memory_box/widget/audio_widget/list_audio.dart';
 import 'package:memory_box/widget/circle_app_bar.dart';
 import 'package:memory_box/widget/left_arrow_button.dart';
+import 'package:memory_box/widget/no_audio_widget.dart';
 import 'package:memory_box/widget/search_wigdet.dart';
 
 import 'package:provider/provider.dart';
@@ -58,12 +59,13 @@ class SearchPageCollections extends StatelessWidget {
                     audioUrl: _data[_indexAudio].audioUrl,
                     maxLength: _data.length,
                     audioName: _data[_indexAudio].audioName,
-                  )
+                  ),
+                if (_data.isEmpty) const NoAudioWidget()
               ],
             ),
           );
         } else {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );

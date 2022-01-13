@@ -19,4 +19,5 @@ abstract class AppIcons {
   static const iconAvatar = AssetImage('assets/images/icon/icon_avatar.png');
   static const leftArrow = AssetImage('assets/images/icon/left_arrow.png');
   static const done = AssetImage('assets/images/icon/done.png');
+  static const arrowDown = AssetImage('assets/images/icon/arrow_down.png');
 }

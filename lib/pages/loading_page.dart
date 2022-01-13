@@ -21,6 +21,7 @@ class _LoadingPageState extends State<LoadingPage> {
       const Duration(seconds: 3),
       () => Navigator.of(context).pushReplacementNamed(Main.routeName),
     );
+
     super.initState();
   }
 

@@ -11,6 +11,15 @@ import 'widget/audio_player_container_widgets/top_button.dart';
 class AudioContainerWidget extends StatefulWidget {
   const AudioContainerWidget({Key? key}) : super(key: key);
 
+  static Widget create() {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ViewModelAudioPlayer()),
+      ],
+      child: const AudioContainerWidget(),
+    );
+  }
+
   @override
   State<AudioContainerWidget> createState() => _AudioContainerWidgetState();
 }
@@ -32,20 +41,16 @@ class _AudioContainerWidgetState extends State<AudioContainerWidget> {
     return SingleChildScrollView(
       child: SizedBox(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height - 310,
+        height: MediaQuery.of(context).size.height / 1.7,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
               TopButtonWidget(),
-              SizedBox(),
               AudioNameWidget(),
-              SizedBox(),
               SliderAudioWidget(),
-              SizedBox(),
               BottomButtonWidget(),
-              SizedBox()
             ],
           ),
         ),

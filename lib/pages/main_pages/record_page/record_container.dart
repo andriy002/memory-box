@@ -49,6 +49,8 @@ class RecordContainerWidget extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: TextButton(
             onPressed: () {
+              context.read<ViewModelRecord>().stop();
+
               context.read<Navigation>().setCurrentIndex = 0;
             },
             child: const Text(

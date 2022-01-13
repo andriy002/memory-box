@@ -128,8 +128,8 @@ class ViewModelRecord with ChangeNotifier {
 
   @override
   void dispose() {
-    _state.record = null;
     stop();
+    _state.record = null;
     super.dispose();
   }
 }

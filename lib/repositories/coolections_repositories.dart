@@ -18,7 +18,7 @@ class CollectionsRepositories {
 
   _firebase_storage.FirebaseStorage storage =
       _firebase_storage.FirebaseStorage.instanceFor(
-          bucket: 'gs://memory-box-9c2a3.appspot.com/');
+          bucket: 'memory-box-9c2a3.appspot.com');
 
   List<CollectionsBuilder> _collectionFromSnap(QuerySnapshot snapshot) {
     return snapshot.docs
@@ -40,8 +40,7 @@ class CollectionsRepositories {
     storageRef.putFile(file);
   }
 
-  Future<void> _deleteAudioInCollections(
-      String doc, List collectionName) async {
+  Future<void> deleteAudioInCollections(String doc, List collectionName) async {
     List listCollectionName = [];
     await _collections
         .doc(_firebaseAuth.currentUser!.uid)
@@ -82,7 +81,7 @@ class CollectionsRepositories {
         .then(
       (value) {
         for (var element in value.docs) {
-          _deleteAudioInCollections(element.data()['uid'], colectionName);
+          deleteAudioInCollections(element.data()['uid'], colectionName);
         }
       },
     );
@@ -138,6 +137,41 @@ class CollectionsRepositories {
     return snapshot.docs
         .map((doc) => AudioBuilder.fromJson(doc.data() as Map<String, dynamic>))
         .toList();
+  }
+
+  void updateCollectionDisplayName(String nameCollection, String displayName) {
+    _collections
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('collections')
+        .doc(nameCollection)
+        .update({'displayName': displayName});
+  }
+
+  void updateCollectionDescription(String nameCollection, String description) {
+    _collections
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('collections')
+        .doc(nameCollection)
+        .update({'descriptions': description});
+  }
+
+  Future<void> updateImage(String nameCollection, File image) async {
+    _collections
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('collections')
+        .doc(nameCollection)
+        .update({
+      'image': await uploadImage(image, nameCollection),
+    });
+  }
+
+  Future<String> uploadImage(File image, String nameCollection) async {
+    final String _uid = _firebaseAuth.currentUser!.uid;
+    Reference storageRef =
+        storage.ref('users/$_uid/collections-photo/$nameCollection');
+    await storageRef.putFile(image);
+    final String url = (await storageRef.getDownloadURL()).toString();
+    return url;
   }
 
   Stream<List<CollectionsBuilder>> get colllections {

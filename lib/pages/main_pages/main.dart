@@ -4,7 +4,6 @@ import 'package:memory_box/pages/main_pages/record_page/record_page.dart';
 import 'package:memory_box/pages/main_pages/search_page/search_page.dart';
 import 'package:memory_box/pages/main_pages/widget/bottom_navigation.dart';
 import 'package:memory_box/pages/main_pages/widget/drawer.dart';
-import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:memory_box/routes/app_router.dart';
 
 import 'package:memory_box/view_model/navigation.dart';
@@ -24,13 +23,9 @@ class Main extends StatelessWidget {
   static Widget create() {
     return MultiProvider(
       providers: [
-        StreamProvider(
-          create: (_) => AudioRepositories.instance.audio,
-          initialData: null,
-        ),
         ChangeNotifierProvider(
           create: (_) => Navigation(),
-        )
+        ),
       ],
       child: const Main(),
     );

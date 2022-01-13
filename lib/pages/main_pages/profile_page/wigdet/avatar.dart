@@ -12,9 +12,14 @@ class AvatarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _imageUrl = context.select(
-      (UserBuilder? userFB) => userFB?.avatarUrl ?? '',
+    final String? _imageUrl = context.select(
+      (UserBuilder? userFB) => userFB?.avatarUrl,
     );
+    if (_imageUrl == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 
     final _editToogleWatch = context.select(
       (ViewModelProfile vm) => vm.state.editToogle,

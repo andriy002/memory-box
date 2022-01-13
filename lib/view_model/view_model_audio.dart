@@ -50,6 +50,13 @@ class ViewModelAudio with ChangeNotifier {
     });
   }
 
+  void removeCollectionAudioList(String name) {
+    if (_state.audioMap.isEmpty) return;
+    _state.audioMap.forEach((key, value) {
+      _collectionRepo.deleteAudioInCollections(key, [name]);
+    });
+  }
+
   void searchKeyInput(String searchKey) {
     _state.searchKey = searchKey;
     notifyListeners();

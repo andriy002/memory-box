@@ -82,7 +82,7 @@ class AppBarCollectionCreate extends StatelessWidget {
                 child: FractionallySizedBox(
                   widthFactor: 0.9,
                   child: TextField(
-                    maxLength: 28,
+                    maxLength: 20,
                     onChanged:
                         context.read<ViewModelCoolections>().setCollectionName,
                     style: const TextStyle(
@@ -152,7 +152,7 @@ class AppBarCollectionCreate extends StatelessWidget {
                     width: double.infinity,
                     height: MediaQuery.of(context).size.height / 10,
                     child: TextField(
-                      maxLength: 200,
+                      maxLength: 230,
                       maxLines: 3,
                       onChanged: context
                           .read<ViewModelCoolections>()

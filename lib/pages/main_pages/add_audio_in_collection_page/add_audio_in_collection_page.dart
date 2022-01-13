@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:memory_box/models/collections.model.dart';
 import 'package:memory_box/repositories/coolections_repositories.dart';
@@ -9,6 +7,7 @@ import 'package:memory_box/resources/app_icons.dart';
 import 'package:memory_box/view_model/view_model_collections.dart';
 import 'package:memory_box/widget/circle_app_bar.dart';
 import 'package:memory_box/widget/left_arrow_button.dart';
+import 'package:memory_box/widget/no_collections_widget.dart';
 import 'package:provider/provider.dart';
 
 class AddAudioInCollectionPage extends StatelessWidget {
@@ -35,90 +34,89 @@ class AddAudioInCollectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<CollectionsBuilder>? dataCollections =
+    final List<CollectionsBuilder>? _dataCollections =
         context.watch<List<CollectionsBuilder>?>();
 
-    if (dataCollections == null) {
+    if (_dataCollections == null) {
       return const Center(child: CircularProgressIndicator());
     }
-    return Scaffold(
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height - 80,
-        child: Stack(
-          children: [
-            const CircleAppBar(
-              heightCircle: 0,
-              colorCircle: AppColors.collectionsColor,
-            ),
-            CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                SliverAppBar(
-                  leading: leftArrowButton(Navigator.of(context).pop),
-                  actions: [
-                    TextButton(
-                      child: const Text(
-                        'Добавить',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: AppFonts.mainFont,
-                            fontSize: 16),
-                      ),
-                      onPressed: () {
-                        context
-                            .read<ViewModelCoolections>()
-                            .addAudioToCollectionList(args);
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                  backgroundColor: AppColors.collectionsColor,
-                  expandedHeight: MediaQuery.of(context).size.height / 10,
-                  floating: false,
-                  pinned: false,
-                  snap: false,
-                  title: Column(
-                    children: const [
-                      Text(
-                        'Подборки',
-                        style: TextStyle(
-                            fontFamily: AppFonts.mainFont,
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Все в одном месте',
-                        style: TextStyle(
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - 80,
+      child: Stack(
+        children: [
+          const CircleAppBar(
+            heightCircle: 0,
+            colorCircle: AppColors.collectionsColor,
+          ),
+          CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                leading: leftArrowButton(Navigator.of(context).pop),
+                actions: [
+                  TextButton(
+                    child: const Text(
+                      'Добавить',
+                      style: TextStyle(
+                          color: Colors.white,
                           fontFamily: AppFonts.mainFont,
-                          fontSize: 16,
-                        ),
-                      )
-                    ],
-                  ),
-                  centerTitle: true,
-                ),
-                SliverGrid(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      return SliverCollectionsWidget(
-                        displayName: dataCollections[index].displayName,
-                        img: dataCollections[index].image,
-                        name: dataCollections[index].name,
-                      );
+                          fontSize: 16),
+                    ),
+                    onPressed: () {
+                      context
+                          .read<ViewModelCoolections>()
+                          .addAudioToCollectionList(args);
+                      Navigator.of(context).pop();
                     },
-                    childCount: dataCollections.length,
                   ),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.8,
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 10,
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
+                ],
+                backgroundColor: AppColors.collectionsColor,
+                expandedHeight: MediaQuery.of(context).size.height / 10,
+                floating: false,
+                pinned: false,
+                snap: false,
+                title: Column(
+                  children: const [
+                    Text(
+                      'Подборки',
+                      style: TextStyle(
+                          fontFamily: AppFonts.mainFont,
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Все в одном месте',
+                      style: TextStyle(
+                        fontFamily: AppFonts.mainFont,
+                        fontSize: 16,
+                      ),
+                    )
+                  ],
+                ),
+                centerTitle: true,
+              ),
+              SliverGrid(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return SliverCollectionsWidget(
+                      displayName: _dataCollections[index].displayName,
+                      img: _dataCollections[index].image,
+                      name: _dataCollections[index].name,
+                    );
+                  },
+                  childCount: _dataCollections.length,
+                ),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.8,
+                  crossAxisSpacing: 4,
+                  mainAxisSpacing: 10,
+                ),
+              )
+            ],
+          ),
+          if (_dataCollections.isEmpty) const NoCollectionWidget()
+        ],
       ),
     );
   }

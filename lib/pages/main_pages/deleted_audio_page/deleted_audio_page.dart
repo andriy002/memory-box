@@ -8,6 +8,7 @@ import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
 import 'package:memory_box/widget/audio_widget/list_audio.dart';
 import 'package:memory_box/widget/circle_app_bar.dart';
+import 'package:memory_box/widget/no_audio_widget.dart';
 import 'package:memory_box/widget/popup_item.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,7 @@ class DeletedAudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<AudioBuilder>? data = context.watch<List<AudioBuilder>?>();
+    final List<AudioBuilder>? _data = context.watch<List<AudioBuilder>?>();
     final bool _isPlaying =
         context.select((ViewModelAudioPlayer vm) => vm.state.isPlaying);
     final int _indexAudio =
@@ -38,7 +39,7 @@ class DeletedAudioPage extends StatelessWidget {
     final bool _selected =
         context.select((ViewModelAudio vm) => vm.state.selected);
 
-    if (data == null) {
+    if (_data == null) {
       return const Center(child: CircularProgressIndicator());
     }
     return Stack(
@@ -88,8 +89,8 @@ class DeletedAudioPage extends StatelessWidget {
             SliverAudioList(
               stastusButton:
                   _selected ? ButtonStatus.selected : ButtonStatus.deleted,
-              data: data,
-              childCount: data.length,
+              data: _data,
+              childCount: _data.length,
             ),
             const SliverToBoxAdapter(
               child: SizedBox(
@@ -100,10 +101,21 @@ class DeletedAudioPage extends StatelessWidget {
         ),
         if (_isPlaying)
           AudioPlayerWidget(
-            audioUrl: data[_indexAudio].audioUrl,
-            maxLength: data.length,
-            audioName: data[_indexAudio].audioName,
+            audioUrl: _data[_indexAudio].audioUrl,
+            maxLength: _data.length,
+            audioName: _data[_indexAudio].audioName,
           ),
+        if (_data.isEmpty)
+          const Center(
+            child: Text(
+              'У вас нет удаленных \n аудиозаписей',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.grey,
+                  fontFamily: AppFonts.mainFont,
+                  fontSize: 24),
+            ),
+          )
       ],
     );
   }
@@ -116,7 +128,6 @@ class PopupMenuAudioWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool selected =
         context.select((ViewModelAudio vm) => vm.state.selected);
-    final _viewModel = context.read<ViewModelAudio>();
 
     return PopupMenuButton(
       icon: const Icon(Icons.more_horiz),

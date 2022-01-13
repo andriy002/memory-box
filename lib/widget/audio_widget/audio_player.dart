@@ -72,6 +72,7 @@ class AudioPlayerWidget extends StatelessWidget {
                   ),
                 ),
                 IconButton(
+                    constraints: const BoxConstraints(maxWidth: 60),
                     onPressed: () {
                       context
                           .read<ViewModelAudioPlayer>()

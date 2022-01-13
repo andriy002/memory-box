@@ -30,36 +30,39 @@ class SliverAppBarWidget extends StatelessWidget {
         pinned: false,
         snap: false,
         flexibleSpace: FlexibleSpaceBar(
-          background: Stack(
-            alignment: Alignment.center,
-            children: [
-              CircleAppBar(
-                  heightCircle: MediaQuery.of(context).size.height / 6),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 90,
-                    ),
-                    _appBarTitle(context),
-                    SizedBox(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height / 3.5,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _BigCard(dataCollections: _dataCollections),
-                          _SmallCard(
-                            dataCollections: _dataCollections,
-                          )
-                        ],
+          background: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                CircleAppBar(
+                    heightCircle: MediaQuery.of(context).size.height / 6),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 90,
                       ),
-                    )
-                  ],
-                ),
-              )
-            ],
+                      _appBarTitle(context),
+                      SizedBox(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height / 3.5,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _BigCard(dataCollections: _dataCollections),
+                            _SmallCard(
+                              dataCollections: _dataCollections,
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }
