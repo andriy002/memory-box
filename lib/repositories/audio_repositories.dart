@@ -99,8 +99,45 @@ class AudioRepositories {
 
 // delete all audio
 
-  void deleteAllAudio() {
-    _audio.doc(_firebaseAuth.currentUser?.uid).delete();
+  Future<void> deleteAllAudio() async {
+    final String _uid = _firebaseAuth.currentUser!.uid;
+
+    await _audio.doc(_uid).collection('allAudio').get().then(
+          // ignore: avoid_function_literals_in_foreach_calls
+          (value) => value.docs.forEach(
+            (element) {
+              _audio
+                  .doc(_uid)
+                  .collection('allAudio')
+                  .doc(element.get('uid'))
+                  .delete();
+            },
+          ),
+        );
+    await _audio.doc(_uid).collection('deleteAudio').get().then(
+          // ignore: avoid_function_literals_in_foreach_calls
+          (value) => value.docs.forEach(
+            (element) {
+              _audio
+                  .doc(_uid)
+                  .collection('deleteAudio')
+                  .doc(element.get('uid'))
+                  .delete();
+            },
+          ),
+        );
+    await _audio.doc(_uid).collection('collections').get().then(
+          // ignore: avoid_function_literals_in_foreach_calls
+          (value) => value.docs.forEach(
+            (element) {
+              _audio
+                  .doc(_uid)
+                  .collection('collections')
+                  .doc(element.get('name'))
+                  .delete();
+            },
+          ),
+        );
   }
 
 // update audio name

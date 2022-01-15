@@ -16,13 +16,27 @@ class UsersRepositories {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-  Future<void> updatePhoto() async {
+  // update avatar user
+
+  Future<void> updatePhoto(File avatar) async {
     final String _uid = _firebaseAuth.currentUser!.uid;
-    Reference storageRef = storage.ref('users/$_uid/profile/user-$_uid-avatar');
-    String url = (await storageRef.getDownloadURL()).toString();
+    final String url = await uploadProfilePhoto(avatar);
+
     users.doc(_uid).update({'avatarUrl': url});
     _firebaseAuth.currentUser!.updatePhotoURL(url);
   }
+
+  // check user phone numb
+
+  bool checkAuthUser() {
+    if (_firebaseAuth.currentUser?.phoneNumber == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // update display name
 
   void updateDisplayName(String name) {
     final String _uid = _firebaseAuth.currentUser!.uid;
@@ -30,22 +44,35 @@ class UsersRepositories {
     _firebaseAuth.currentUser!.updateDisplayName(name);
   }
 
+  // update phone numb
+
   void updatePhoneNumb(String phone) {
     final String _uid = _firebaseAuth.currentUser!.uid;
     users.doc(_uid).update({'phoneNumb': phone});
   }
 
+  // deleted account
+
   void deleteAccount() {
     final String _uid = _firebaseAuth.currentUser!.uid;
+    _firebaseAuth.currentUser!.updateDisplayName('');
+    _firebaseAuth.currentUser!.updatePhotoURL(null);
     users.doc(_uid).delete();
     _firebaseAuth.signOut();
   }
 
-  Future<void> uploadProfilePhoto(File file) async {
+  // upload user avatar in storage
+
+  Future<String> uploadProfilePhoto(File file) async {
     final String _uid = _firebaseAuth.currentUser!.uid;
     Reference storageRef = storage.ref('users/$_uid/profile/user-$_uid-avatar');
     await storageRef.putFile(file);
+    final String url = (await storageRef.getDownloadURL()).toString();
+
+    return url;
   }
+
+  // stream user
 
   Stream<UserBuilder> get user {
     final String _uid = _firebaseAuth.currentUser!.uid;

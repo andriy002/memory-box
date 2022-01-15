@@ -5,6 +5,7 @@ import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:http/http.dart' as http;
 import 'package:memory_box/repositories/coolections_repositories.dart';
 import 'package:memory_box/repositories/deleted_audio_repositories.dart';
+import 'package:memory_box/repositories/user_repositories.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 
@@ -27,10 +28,15 @@ class ViewModelAudio with ChangeNotifier {
       CollectionsRepositories.instance;
   final DeletedAudioRepositories _deletedAudioRepo =
       DeletedAudioRepositories.instance;
+  final UsersRepositories _userRepo = UsersRepositories.instance;
 
   void setIndexReanme(int index) {
     _state.indexRename = index;
     notifyListeners();
+  }
+
+  bool checkAuthUser() {
+    return _userRepo.checkAuthUser();
   }
 
   void selected() {

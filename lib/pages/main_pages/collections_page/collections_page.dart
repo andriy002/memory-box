@@ -5,7 +5,9 @@ import 'package:memory_box/pages/main_pages/collections_page/widget/collection_c
 import 'package:memory_box/pages/main_pages/collections_page/widget/sliver_app_bar_collection_page.dart';
 import 'package:memory_box/repositories/coolections_repositories.dart';
 import 'package:memory_box/resources/app_colors.dart';
+
 import 'package:memory_box/widget/circle_app_bar.dart';
+import 'package:memory_box/widget/no_auth_user.dart';
 import 'package:memory_box/widget/no_collections_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +31,10 @@ class CollectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!context.read<ViewModelCoolections>().checkAuthUser()) {
+      return const NoAuthUser();
+    }
+
     final List<CollectionsBuilder>? _dataCollections =
         context.watch<List<CollectionsBuilder>?>();
 

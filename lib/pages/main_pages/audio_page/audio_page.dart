@@ -7,6 +7,7 @@ import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
 import 'package:memory_box/widget/audio_widget/list_audio/list_audio.dart';
 import 'package:memory_box/widget/no_audio_widget.dart';
+import 'package:memory_box/widget/no_auth_user.dart';
 
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,9 @@ class AudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!context.read<ViewModelAudio>().checkAuthUser()) {
+      return const NoAuthUser();
+    }
     final bool _isPlaying =
         context.select((ViewModelAudioPlayer vm) => vm.state.isPlaying);
     final int _indexAudio =

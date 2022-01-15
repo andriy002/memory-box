@@ -17,6 +17,8 @@ class DeletedAudioRepositories {
       _firebase_storage.FirebaseStorage.instanceFor(
           bucket: 'memory-box-9c2a3.appspot.com');
 
+  // delete audio in storage and firestore
+
   Future<void> deletedAudioInStorage(String doc) async {
     await _audio
         .doc(_firebaseAuthCurrentUser.currentUser?.uid)
@@ -33,6 +35,8 @@ class DeletedAudioRepositories {
         .doc(doc)
         .delete();
   }
+
+  // restore audio in firestore
 
   Future<void> restoreAudio(String doc) async {
     if (doc.isEmpty) return;
@@ -70,11 +74,15 @@ class DeletedAudioRepositories {
         .delete();
   }
 
+  // maping data fron stream
+
   List<AudioBuilder> _audioFromSnap(QuerySnapshot snapshot) {
     return snapshot.docs
         .map((doc) => AudioBuilder.fromJson(doc.data() as Map<String, dynamic>))
         .toList();
   }
+
+  // stream deleted audio
 
   Stream<List<AudioBuilder>> get audio {
     return _audio

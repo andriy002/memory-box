@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:memory_box/repositories/audio_repositories.dart';
+import 'package:memory_box/repositories/user_repositories.dart';
 import 'package:memory_box/utils/two_digits.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -26,6 +27,11 @@ class _ViewModelRecordState {
 class ViewModelRecord with ChangeNotifier {
   final _ViewModelRecordState _state = _ViewModelRecordState();
   final AudioRepositories _audioRepo = AudioRepositories.instance;
+  final UsersRepositories _userRepo = UsersRepositories.instance;
+
+  bool checkAuthUser() {
+    return _userRepo.checkAuthUser();
+  }
 
   _ViewModelRecordState get state => _state;
 
@@ -97,9 +103,11 @@ class ViewModelRecord with ChangeNotifier {
     String name = _state.audioName;
     final temp = await getTemporaryDirectory();
     final pathAudio = '${temp.path}/Аудиозапись.aac';
+
     if (name == 'Аудиозапись') {
       name += ' ${DateTime.now()}';
     }
+
     final appStorage = await getExternalStorageDirectory();
     final newFile = File('${appStorage?.path}/$name.aac');
     return File(pathAudio).copy(newFile.path);

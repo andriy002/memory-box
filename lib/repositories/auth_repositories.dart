@@ -15,7 +15,8 @@ class AuthRepositories {
       FirebaseFirestore.instance.collection('users');
 
   String? _vereficationCode;
-  bool eventAuth = false;
+
+  // send sms otp
 
   Future<void> authSendCode(String phone) async {
     await _auth.verifyPhoneNumber(
@@ -30,15 +31,18 @@ class AuthRepositories {
     );
   }
 
+  // add user in forestore
+
   void _addUserFireStore() {
     UserBuilder user = UserBuilder(
-      phoneNumb:
-          _auth.currentUser?.phoneNumber ?? 'Здесь можно зарегистрироваться',
+      phoneNumb: _auth.currentUser?.phoneNumber ?? 'Регистрация',
       displayName: _auth.currentUser?.displayName ?? 'Здесь будет твоё имя',
       avatarUrl: _auth.currentUser?.photoURL ?? '',
     );
     _users.doc(_auth.currentUser!.uid).set(user.toJson());
   }
+
+  // check sms otp
 
   Future<void> auth(String code) async {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -47,15 +51,21 @@ class AuthRepositories {
     _addUserFireStore();
   }
 
+  // update phone numb
+
   Future<void> updateNumb(String code) async {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _vereficationCode ?? '', smsCode: code);
     await _auth.currentUser?.updatePhoneNumber(credential);
   }
 
+  //sign out account
+
   Future<void> signOut() async {
     await _auth.signOut();
   }
+
+  // sign in anon
 
   Future<void> signInAnon() async {
     await _auth.signInAnonymously();

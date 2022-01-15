@@ -47,7 +47,6 @@ class ImageWidget extends StatelessWidget {
                       image: FileImage(_image),
                       fit: BoxFit.cover,
                     ),
-              color: Colors.amber,
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

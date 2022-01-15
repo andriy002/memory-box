@@ -28,10 +28,11 @@ class ViewModelProfile with ChangeNotifier {
         _userRepo.updateDisplayName(_state.displayName);
       }
       if (_state.imageUrl != null) {
-        _userRepo.updatePhoto();
+        _userRepo.updatePhoto(_state.imageUrl!);
       }
       notifyListeners();
     } else {
+      _state.imageUrl = null;
       _state.editToogle = true;
       _state.imageUrl = null;
       notifyListeners();
@@ -42,7 +43,7 @@ class ViewModelProfile with ChangeNotifier {
     if (_state.sendSms) {
       try {
         await _authRepo.updateNumb(code);
-        _userRepo.updatePhoneNumb(code);
+        _userRepo.updatePhoneNumb(phone);
       } catch (e) {
         print(' Потрібний дизайн для : ${e.toString()}');
       }
@@ -51,6 +52,7 @@ class ViewModelProfile with ChangeNotifier {
     } else {
       try {
         await _authRepo.authSendCode(phone);
+
         _state.phone = phone;
         _state.sendSms = true;
         notifyListeners();
@@ -61,8 +63,9 @@ class ViewModelProfile with ChangeNotifier {
   }
 
   Future<void> deleteAcc(Function nav) async {
+    await _audioRepo.deleteAllAudio();
     await nav();
-    _audioRepo.deleteAllAudio();
+
     _userRepo.deleteAccount();
   }
 
@@ -89,8 +92,6 @@ class ViewModelProfile with ChangeNotifier {
 
     final _lmageTemporary = File(image.path);
     _state.imageUrl = _lmageTemporary;
-
-    // await _userRepo.uploadProfilePhoto(_state.imageUrl!);
 
     notifyListeners();
   }

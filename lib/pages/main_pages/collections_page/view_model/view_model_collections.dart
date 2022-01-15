@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memory_box/repositories/coolections_repositories.dart';
+import 'package:memory_box/repositories/user_repositories.dart';
 
 class _ViewModelCoolectionsState {
   Map<String, bool> collectionMap = {};
@@ -11,6 +12,7 @@ class ViewModelCoolections with ChangeNotifier {
   _ViewModelCoolectionsState get state => _state;
   final CollectionsRepositories _collectionRepo =
       CollectionsRepositories.instance;
+  final UsersRepositories _userRepo = UsersRepositories.instance;
 
   void selected() {
     if (_state.selected) {
@@ -20,6 +22,10 @@ class ViewModelCoolections with ChangeNotifier {
       _state.selected = true;
       notifyListeners();
     }
+  }
+
+  bool checkAuthUser() {
+    return _userRepo.checkAuthUser();
   }
 
   void addCollectionToMap(String name) {

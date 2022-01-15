@@ -11,15 +11,6 @@ import 'widget/audio_player_container_widgets/top_button.dart';
 class AudioContainerWidget extends StatefulWidget {
   const AudioContainerWidget({Key? key}) : super(key: key);
 
-  static Widget create() {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => ViewModelAudioPlayer()),
-      ],
-      child: const AudioContainerWidget(),
-    );
-  }
-
   @override
   State<AudioContainerWidget> createState() => _AudioContainerWidgetState();
 }
