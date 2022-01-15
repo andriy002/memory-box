@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memory_box/pages/main_pages/main.dart';
 import 'package:memory_box/pages/main_pages/record_page/record_page.dart';
 import 'package:memory_box/pages/main_pages/record_page/view_model_record/view_mode_record.dart';
 import 'package:memory_box/resources/app_fonts.dart';

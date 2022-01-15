@@ -12,7 +12,7 @@ class UsersRepositories {
 
   _firebase_storage.FirebaseStorage storage =
       _firebase_storage.FirebaseStorage.instanceFor(
-          bucket: 'gs://memory-box-9c2a3.appspot.com/');
+          bucket: 'memory-box-9c2a3.appspot.com');
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
@@ -35,16 +35,16 @@ class UsersRepositories {
     users.doc(_uid).update({'phoneNumb': phone});
   }
 
-  Future<void> deleteUser() async {
+  void deleteAccount() {
     final String _uid = _firebaseAuth.currentUser!.uid;
     users.doc(_uid).delete();
-    _firebaseAuth.currentUser!.delete();
+    _firebaseAuth.signOut();
   }
 
   Future<void> uploadProfilePhoto(File file) async {
     final String _uid = _firebaseAuth.currentUser!.uid;
     Reference storageRef = storage.ref('users/$_uid/profile/user-$_uid-avatar');
-    storageRef.putFile(file);
+    await storageRef.putFile(file);
   }
 
   Stream<UserBuilder> get user {

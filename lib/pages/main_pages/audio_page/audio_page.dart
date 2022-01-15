@@ -5,7 +5,7 @@ import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:memory_box/view_model/view_model_audio.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
-import 'package:memory_box/widget/audio_widget/list_audio.dart';
+import 'package:memory_box/widget/audio_widget/list_audio/list_audio.dart';
 import 'package:memory_box/widget/no_audio_widget.dart';
 
 import 'package:provider/provider.dart';

@@ -5,7 +5,7 @@ import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:memory_box/view_model/view_model_audio.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
-import 'package:memory_box/widget/audio_widget/list_audio.dart';
+import 'package:memory_box/widget/audio_widget/list_audio/list_audio.dart';
 import 'package:memory_box/widget/no_audio_widget.dart';
 
 import 'package:provider/provider.dart';
@@ -46,22 +46,26 @@ class SearchPage extends StatelessWidget {
             height: MediaQuery.of(context).size.height - 80,
             child: Stack(
               children: [
-                CustomScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  slivers: [
-                    const SliverAppBarSearchPage(),
-                    SliverAudioList(
-                      stastusButton:
-                          _selected ? ButtonStatus.selected : ButtonStatus.edit,
-                      data: _data,
-                      childCount: _data.length,
-                    ),
-                    const SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 80,
+                Container(
+                  color: Colors.white,
+                  child: CustomScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    slivers: [
+                      const SliverAppBarSearchPage(),
+                      SliverAudioList(
+                        stastusButton: _selected
+                            ? ButtonStatus.selected
+                            : ButtonStatus.edit,
+                        data: _data,
+                        childCount: _data.length,
                       ),
-                    ),
-                  ],
+                      const SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 80,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 if (_isPlaying)
                   AudioPlayerWidget(

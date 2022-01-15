@@ -10,9 +10,13 @@ import 'package:firebase_storage/firebase_storage.dart' as _firebase_storage;
 class CollectionsRepositories {
   static final CollectionsRepositories _repositories =
       CollectionsRepositories._instance();
+
   CollectionsRepositories._instance();
+
   static CollectionsRepositories get instance => _repositories;
+
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   final CollectionReference _collections =
       FirebaseFirestore.instance.collection('audio');
 
@@ -20,25 +24,7 @@ class CollectionsRepositories {
       _firebase_storage.FirebaseStorage.instanceFor(
           bucket: 'memory-box-9c2a3.appspot.com');
 
-  List<CollectionsBuilder> _collectionFromSnap(QuerySnapshot snapshot) {
-    return snapshot.docs
-        .map((doc) =>
-            CollectionsBuilder.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
-  }
-
-  Future<String> updatePhoto(String name) async {
-    final String _uid = _firebaseAuth.currentUser!.uid;
-    Reference storageRef = storage.ref('users/$_uid/collections-photo/$name');
-    String url = (await storageRef.getDownloadURL()).toString();
-    return url;
-  }
-
-  Future<void> uploadProfilePhoto(File file, String name) async {
-    final String _uid = _firebaseAuth.currentUser!.uid;
-    Reference storageRef = storage.ref('users/$_uid/collections-photo/$name');
-    storageRef.putFile(file);
-  }
+// delete audio in collection
 
   Future<void> deleteAudioInCollections(String doc, List collectionName) async {
     List listCollectionName = [];
@@ -63,7 +49,9 @@ class CollectionsRepositories {
         .update({'collections': listCollectionName});
   }
 
-  void deleteCollection(String name) {
+// deleted collection
+
+  void deletedCollection(String name) {
     if (name.isEmpty) return;
     _collections
         .doc(_firebaseAuth.currentUser!.uid)
@@ -72,7 +60,9 @@ class CollectionsRepositories {
         .delete();
   }
 
-  void deletedAudioInCollection(List colectionName) {
+  // delete list audio in collections
+
+  void deletedAudioInCollectionList(List colectionName) {
     _collections
         .doc(_firebaseAuth.currentUser!.uid)
         .collection('allAudio')
@@ -86,6 +76,8 @@ class CollectionsRepositories {
       },
     );
   }
+
+  // add audio in collection
 
   Future<void> addAudioInCollection(String col, String doc) async {
     List colectionName = [col];
@@ -106,6 +98,8 @@ class CollectionsRepositories {
         .update({'collections': colectionName});
   }
 
+  // add audio in collection list
+
   Future<void> addAudioInCollectionList(List col, String doc) async {
     await _collections
         .doc(_firebaseAuth.currentUser!.uid)
@@ -123,6 +117,8 @@ class CollectionsRepositories {
         .update({'collections': col.toSet().toList()});
   }
 
+  // create collection
+
   void createNewCollection(String name, String description, String image) {
     CollectionsBuilder collections = CollectionsBuilder(
         descriptions: description, name: name, image: image, displayName: name);
@@ -133,11 +129,7 @@ class CollectionsRepositories {
         .set(collections.toJson());
   }
 
-  List<AudioBuilder> _audioFromSnap(QuerySnapshot snapshot) {
-    return snapshot.docs
-        .map((doc) => AudioBuilder.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
-  }
+  // update name collection
 
   void updateCollectionDisplayName(String nameCollection, String displayName) {
     _collections
@@ -147,6 +139,8 @@ class CollectionsRepositories {
         .update({'displayName': displayName});
   }
 
+  // update description in collection
+
   void updateCollectionDescription(String nameCollection, String description) {
     _collections
         .doc(_firebaseAuth.currentUser!.uid)
@@ -154,6 +148,8 @@ class CollectionsRepositories {
         .doc(nameCollection)
         .update({'descriptions': description});
   }
+
+  // update image
 
   Future<void> updateImage(String nameCollection, File image) async {
     _collections
@@ -165,6 +161,8 @@ class CollectionsRepositories {
     });
   }
 
+  // update image in storage
+
   Future<String> uploadImage(File image, String nameCollection) async {
     final String _uid = _firebaseAuth.currentUser!.uid;
     Reference storageRef =
@@ -174,6 +172,25 @@ class CollectionsRepositories {
     return url;
   }
 
+  // maping data collection from stream firestore
+
+  List<CollectionsBuilder> _collectionFromSnap(QuerySnapshot snapshot) {
+    return snapshot.docs
+        .map((doc) =>
+            CollectionsBuilder.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+  }
+
+  // maping data audio in collection from stream firestore
+
+  List<AudioBuilder> _audioFromSnap(QuerySnapshot snapshot) {
+    return snapshot.docs
+        .map((doc) => AudioBuilder.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+  }
+
+  // stream collection
+
   Stream<List<CollectionsBuilder>> get colllections {
     return _collections
         .doc(_firebaseAuth.currentUser!.uid)
@@ -181,6 +198,8 @@ class CollectionsRepositories {
         .snapshots()
         .map(_collectionFromSnap);
   }
+
+  // stream audio from collection
 
   Stream<List<AudioBuilder>> audioFromCollection(String collectionName) {
     return _collections

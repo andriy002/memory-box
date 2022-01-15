@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:memory_box/models/audio_model.dart';
 import 'package:firebase_storage/firebase_storage.dart' as _firebase_storage;
-import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class AudioRepositories {
@@ -23,6 +22,8 @@ class AudioRepositories {
           bucket: 'memory-box-9c2a3.appspot.com');
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+// add audio in firestore
 
   Future<void> _addAudioInFirestore(
       String audioName, String duration, String url) async {
@@ -46,43 +47,20 @@ class AudioRepositories {
         );
   }
 
-  Future<void> addAudio(String path, String audioName, String duration) async {
-    try {
-      Reference storageRef = storage
-          .ref('users/${_firebaseAuth.currentUser?.uid}/audio/$audioName');
+// add audio in storage
 
-      await storageRef.putFile(File(path));
-      final String url = await storageRef.getDownloadURL();
+  Future<void> addAudioInStorage(
+      String path, String audioName, String duration) async {
+    Reference storageRef =
+        storage.ref('users/${_firebaseAuth.currentUser?.uid}/audio/$audioName');
 
-      _addAudioInFirestore(audioName, duration, url);
-    } catch (e) {
-      print(e.toString());
-    }
+    await storageRef.putFile(File(path));
+    final String url = await storageRef.getDownloadURL();
+
+    _addAudioInFirestore(audioName, duration, url);
   }
 
-  List<AudioBuilder> _audioFromSnap(QuerySnapshot snapshot) {
-    return snapshot.docs
-        .map((doc) => AudioBuilder.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
-  }
-
-  Stream<List<AudioBuilder>> get audio {
-    return _audio
-        .doc(_firebaseAuth.currentUser!.uid)
-        .collection('allAudio')
-        .snapshots()
-        .map(_audioFromSnap);
-  }
-
-  Stream<List<AudioBuilder>> searchAudio(String searchKey) {
-    return _audio
-        .doc(_firebaseAuth.currentUser!.uid)
-        .collection('allAudio')
-        .where('searchKey', isGreaterThanOrEqualTo: searchKey.toLowerCase())
-        .where('searchKey', isLessThan: searchKey.toLowerCase() + '\uf8ff')
-        .snapshots()
-        .map(_audioFromSnap);
-  }
+// send audio to deteled collection and remove in all audio
 
   Future<void> sendAudioToDeleteColection(String uid) async {
     if (uid.isEmpty) return;
@@ -119,6 +97,14 @@ class AudioRepositories {
         .delete();
   }
 
+// delete all audio
+
+  void deleteAllAudio() {
+    _audio.doc(_firebaseAuth.currentUser?.uid).delete();
+  }
+
+// update audio name
+
   Future<void> updateAudioName(String uid, String name) async {
     await _audio
         .doc(_firebaseAuth.currentUser!.uid)
@@ -134,5 +120,35 @@ class AudioRepositories {
         .update(
       {'searchKey': name.toLowerCase()},
     );
+  }
+
+  // maping data from stream firestore
+
+  List<AudioBuilder> _audioFromSnap(QuerySnapshot snapshot) {
+    return snapshot.docs
+        .map((doc) => AudioBuilder.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+  }
+
+  // stream audio in firestore
+
+  Stream<List<AudioBuilder>> get audio {
+    return _audio
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('allAudio')
+        .snapshots()
+        .map(_audioFromSnap);
+  }
+
+  // search audio stream
+
+  Stream<List<AudioBuilder>> searchAudio(String searchKey) {
+    return _audio
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('allAudio')
+        .where('searchKey', isGreaterThanOrEqualTo: searchKey.toLowerCase())
+        .where('searchKey', isLessThan: searchKey.toLowerCase() + '\uf8ff')
+        .snapshots()
+        .map(_audioFromSnap);
   }
 }

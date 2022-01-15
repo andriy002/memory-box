@@ -19,9 +19,7 @@ class AuthRepositories {
 
   Future<void> authSendCode(String phone) async {
     await _auth.verifyPhoneNumber(
-      verificationFailed: (FirebaseAuthException error) {
-        print(error.code);
-      },
+      verificationFailed: (FirebaseAuthException error) {},
       phoneNumber: phone,
       timeout: const Duration(seconds: 120),
       codeSent: (String vereficationId, int? forceResendingToken) {
@@ -39,10 +37,7 @@ class AuthRepositories {
       displayName: _auth.currentUser?.displayName ?? 'Здесь будет твоё имя',
       avatarUrl: _auth.currentUser?.photoURL ?? '',
     );
-    _users
-        .doc(_auth.currentUser!.uid)
-        .set(user.toJson())
-        .catchError((e) => print(e.toString()));
+    _users.doc(_auth.currentUser!.uid).set(user.toJson());
   }
 
   Future<void> auth(String code) async {

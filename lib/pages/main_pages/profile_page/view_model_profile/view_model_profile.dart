@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:memory_box/repositories/audio_repositories.dart';
 import 'package:memory_box/repositories/auth_repositories.dart';
 import 'package:memory_box/repositories/user_repositories.dart';
 
@@ -19,6 +19,7 @@ class ViewModelProfile with ChangeNotifier {
   _ViewModelProfileState get state => _state;
   final UsersRepositories _userRepo = UsersRepositories.instance;
   final AuthRepositories _authRepo = AuthRepositories.instance;
+  final AudioRepositories _audioRepo = AudioRepositories.instance;
 
   void editToogle() {
     if (_state.editToogle) {
@@ -60,12 +61,9 @@ class ViewModelProfile with ChangeNotifier {
   }
 
   Future<void> deleteAcc(Function nav) async {
-    nav();
-    try {
-      await _userRepo.deleteUser();
-    } catch (e) {
-      print(e.toString());
-    }
+    await nav();
+    _audioRepo.deleteAllAudio();
+    _userRepo.deleteAccount();
   }
 
   void displayNameController(String name) {
@@ -80,24 +78,20 @@ class ViewModelProfile with ChangeNotifier {
   }
 
   Future<void> imagePicker() async {
-    try {
-      final image = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 50,
-        maxHeight: 720,
-        maxWidth: 720,
-      );
+    final image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+      maxHeight: 720,
+      maxWidth: 720,
+    );
 
-      if (image == null) return;
+    if (image == null) return;
 
-      final _lmageTemporary = File(image.path);
-      _state.imageUrl = _lmageTemporary;
+    final _lmageTemporary = File(image.path);
+    _state.imageUrl = _lmageTemporary;
 
-      await _userRepo.uploadProfilePhoto(_state.imageUrl!);
+    // await _userRepo.uploadProfilePhoto(_state.imageUrl!);
 
-      notifyListeners();
-    } on PlatformException catch (e) {
-      print(e);
-    }
+    notifyListeners();
   }
 }

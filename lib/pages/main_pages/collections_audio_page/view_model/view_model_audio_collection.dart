@@ -73,8 +73,8 @@ class ViewModelCollectionAudio with ChangeNotifier {
   }
 
   void deleteCollection(String name) {
-    _collectionRepo.deletedAudioInCollection([name]);
-    _collectionRepo.deleteCollection(name);
+    _collectionRepo.deletedAudioInCollectionList([name]);
+    _collectionRepo.deletedCollection(name);
   }
 
   Future<void> imagePicker() async {

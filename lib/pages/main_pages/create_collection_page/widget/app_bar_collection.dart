@@ -1,40 +1,37 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:memory_box/view_model/view_model_collections.dart';
+import 'package:memory_box/pages/main_pages/create_collection_page/view_model/view_model_create_collection.dart';
+import 'package:memory_box/pages/main_pages/create_collection_page/widget/collection_image_widget.dart';
+import 'package:memory_box/pages/main_pages/create_collection_page/widget/description_widget.dart';
 import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/resources/app_fonts.dart';
-import 'package:memory_box/resources/app_icons.dart';
 import 'package:memory_box/view_model/view_model_audio.dart';
 import 'package:memory_box/widget/circle_app_bar.dart';
 import 'package:memory_box/widget/left_arrow_button.dart';
 import 'package:provider/provider.dart';
+
+import 'collection_name_widget.dart';
 
 class AppBarCollectionCreate extends StatelessWidget {
   const AppBarCollectionCreate({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final File? _image =
-        context.select((ViewModelCoolections vm) => vm.state.imageUrl);
-    final _nameCollection =
-        context.select((ViewModelCoolections vm) => vm.state.newCollectionName);
-    final String? _nameDescription = context
-        .select((ViewModelCoolections vm) => vm.state.newCollectionDescription);
-    final bool _error =
-        context.select((ViewModelCoolections vm) => vm.state.error);
+    final _nameCollection = context
+        .select((ViewModelCreateCoolection vm) => vm.state.collectionName);
 
     return SliverAppBar(
       leading: leftArrowButton(
         () {
-          context.read<ViewModelCoolections>().deleteFields();
+          context.read<ViewModelCreateCoolection>().deleteFields();
           Navigator.of(context).pop();
         },
       ),
       actions: [
         TextButton(
           onPressed: () async {
-            if (await context.read<ViewModelCoolections>().createCollection() ==
+            if (await context
+                    .read<ViewModelCreateCoolection>()
+                    .createCollection() ==
                 false) {
               Navigator.of(context).pop();
 
@@ -68,104 +65,24 @@ class AppBarCollectionCreate extends StatelessWidget {
         ),
       ),
       flexibleSpace: FlexibleSpaceBar(
-        background: Padding(
-          padding: const EdgeInsets.only(top: 10),
+        background: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Stack(
-            alignment: Alignment.topCenter,
             children: [
               CircleAppBar(
-                heightCircle: MediaQuery.of(context).size.height / 8,
+                heightCircle: MediaQuery.of(context).size.height / 4,
                 colorCircle: AppColors.collectionsColor,
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 75),
-                child: FractionallySizedBox(
-                  widthFactor: 0.9,
-                  child: TextField(
-                    maxLength: 20,
-                    onChanged:
-                        context.read<ViewModelCoolections>().setCollectionName,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: AppFonts.mainFont,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold),
-                    decoration: InputDecoration(
-                        counterText: '',
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(
-                            color: _error ? Colors.red : Colors.white,
-                            fontFamily: AppFonts.mainFont,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold),
-                        hintText: _error
-                            ? 'Cначала введите название '
-                            : _nameCollection ?? 'Название',
-                        isCollapsed: true),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: SizedBox(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.width / 2,
-                  child: GestureDetector(
-                    onTap: () {
-                      context.read<ViewModelCoolections>().imagePicker();
-                    },
-                    child: FractionallySizedBox(
-                      widthFactor: 0.9,
-                      heightFactor: 1,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: _error ? Colors.red : Colors.grey,
-                              blurRadius: 10,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(15),
-                          image: _image != null
-                              ? DecorationImage(
-                                  image: FileImage(_image), fit: BoxFit.cover)
-                              : null,
-                          color: Colors.white,
-                        ),
-                        child: Center(
-                            child: _image == null
-                                ? const ImageIcon(
-                                    AppIcons.photoEdit,
-                                    size: 80,
-                                  )
-                                : null),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 23),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height / 10,
-                    child: TextField(
-                      maxLength: 230,
-                      maxLines: 3,
-                      onChanged: context
-                          .read<ViewModelCoolections>()
-                          .setCollectionDescription,
-                      style: const TextStyle(fontFamily: AppFonts.mainFont),
-                      decoration: InputDecoration(
-                          counterText: '',
-                          border: InputBorder.none,
-                          hintStyle:
-                              const TextStyle(fontFamily: AppFonts.mainFont),
-                          hintText: _nameDescription ?? 'Введите описание...'),
-                    ),
-                  ),
+                padding: const EdgeInsets.only(top: 85),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    SetCollectionNameWidget(),
+                    SetCollectionImageWidget(),
+                    SetDescriptionWidget()
+                  ],
                 ),
               ),
             ],

@@ -47,6 +47,9 @@ class SliverAppBarSearchPage extends StatelessWidget {
               fontFamily: AppFonts.mainFont,
               fontSize: 16,
             ),
+          ),
+          SizedBox(
+            height: 15,
           )
         ],
       ),

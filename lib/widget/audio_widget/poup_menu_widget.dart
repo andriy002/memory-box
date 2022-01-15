@@ -10,7 +10,7 @@ class PopupMenuAudioWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool selected =
+    final bool _selected =
         context.select((ViewModelAudio vm) => vm.state.selected);
     final _viewModel = context.read<ViewModelAudio>();
 
@@ -29,7 +29,7 @@ class PopupMenuAudioWidget extends StatelessWidget {
           Radius.circular(15),
         ),
       ),
-      itemBuilder: !selected
+      itemBuilder: !_selected
           ? (context) => [
                 popupMenuItem('Выбрать несколько', () {
                   context.read<ViewModelAudio>().selected();

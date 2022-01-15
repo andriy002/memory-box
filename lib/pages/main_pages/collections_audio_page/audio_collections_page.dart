@@ -6,9 +6,9 @@ import 'package:memory_box/resources/app_colors.dart';
 import 'package:memory_box/view_model/view_model_audio.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
-import 'package:memory_box/widget/audio_widget/list_audio.dart';
+import 'package:memory_box/widget/audio_widget/list_audio/list_audio.dart';
 import 'package:provider/provider.dart';
-import 'widget/Sliver_app_bar_collection.dart';
+import 'widget/sliver_app_bar_collection.dart';
 
 class CollectionsAudioPage extends StatelessWidget {
   final String img;

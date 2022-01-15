@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-abstract class AppIcons {
+class AppIcons {
+  AppIcons._();
   static const home = AssetImage('assets/images/icon/home.png');
   static const selections = AssetImage('assets/images/icon/selections.png');
   static const audio = AssetImage('assets/images/icon/audio.png');

@@ -42,7 +42,9 @@ class _AudioNameWidgetState extends State<AudioNameWidget> {
             : SizedBox(
                 width: 300,
                 child: TextField(
+                  maxLength: 30,
                   controller: _audioNameController,
+                  decoration: const InputDecoration(counterText: ''),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontFamily: AppFonts.mainFont, fontSize: 24),

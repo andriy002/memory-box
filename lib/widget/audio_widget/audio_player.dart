@@ -48,7 +48,7 @@ class AudioPlayerWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const _PlayerPlayPasueButtonWidget(),
+                const _PlayerPlayPauseButtonWidget(),
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 1.4,
                   height: 60.0,
@@ -158,8 +158,8 @@ class _PositionAudioWidget extends StatelessWidget {
   }
 }
 
-class _PlayerPlayPasueButtonWidget extends StatelessWidget {
-  const _PlayerPlayPasueButtonWidget({Key? key}) : super(key: key);
+class _PlayerPlayPauseButtonWidget extends StatelessWidget {
+  const _PlayerPlayPauseButtonWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

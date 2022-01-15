@@ -32,7 +32,7 @@ class EditAccountWidget extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            _deleteDialog(context);
+            _deletedDialog(context);
           },
           child: const Text(
             'Удалить аккаунт',
@@ -47,7 +47,7 @@ class EditAccountWidget extends StatelessWidget {
     );
   }
 
-  Future<dynamic> _deleteDialog(BuildContext context) {
+  Future<dynamic> _deletedDialog(BuildContext context) {
     void nav() {
       Navigator.of(context, rootNavigator: true)
           .pushReplacementNamed(WelcomPage.routeName);
@@ -55,6 +55,7 @@ class EditAccountWidget extends StatelessWidget {
 
     return showDialog(
       context: context,
+      useRootNavigator: false,
       builder: (_) => AlertDialog(
         title: const Text(
           'Точно удалить аккаунт?',
