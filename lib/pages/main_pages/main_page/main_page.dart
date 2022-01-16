@@ -20,8 +20,12 @@ class MainPage extends StatelessWidget {
   static Widget create() {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ViewModelAudio()),
-        ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
+        ChangeNotifierProxyProvider(
+            create: (_) => ViewModelAudio(),
+            update: (_, ___, __) => ViewModelAudio()),
+        ChangeNotifierProxyProvider(
+            create: (_) => ViewModelAudioPlayer(),
+            update: (_, ___, __) => ViewModelAudioPlayer()),
         StreamProvider(
           create: (_) => CollectionsRepositories.instance.colllections,
           initialData: null,
