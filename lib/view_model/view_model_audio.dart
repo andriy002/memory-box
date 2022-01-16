@@ -89,9 +89,9 @@ class ViewModelAudio with ChangeNotifier {
     notifyListeners();
   }
 
-  void addAudioToCollection(String nameCollection) {
-    _state.audioMap.forEach((key, value) {
-      _collectionRepo.addAudioInCollection(nameCollection, key);
+  Future<void> addAudioToCollection(String nameCollection) async {
+    _state.audioMap.forEach((key, value) async {
+      await _collectionRepo.addAudioInCollection(nameCollection, key);
     });
   }
 

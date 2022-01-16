@@ -69,29 +69,32 @@ class CollectionsAudioPage extends StatelessWidget {
 
     return Stack(
       children: [
-        CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            AppBarCollectionAudio(
-              dataLength: data.length,
-              img: img,
-              description: description,
-              displayName: displayName,
-              nameCollections: nameCollections,
-            ),
-            SliverAudioList(
-              stastusButton:
-                  _selected ? ButtonStatus.selected : ButtonStatus.edit,
-              data: data,
-              childCount: data.length,
-              colorButton: AppColors.collectionsColor,
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 160,
+        Container(
+          color: Colors.white,
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              AppBarCollectionAudio(
+                dataLength: data.length,
+                img: img,
+                description: description,
+                displayName: displayName,
+                nameCollections: nameCollections,
               ),
-            ),
-          ],
+              SliverAudioList(
+                stastusButton:
+                    _selected ? ButtonStatus.selected : ButtonStatus.edit,
+                data: data,
+                childCount: data.length,
+                colorButton: AppColors.collectionsColor,
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 160,
+                ),
+              ),
+            ],
+          ),
         ),
         if (_isPlaying)
           AudioPlayerWidget(

@@ -33,11 +33,10 @@ class AppBarCollectionCreate extends StatelessWidget {
                     .read<ViewModelCreateCoolection>()
                     .createCollection() ==
                 false) {
-              Navigator.of(context).pop();
-
-              context.read<ViewModelAudio>().addAudioToCollection(
+              await context.read<ViewModelAudio>().addAudioToCollection(
                     _nameCollection!,
                   );
+              Navigator.of(context).pop();
             }
           },
           child: const Text(

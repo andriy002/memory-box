@@ -12,6 +12,7 @@ class _ViewModelProfileState {
   String displayName = '';
   bool sendSms = false;
   String phone = '';
+  String? phoneNumb;
 }
 
 class ViewModelProfile with ChangeNotifier {
@@ -43,7 +44,7 @@ class ViewModelProfile with ChangeNotifier {
     if (_state.sendSms) {
       try {
         await _authRepo.updateNumb(code);
-        _userRepo.updatePhoneNumb(phone);
+        _userRepo.updatePhoneNumb(_state.phoneNumb ?? '');
       } catch (e) {
         print(' Потрібний дизайн для : ${e.toString()}');
       }
@@ -52,6 +53,7 @@ class ViewModelProfile with ChangeNotifier {
     } else {
       try {
         await _authRepo.authSendCode(phone);
+        _state.phoneNumb = phone;
 
         _state.phone = phone;
         _state.sendSms = true;
