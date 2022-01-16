@@ -6,7 +6,6 @@ import 'package:memory_box/view_model/view_model_audio.dart';
 import 'package:memory_box/view_model/view_model_audio_player.dart';
 import 'package:memory_box/widget/audio_widget/audio_player.dart';
 import 'package:memory_box/widget/audio_widget/list_audio/list_audio.dart';
-import 'package:memory_box/widget/no_audio_widget.dart';
 
 import 'package:provider/provider.dart';
 
@@ -17,8 +16,12 @@ class SearchPage extends StatelessWidget {
   static Widget create() {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ViewModelAudio()),
-        ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
+        ChangeNotifierProxyProvider(
+            create: (_) => ViewModelAudio(),
+            update: (_, ___, __) => ViewModelAudio()),
+        ChangeNotifierProxyProvider(
+            create: (_) => ViewModelAudioPlayer(),
+            update: (_, ___, __) => ViewModelAudioPlayer()),
       ],
       child: const SearchPage(),
     );
@@ -33,14 +36,14 @@ class SearchPage extends StatelessWidget {
     final int _indexAudio = context.select(
       (ViewModelAudioPlayer vm) => vm.state.indexAudio ?? 0,
     );
+    final bool _selected =
+        context.select((ViewModelAudio vm) => vm.state.selected);
 
     return StreamBuilder<Object>(
       stream: AudioRepositories.instance.searchAudio(_searchKey),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final List<AudioBuilder> _data = snapshot.data as List<AudioBuilder>;
-          final bool _selected =
-              context.select((ViewModelAudio vm) => vm.state.selected);
 
           return SizedBox(
             height: MediaQuery.of(context).size.height - 80,
@@ -61,7 +64,7 @@ class SearchPage extends StatelessWidget {
                       ),
                       const SliverToBoxAdapter(
                         child: SizedBox(
-                          height: 80,
+                          height: 160,
                         ),
                       ),
                     ],
@@ -73,7 +76,6 @@ class SearchPage extends StatelessWidget {
                     maxLength: _data.length,
                     audioName: _data[_indexAudio].audioName,
                   ),
-                if (_data.isEmpty) const NoAudioWidget()
               ],
             ),
           );

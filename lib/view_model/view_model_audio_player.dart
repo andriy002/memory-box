@@ -8,7 +8,7 @@ import 'package:share/share.dart';
 class _ViewModelAudioPlayerState {
   Duration audioPosition = const Duration();
   Duration audioLength = const Duration();
-  AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer? audioPlayer = AudioPlayer();
   bool isPlaying = false;
   bool pause = false;
   int? indexAudio;
@@ -50,7 +50,7 @@ class ViewModelAudioPlayer with ChangeNotifier {
   }
 
   void nextAudio(int max) {
-    _state.audioPlayer.release();
+    _state.audioPlayer?.release();
 
     int maxLength = max - 1;
     if (_state.indexAudio == maxLength) {
@@ -64,21 +64,23 @@ class ViewModelAudioPlayer with ChangeNotifier {
 
   Future<void> setAudioUrl(String audio, bool isLocal) async {
     if (audio.isEmpty) return;
-    _state.audioPlayer = AudioPlayer();
+    if (_state.repeatAudio) {
+      _state.audioPlayer = AudioPlayer();
+    }
 
-    await _state.audioPlayer.setUrl(audio, isLocal: isLocal);
+    await _state.audioPlayer?.setUrl(audio, isLocal: isLocal);
     play(audio);
 
-    _state.audioPlayer.onDurationChanged.listen((d) {
+    _state.audioPlayer?.onDurationChanged.listen((d) {
       _state.audioLength = d;
       notifyListeners();
     });
-    _state.audioPlayer.onAudioPositionChanged.listen((p) {
+    _state.audioPlayer?.onAudioPositionChanged.listen((p) {
       _state.audioPosition = p;
       notifyListeners();
     });
 
-    _state.audioPlayer.onPlayerCompletion.listen((e) {
+    _state.audioPlayer?.onPlayerCompletion.listen((e) {
       if (_state.repeatAudio) {
         nextAudio(_state.lengthAudio);
       } else {
@@ -93,17 +95,17 @@ class ViewModelAudioPlayer with ChangeNotifier {
   Future<void> setLocalAudio(String audio, bool isLocal) async {
     if (audio.isEmpty) return;
 
-    await _state.audioPlayer.setUrl(audio, isLocal: isLocal);
+    await _state.audioPlayer?.setUrl(audio, isLocal: isLocal);
 
-    _state.audioPlayer.onDurationChanged.listen((d) {
+    _state.audioPlayer?.onDurationChanged.listen((d) {
       _state.audioLength = d;
       notifyListeners();
     });
-    _state.audioPlayer.onAudioPositionChanged.listen((p) {
+    _state.audioPlayer?.onAudioPositionChanged.listen((p) {
       _state.audioPosition = p;
       notifyListeners();
     });
-    _state.audioPlayer.onPlayerCompletion.listen((_) {
+    _state.audioPlayer?.onPlayerCompletion.listen((_) {
       _state.audioPosition = const Duration(microseconds: 0);
       _state.isPlaying = false;
       _state.indexAudio = null;
@@ -113,25 +115,25 @@ class ViewModelAudioPlayer with ChangeNotifier {
 
   void play(String audio) async {
     if (audio.isEmpty) return;
-    await _state.audioPlayer.play(audio);
+    await _state.audioPlayer?.play(audio);
     _state.isPlaying = true;
     _state.pause = false;
   }
 
   void resume() {
-    _state.audioPlayer.resume();
+    _state.audioPlayer?.resume();
     _state.pause = false;
     notifyListeners();
   }
 
   void pause() {
-    _state.audioPlayer.pause();
+    _state.audioPlayer?.pause();
     _state.pause = true;
     notifyListeners();
   }
 
   void setPlayingIndex(int index) {
-    _state.audioPlayer.release();
+    _state.audioPlayer?.release();
 
     _state.indexAudio = index;
     _state.isPlaying = true;
@@ -139,7 +141,7 @@ class ViewModelAudioPlayer with ChangeNotifier {
   }
 
   void stop() {
-    _state.audioPlayer.stop();
+    _state.audioPlayer?.stop();
     _state.isPlaying = false;
     _state.indexAudio = null;
     _state.repeatAudio = false;
@@ -148,18 +150,18 @@ class ViewModelAudioPlayer with ChangeNotifier {
 
   void sekToSec(int sec) {
     Duration newPosition = Duration(seconds: sec);
-    _state.audioPlayer.seek(newPosition);
+    _state.audioPlayer?.seek(newPosition);
     notifyListeners();
   }
 
   void secDown() {
     if (_state.audioPosition.inSeconds >= 15) {
-      _state.audioPlayer.seek(
+      _state.audioPlayer?.seek(
         _state.audioPosition - const Duration(seconds: 15),
       );
       notifyListeners();
     } else {
-      _state.audioPlayer.seek(
+      _state.audioPlayer?.seek(
         _state.audioPosition = const Duration(seconds: 0),
       );
       notifyListeners();
@@ -169,12 +171,12 @@ class ViewModelAudioPlayer with ChangeNotifier {
   void secUp() {
     if ((_state.audioPosition.inSeconds - _state.audioLength.inSeconds) <=
         -15) {
-      _state.audioPlayer.seek(
+      _state.audioPlayer?.seek(
         _state.audioPosition + const Duration(seconds: 15),
       );
       notifyListeners();
     } else {
-      _state.audioPlayer.seek(
+      _state.audioPlayer?.seek(
         _state.audioPosition =
             Duration(seconds: _state.audioLength.inSeconds - 0),
       );
@@ -184,8 +186,9 @@ class ViewModelAudioPlayer with ChangeNotifier {
 
   @override
   void dispose() {
-    _state.audioPlayer.stop();
-    _state.audioPlayer.dispose();
+    stop();
+    _state.audioPlayer?.dispose();
+
     super.dispose();
   }
 }

@@ -13,7 +13,6 @@ import 'package:memory_box/pages/main_pages/main_page/main_page.dart';
 import 'package:memory_box/pages/main_pages/profile_page/profile_page.dart';
 import 'package:memory_box/pages/main_pages/record_page/record_page.dart';
 import 'package:memory_box/pages/main_pages/search_page/search_page.dart';
-import 'package:memory_box/widget/no_auth_user.dart';
 
 class AppRouter {
   const AppRouter._();

@@ -34,9 +34,13 @@ class CollectionsAudioPage extends StatelessWidget {
   }) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ViewModelAudio()),
-        ChangeNotifierProvider(create: (_) => ViewModelAudioPlayer()),
         ChangeNotifierProvider(create: (_) => ViewModelCollectionAudio()),
+        ChangeNotifierProxyProvider(
+            create: (_) => ViewModelAudio(),
+            update: (_, ___, __) => ViewModelAudio()),
+        ChangeNotifierProxyProvider(
+            create: (_) => ViewModelAudioPlayer(),
+            update: (_, ___, __) => ViewModelAudioPlayer()),
         StreamProvider(
             create: (_) => CollectionsRepositories.instance.audioFromCollection(
                   nameCollections,

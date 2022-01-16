@@ -51,16 +51,13 @@ class _CollectionsCardWidgetState extends State<CollectionsCardWidget> {
                 setState(() {});
               }
             : () {
-                Navigator.pushNamed(
-                  context,
-                  CollectionsAudioPage.routeName,
-                  arguments: {
-                    'img': widget.img,
-                    'displayName': widget.displayName,
-                    'nameCollections': widget.name,
-                    'description': widget.description
-                  },
-                );
+                Navigator.of(context)
+                    .pushNamed(CollectionsAudioPage.routeName, arguments: {
+                  'img': widget.img,
+                  'displayName': widget.displayName,
+                  'nameCollections': widget.name,
+                  'description': widget.description
+                });
               },
         child: _selectedCollection(_selected, isCheck),
       ),
